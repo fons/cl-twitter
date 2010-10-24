@@ -58,42 +58,41 @@ There are a small set of quick interactive routines for using the API:
 ## Example use:
 
 
-TWITTER> (twitter-op :test)
-"ok"
+    TWITTER> (twitter-op :test)
+    "ok"
 
-TWITTER> (authenticate-user "ieslick" "password")
-#<TWITTER-USER 'ieslick'>
+    TWITTER> (authenticate-user "ieslick" "password")
+    #<TWITTER-USER 'ieslick'>
 
-TWITTER> (latest-tweets)
-(#<TWEET 'ieslick' id:1219635898> #<TWEET 'ieslick' id:1217269236>
- #<TWEET 'ieslick' id:1215984895> #<TWEET 'ieslick' id:1214353382>)
+    TWITTER> (latest-tweets)
+    (#<TWEET 'ieslick' id:1219635898> #<TWEET 'ieslick' id:1217269236>
+    #<TWEET 'ieslick' id:1215984895> #<TWEET 'ieslick' id:1214353382>)
 
-TWITTER> (print-tweets *)
-status: "The lisp twitter api is nearly done!"
-by: Ian Eslick  (ieslick) on: Tue Feb 17 00:49:11 +0000 2009
+    TWITTER> (print-tweets *)
+    status: "The lisp twitter api is nearly done!"
+    by: Ian Eslick  (ieslick) on: Tue Feb 17 00:49:11 +0000 2009
 
-status: "Benefits of working from home; lunchtime stew in Cambridge, MA http://l\
-oopt.us/-Hps2Q"
-by: Ian Eslick  (ieslick) on: Mon Feb 16 17:49:52 +0000 2009
+    status: "Benefits of working from home; lunchtime stew in Cambridge, MA http://l\
+    oopt.us/-Hps2Q"
+    by: Ian Eslick  (ieslick) on: Mon Feb 16 17:49:52 +0000 2009
 
-status: "My lisp can tweet!"
-by: Ian Eslick  (ieslick) on: Mon Feb 16 04:52:28 +0000 2009
+    status: "My lisp can tweet!"
+    by: Ian Eslick  (ieslick) on: Mon Feb 16 04:52:28 +0000 2009
 
-status: "Family outing! in Cambridge, MA http://loopt.us/zUhMpQ"
-by: Ian Eslick  (ieslick) on: Sun Feb 15 21:14:26 +0000 2009
+    status: "Family outing! in Cambridge, MA http://loopt.us/zUhMpQ"
+    by: Ian Eslick  (ieslick) on: Sun Feb 15 21:14:26 +0000 2009
 
-NIL
+    NIL
 
-TWITTER> (send-tweet "cl-twitter is released!")
-#<TWEET 'ieslick' id:1219635898>
+    TWITTER> (send-tweet "cl-twitter is released!")
+    #<TWEET 'ieslick' id:1219635898>
 
-TWITTER> (describe *)
-by: ieslick (Ian Eslick ) created: Tue Feb 17 17:33:33 +0000 2009
-msg: cl-twitter is released!
-; No value
+    TWITTER> (describe *)
+    by: ieslick (Ian Eslick ) created: Tue Feb 17 17:33:33 +0000 2009
+    msg: cl-twitter is released!
+    ; No value
 
-TWITTER> (twitter-op :user-show)
-________________________________________
+    TWITTER> (twitter-op :user-show)
 
 
 ## Search API:
