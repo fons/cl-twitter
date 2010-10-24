@@ -29,7 +29,7 @@
 	 (eql (type-of inst) ',name))
        (let ((args ',args))
 	 (add-conversions args)
-	 (record-type-args name args)
+	 (record-type-args ',name args)
 	 (record-arg-descriptions ',name ,description args)))))
 
 (eval-when (:compile-toplevel :load-toplevel)
@@ -94,6 +94,8 @@
     response)
   (:method (response (prim-type (eql :identity)))
     response))
+
+;;move to after register-twitter-object is defined
 
 (defun parse-element-record (type rec embedded unique-p)
   "Generic parsing function"		     
@@ -411,6 +413,7 @@ If the user has been logged in via basic authorization, returns
 
 (defmethod print-object ((ref search-ref) stream)
   (format stream "#<TWITTER-SEARCH-REF '~A'>" (search-ref-from-user ref)))
+
 
 (defun lookup-search-ref (rec)
   (declare (ignore rec)))

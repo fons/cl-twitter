@@ -7,6 +7,9 @@
 This is a clone of cl-twitter's darcs repository http://www.common-lisp.net/project/cl-twitter/darcs/cl-twitter.
 More information can be found [on cl-twitters cliki page](http://common-lisp.net/project/cl-twitter/).
 
+This version compiles. Authentication does not work. Features which relay on that part obviously will not work.
+The search interface does work, but you're obviously going to be severly rate limited.
+
 
 
 ## Description 
