@@ -13,6 +13,8 @@
    ;; OAuth
    #:oauth-make-twitter-authorization-uri
    #:oauth-authenticate-user
+   #:repl-authenticate-user
+   #:get-authenticated-user
    ;; Updates
    #:public-timeline
    #:timeline

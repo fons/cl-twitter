@@ -7,9 +7,40 @@
 This is a clone of cl-twitter's darcs repository http://www.common-lisp.net/project/cl-twitter/darcs/cl-twitter.
 More information can be found [on cl-twitters cliki page](http://common-lisp.net/project/cl-twitter/).
 
-This version compiles. Authentication does not work. Features which relay on that part obviously will not work.
-The search interface does work, but you're obviously going to be severly rate limited.
 
+## Authentication Update
+
+### cl-oath dependency
+
+At this point for authorization to work you'd need the slightly different version of [cl-oauth](https://github.com/fons/cl-oauth) from my github repo.
+The modification is minor and I'm working to have my change merged back into the main branch.
+
+### repl twitter client
+
+I've setup a twitter app called cl-twit-repl. The consumer key and consumer secret are stored in twitter.lisp.
+
+### Initial setup
+
+To authenticate from the repl run (cl-twitter:repl-authenticate-user).
+You should see output like this :
+
+    please authorize : #<PURI:URI http://twitter.com/oauth/authorize?&oauth_token=ZcXVnoHiuhQKDp9hk5sFscj7NP0Nopx235aZFjn5M>
+    enter PIN :   
+
+Log into your twitter account and copy the url into the browser bar.
+
+After agreeing to allow cl-twit-repl access, twitter will give you a pin.
+Enter the pin at the command prompt, and hit return.
+
+If everything goes well, you should be logged in.
+Your access tokens are stored in clear text in a file called access.ht, away from the repo.
+So this is obviously not the moste secure solution.
+
+### Subsequent access
+
+Run (cl-twitter:get-authenticated-user <user name> ). This will read access credentials from acces.ht.
+
+Currently this is set up to handle one user name at a time.
 
 
 ## Description 

@@ -5,11 +5,12 @@
 ;;
 
 (defvar *twitter-user*)
+
 (defvar *twitter-client-headers* 
   '(("X-Twitter-Client" . "CL-Twitter")
     ("X-Twitter-Client-Version" . "1.0")
     ("X-Twitter-Client-URL" . "http://common-lisp.net/project/cl-twitter/"))
-  "Defult headers sent in requests")
+  "Default headers sent in requests")
 
 (defvar *twitter-client-source-param* "cltwitter"
   "The source value for posts; shows up in twitter web if as client id")
@@ -26,13 +27,11 @@
 	  (parse-error-response response code)))))
 
 (defun send-command (command args)
-  (multiple-value-bind (method url auth post-params)
-      (command-request-arguments command args)
+  (multiple-value-bind (method url auth post-params) (command-request-arguments command args)
     (let ((socket nil))
       (unwind-protect
 	   (multiple-value-bind (response code)
-	       (destructuring-bind (&optional auth-method &rest auth-spec)
-		   (or auth  (user-http-auth *twitter-user*))
+	       (destructuring-bind (&optional auth-method &rest auth-spec) (or auth  (user-http-auth *twitter-user*))
 		 (let ((common-drakma-args 
 			(list :want-stream t
 			      :additional-headers *twitter-client-headers*
@@ -45,8 +44,7 @@
 			      :parameters (plist->alist post-params)
 			      common-drakma-args)
 		       (destructuring-bind (access-token) auth-spec
-			 (oauth:access-protected-resource
-				  url access-token (oauth:token-consumer (twitter-user-access-token *twitter-user*))
+			 (oauth:access-protected-resource  url access-token (oauth:token-consumer (twitter-user-access-token *twitter-user*))
 				  :request-method method
 				  :user-parameters (plist->alist post-params)
 				  :drakma-args common-drakma-args)))))
@@ -76,29 +74,23 @@
 	       ((null type)
 		nil)
 	       (t (parse-record response type)))))
-;;    (format t "Parsed response of type ~S:  ~S~%" type parsed)
+    ;;    (format t "Parsed response of type ~S:  ~S~%" type parsed)
     parsed))
 
 
 ;;
 ;; Public API for common commands
 ;;
+;;
+;;
+;;
 
-(defun authenticate-user (username password)
-  (let ((user (get-user username)))
-    (setf (twitter-user-password user) password)
-    (twitter-op :verify-credentials :user user)
-;      (twitter-api-condition () (return-from authenticate-user nil)))
-    (setf *twitter-user* user)
-    (twitter-op :user-show :id (twitter-user-screen-name user))))
+(defvar *consumer-key* "9hOStbD2Zf7x0mUoo7cYBg"
+  "The consumer key for cl-twit-repl, as listed on https://twitter.com/apps. Used for OAuth.")
 
-(defvar *consumer-key* nil
-  "The consumer key for your application, as listed on https://twitter.com/apps.
-Used for OAuth.")
+(defvar *consumer-secret* "PWx9ZBZS9BVbesqlkoyiPzXtucmU7jaWe4ECcC30l0"
+  "The consumer secret for cl-twit-repl, as listed on https://twitter.com/apps. Used for OAuth.")
 
-(defvar *consumer-secret* nil
-  "The consumer secret for your application, as listed on https://twitter.com/apps.
-Used for OAuth.")
 
 (defvar *oauth-request-token-cache* nil
   "A list of request tokens that have been generated for OAuth
@@ -113,7 +105,7 @@ while (by calls to OAUTH-AUTHENTICATE-USER).")
 (defun oauth-make-twitter-authorization-uri (&key (consumer-key *consumer-key*) (consumer-secret *consumer-secret*))
   "Returns a URL where the user should be directed to authorize the
 application.  Once the user has authorized the user, she will be
-redirected toe the web page specified on the https://twitter.com/apps
+redirected to the web page specified on the https://twitter.com/apps
 page for the application."
   (let ((request-token
 	 (cl-oauth:obtain-request-token "http://twitter.com/oauth/request_token"
@@ -156,7 +148,33 @@ the user has been logged in to Twitter via OAuth."
       (setf (twitter-user-access-token user) access-token)
       user)))
 
+(defun repl-authenticate-user (&key (consumer-key *consumer-key*) (consumer-secret *consumer-secret*))
+  (let* ((request-token (oauth:obtain-request-token "http://twitter.com/oauth/request_token" (oauth:make-consumer-token :key consumer-key :secret consumer-secret)))
+	 (uri (cl-oauth:make-authorization-uri "http://twitter.com/oauth/authorize" request-token)))
+    (format t "please authorize : ~S~%" uri)
+    (format t "enter PIN :   ")
+    (let (( pin (read)))
+      (format t "obtaining access tokens for pin : ~S~%" pin)
+      (unless (oauth:request-token-authorized-p request-token)
+	(oauth:authorize-request-token request-token))
+      (setf (oauth:request-token-verification-code request-token) (format nil "~A" pin))      
+      (let* ((access-token (oauth:obtain-access-token "http://twitter.com/oauth/access_token" request-token)) 
+	     (user-id (cdr (assoc "user_id" (oauth:token-user-data access-token) :test #'equal)))
+	     (username (cdr (assoc "screen_name" (oauth:token-user-data access-token) :test #'equal)))
+	     (user (get-user username)))
+	(setf (twitter-user-access-token user) access-token)
+	(setf *twitter-user* user)
+	(write-access-info *twitter-user*)
+	(twitter-op :user-show :id user-id  :auth (list :oauth access-token))))))
 
+(defun get-authenticated-user (user)
+      (let* ((access-token (get-access-token user))
+	     (user-id (cdr (assoc "user_id" (oauth:token-user-data access-token) :test #'equal)))
+	     (username (cdr (assoc "screen_name" (oauth:token-user-data access-token) :test #'equal)))
+	     (user (get-user username)))
+	(setf (twitter-user-access-token user) access-token)
+	(setf *twitter-user* user) 
+	(twitter-op :user-show :id user-id  :auth (list :oauth access-token))))
 
 (defun authenticated-user ()
   *twitter-user*)
@@ -187,9 +205,7 @@ the user has been logged in to Twitter via OAuth."
   :user_id "Optional.  The ID or screen name of (the user for whom to request a list of friends."
   :screen_name "Optional.  The ID or screen name of (the user for whom to request a list of friends."
   :page "Optional. Retrieves the next 5000 ids.")
-
-
-  (print-tweets (apply 'twitter-op :friends-timeline args)))
+(print-tweets (apply 'twitter-op :friends-timeline args)))
 
 (defun send-tweet (text &rest args &key (tiny-url-p t) &allow-other-keys)
   (let ((newtext (if tiny-url-p (convert-to-tinyurl text) text)))
@@ -286,3 +302,6 @@ the user has been logged in to Twitter via OAuth."
 		      regex result 
 		      (get-tinyurl (subseq result start end))))))))
 
+
+
+  
