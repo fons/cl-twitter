@@ -10,10 +10,6 @@ More information can be found [on cl-twitters cliki page](http://common-lisp.net
 
 ## Authentication Update
 
-### cl-oath dependency
-
-At this point for authorization to work you'd need the slightly different version of [cl-oauth](https://github.com/fons/cl-oauth) from my github repo.
-The modification is minor and I'm working to have my change merged back into the main branch.
 
 ### repl twitter client
 

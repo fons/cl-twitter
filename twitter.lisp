@@ -44,7 +44,7 @@
 			      :parameters (plist->alist post-params)
 			      common-drakma-args)
 		       (destructuring-bind (access-token) auth-spec
-			 (oauth:access-protected-resource  url access-token (oauth:token-consumer (twitter-user-access-token *twitter-user*))
+			 (oauth:access-protected-resource  url access-token :consumer-token (oauth:token-consumer (twitter-user-access-token *twitter-user*))
 				  :request-method method
 				  :user-parameters (plist->alist post-params)
 				  :drakma-args common-drakma-args)))))
