@@ -30,15 +30,24 @@
   (cdr (assoc "screen_name" (oauth:token-user-data token)  :test #'equal)))
 
 (defun serialize-access-token (token)
-  (list (user-name token) (cons 'access (list (mapcar (lambda (e) (list (car e) (funcall (cadr e) token) )) *ACCESS-TOKEN-SERIALIZER*)))))
+    (list (user-name token) (cons 'access (list (mapcar (lambda (e) (list (car e) (funcall (cadr e) token) )) *ACCESS-TOKEN-SERIALIZER*)))))
 
-(defun write-access-info(twitter-user)
-  (with-open-file (stream *access-file* :direction :output :if-exists :supersede)
-    (format stream "~S~%" (serialize-access-token (twitter-user-access-token twitter-user)))))
+(defun write-access-info (twitter-user)
+  (let ((ht  (read-access-info))
+	(lst (serialize-access-token (twitter-user-access-token twitter-user))))
+    (setf (gethash (car lst) ht) lst)
+    (with-open-file (stream *access-file* :direction :output :if-exists :supersede)
+      (maphash (lambda (key lst) (format stream "~S~%" lst)) ht)))) 
+		 
 
 (defun read-access-info()
-  (with-open-file (stream *access-file* :direction :input )
-    (read stream)))
+  (let ((ht (make-hash-table :test 'equal)))
+    (with-open-file (stream *access-file* :direction :input )
+      (do ((line (read stream nil) (read stream nil))) 
+	  ((null line))
+	(setf (gethash (car line) ht) line))) 
+    ht))
+      
 
 (defvar *N* (pairlis '(access consumer) '(oauth:make-access-token oauth:make-consumer-token) ))
 
@@ -67,9 +76,10 @@
     (cons fun (reduce (lambda (l r) (append l r)) (mapcar #'unpack  arglist) ))))
 
 (defun get-access-token (user)
-  (labels ((check-name (lst)
-	     (if (string= (car lst) user)
-		 (cadr lst)
-		 (error (format nil "access credentials for user ~A not found~%" user))))) 
+  (labels ((check-name (ht)
+	     (let ((lst (gethash user ht)))
+	       (if lst
+		   (cadr lst)
+		   (error (format nil "access credentials for user ~A not found~%" user)))))) 
     (eval (maker (check-name (read-access-info))))))
 

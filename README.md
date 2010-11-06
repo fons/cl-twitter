@@ -30,13 +30,11 @@ Enter the pin at the command prompt, and hit return.
 
 If everything goes well, you should be logged in.
 Your access tokens are stored in clear text in a file called access.ht, away from the repo.
-So this is obviously not the moste secure solution.
+This is obviously not the moste secure solution.
 
 ### Subsequent access
 
-Run (cl-twitter:get-authenticated-user <user name> ). This will read access credentials from acces.ht.
-
-Currently this is set up to handle one user name at a time.
+Run (cl-twitter:get-authenticated-user <user name> ). This will read the access credentials from acces.ht.
 
 
 ## Description 
