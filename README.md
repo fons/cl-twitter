@@ -29,8 +29,9 @@ After agreeing to allow cl-twit-repl access, twitter will give you a pin.
 Enter the pin at the command prompt, and hit return.
 
 If everything goes well, you should be logged in.
-Your access tokens are stored in clear text in a file called access.ht, away from the repo.
-This is obviously not the moste secure solution.
+Your access tokens are stored in clear text in a file called access.ht, in the repo's directory.
+This is obviously not the most secure solution.
+The \*access-file\* variable controls the name and location of that file.
 
 ### Subsequent access
 

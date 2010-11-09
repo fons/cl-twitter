@@ -4,7 +4,7 @@
   (:use :cl :drakma :json :anaphora); :trivial-http)
   (:nicknames :cl-twitter :twit)
   (:export 
-
+   #:*access-file*
    #:*http-request-function*
    ;; Interactive API
    #:authenticate-user
