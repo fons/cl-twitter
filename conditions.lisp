@@ -29,10 +29,20 @@
 (defun parse-error-response (response code)
   (destructuring-bind (code short long) 
       (assoc code *code-messages*)
-    (cerror "Ignore response" 'twitter-api-condition 
-	    :code code
-	    :short short
-	    :long long
-	    :request (get-value :error response)
-	    :uri (get-value :request response))))
+    (handler-case 
+	(cerror "Ignore response" 'twitter-api-condition 
+		:code code
+		:short short
+		:long long
+		:request (get-value :error response)
+		:uri (get-value :request response))
+      (error (c)
+	(cerror "Ignore response" 'twitter-api-condition 
+		:code code
+		:short short
+		:long long 
+		:request "request not available"
+		:uri response )))))
 
+
+  

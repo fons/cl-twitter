@@ -1,16 +1,23 @@
 (in-package :twitter)
 
+;; debugging
+;;(setf drakma:*header-stream* *standard-output*)
+
 ;;
 ;; Main API
 ;;
+;;    ("X-Twitter-Client-URL" . "http://common-lisp.net/project/cl-twitter/"))
 
 (defvar *twitter-user*)
 
 (defvar *twitter-client-headers* 
   '(("X-Twitter-Client" . "CL-Twitter")
     ("X-Twitter-Client-Version" . "1.0")
-    ("X-Twitter-Client-URL" . "http://common-lisp.net/project/cl-twitter/"))
+    ("X-Twitter-Client-URL" . "http://github.com/fons/cl-twitter/"))
   "Default headers sent in requests")
+
+(defvar *dump-response* nil 
+  "dump the response to stdout on error")
 
 (defvar *twitter-client-source-param* "cltwitter"
   "The source value for posts; shows up in twitter web if as client id")
@@ -25,6 +32,17 @@
       (if (eq code 200)
 	  (parse-command-response response (command-return-type cmd))
 	  (parse-error-response response code)))))
+
+(defun id (x)
+  x)
+
+(defun dump-stream(stream)
+  (let ((seq (make-string 6000)))
+    (read-sequence seq stream)
+    seq))
+
+(defun read-it (stream)
+  (read-char stream ))
 
 (defun send-command (command args)
   (multiple-value-bind (method url auth post-params) (command-request-arguments command args)
@@ -49,7 +67,17 @@
 				  :user-parameters (plist->alist post-params)
 				  :drakma-args common-drakma-args)))))
 	     (setf socket response)
-	     (values (safe-decode-json response) code))
+	     (handler-case 
+		 (values (safe-decode-json response) code)
+	       (error (c)
+		 (progn
+		   (format t "an error was encountered : ~A ~%" c)
+		   (format t "code  : ~A ~%" code)
+		   (when *dump-response*
+		     (format t "response : {~A}~%" (dump-stream response)))
+		   (values response code)
+		   )
+		 ) ))
 	;; unwind-protect clean-up.  close the socket
 	(when socket
 	  (close socket))))))
@@ -186,35 +214,32 @@ the user has been logged in to Twitter via OAuth."
 (defun public-timeline (&rest args)
   (print-tweets (apply 'twitter-op :public-timeline args)))
 
-(defun timeline (&rest args)
+(defun friends-timeline (&rest args)
+  (print-tweets (apply 'twitter-op :friends-timeline args)))
+
+(defun user-timeline (&rest args)
   (print-tweets (apply 'twitter-op :user-timeline args)))
 
-(defun friends-timeline (&rest args)
-(define-command user-followers/ids (:get (:identity))
-    "http://twitter.com/followers/ids.json"
-    "Returns the authenticating user's friends, each with current status inline. They are ordered by the order in which they were added as friends. It's also possible to request another user's recent friends list via the id parameter below."
-  :id "Optional.  The ID or screen name of (the user for whom to request a list of friends."
-  :user_id "Optional.  The ID or screen name of (the user for whom to request a list of friends."
-  :screen_name "Optional.  The ID or screen name of (the user for whom to request a list of friends."
-  :page "Optional. Retrieves the next 5000 ids.")
+(defun mentions (&rest args)
+  (print-tweets (apply 'twitter-op :mentions args)))
 
-(define-command user-friends/ids (:get (:identity))
-    "http://twitter.com/friends/ids.json"
-    "Returns the authenticating user's friends, each with current status inline. They are ordered by the order in which they were added as friends. It's also possible to request another user's recent friends list via the id parameter below."
-  :id "Optional.  The ID or screen name of (the user for whom to request a list of friends."
-  :user_id "Optional.  The ID or screen name of (the user for whom to request a list of friends."
-  :screen_name "Optional.  The ID or screen name of (the user for whom to request a list of friends."
-  :page "Optional. Retrieves the next 5000 ids.")
-(print-tweets (apply 'twitter-op :friends-timeline args)))
+(defun retweeted-by-me (&rest args)
+  (print-tweets (apply 'twitter-op :retweeted-by-me args)))
+
+(defun retweeted-to-me (&rest args)
+  (print-tweets (apply 'twitter-op :retweeted-to-me args)))
+
+(defun tweet-show (id &rest args)
+  (print-tweet (apply 'twitter-op :tweet-show :id id args)))
 
 (defun send-tweet (text &rest args &key (tiny-url-p t) &allow-other-keys)
   (let ((newtext (if tiny-url-p (convert-to-tinyurl text) text)))
     (if (<= (length newtext) 140)
-	(let ((tweet (apply 'twitter-op :tweet-update :status newtext
-			    (rem-keywords args '(:tiny-url-p)))))
+	(let ((tweet (apply 'twitter-op :tweet-update :status newtext (rem-keywords args '(:tiny-url-p)))))
 	  (print-tweet tweet)
 	  tweet)
 	(error "Tweet updates must be less than 140 characters.  Length is ~A" (length newtext)))))
+
 
 (defun update (text &rest args)
   (apply 'send-tweet text args))
@@ -227,6 +252,17 @@ the user has been logged in to Twitter via OAuth."
                      (twitter-user-screen-name (tweet-user tweet))
 		     text)))
     (apply 'reply-to tweet fmt args)))
+
+(defun delete-tweet (tweet &rest args)
+  (print-tweet (apply 'twitter-op :tweet-delete :id (tweet-id tweet) args)))
+
+(defun retweet (tweet &rest args)
+  (print-tweet (apply 'twitter-op :retweet :id (tweet-id tweet) args)))
+
+(defun retweets (tweet &rest args)
+  (print-tweets (apply 'twitter-op :retweets :id (tweet-id tweet) args)))
+
+;;---------------------------------------------
 
 ;;
 ;; Messages
@@ -262,6 +298,9 @@ the user has been logged in to Twitter via OAuth."
 
 (defun trends (&rest args)
   (apply 'twitter-op :trends args))
+
+(defun current-trends (&rest args)
+  (apply 'twitter-op :current-trends args))
 
 (defun daily-trends (&rest args)
   (apply 'twitter-op :daily-trends args))

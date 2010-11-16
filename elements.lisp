@@ -311,6 +311,9 @@ If the user has been logged in via basic authorization, returns
 	      "none")
 	  (tweet-created-at tweet)))
 
+(defmethod print-tweet ((tweet (eql nil)))
+  ())
+
 (defmethod print-tweet (tweet)
   (format t "~A~%by ~A at ~A~%~%"
 	  (tweet-text tweet)
