@@ -4,6 +4,61 @@
   (:use :cl :drakma :json :anaphora); :trivial-http)
   (:nicknames :cl-twitter :twit)
   (:export 
+   ;;------revised api -------
+   ;;----lisp rest api ------
+   ;; Time line resources as per 
+   #:public-timeline
+   #:home-timeline
+   #:friends-timeline
+   #:user-timeline
+   #:mentions
+   #:retweeted-by-me
+   #:retweeted-to-me
+   #:retweets-of-me
+   ;;  Tweets resources
+   #:get-status
+   #:update-status
+   #:delete-status
+   #:retweet-status
+   #:status-retweets
+   #:status-retweeted-by
+   #:status-retweeted-by-ids
+   ;;  Tweets resources: app api
+   #:tweet?
+   #:send-tweet
+   #:reply-to
+   #:@reply-to
+   #:delete-tweet
+   #:retweet
+   #:retweets
+   #:retweeted-by
+   ;; Trends resources
+   #:trends
+   #:current-trends
+   #:daily-trends
+   #:weekly-trends
+   #:location-trends
+   #:trends@location
+   ;; Trends resources ap api
+   #:trending-locations
+
+   ;;  Direct Messages resources
+   :direct-messages-received
+   :direct-messages-sent
+   :send-direct-message
+   :delete-direct-message
+
+   ;;  Direct Messages resources api
+   #:send-message
+   #:delete-message
+   #:messages
+   #:sent-messages
+
+
+   ;;------------------------
+   ;;--------------------
+
+
    #:*access-file*
    #:*http-request-function*
    ;; Interactive API
@@ -16,21 +71,9 @@
    #:repl-authenticate-user
    #:get-authenticated-user
    ;; Updates
-   #:public-timeline
-   #:timeline
-   #:friends-timeline
    #:do-search
-   #:trends
-   #:daily-trends
-   #:weekly-trends
    ;; Actions
-   #:send-tweet
-   #:update
-   #:reply-to
-   #:@reply-to
-   #:messages
-   #:sent-messages
-   #:send-message
+
    ;; I/O
    #:print-tweets
    #:get-tinyurl

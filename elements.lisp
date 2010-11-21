@@ -219,20 +219,22 @@
   (profile-background-color "" nil)
   (profile-background-image-url "" nil)
   (profile-background-tile "" nil))
-  
-
-(defmethod print-object ((user twitter-user) stream)
-  (format stream "#<TWITTER-USER '~A'>" (twitter-user-screen-name user)))
 
 (defun get-user (ref)
   (when ref
     (if (twitter-user-p ref) ref
 	(aif (gethash ref *twitter-users*) it
-	     (twitter-op :user-show :id ref)))))
+	     (show-user ref)))))
+
 
 (defun lookup-twitter-user (rec)
   (let ((name (get-value :screen-name rec)))
     (gethash name *twitter-users*)))
+  
+
+(defmethod print-object ((user twitter-user) stream)
+  (format stream "#<TWITTER-USER '~A'>" (twitter-user-screen-name user)))
+
 
 (defmethod register-twitter-object ((user twitter-user))
   (setf (gethash (twitter-user-screen-name user) *twitter-users*) user))
@@ -271,96 +273,7 @@ If the user has been logged in via basic authorization, returns
   (format stream "Time Zone: ~A~%" (twitter-user-time-zone user)))
 
 
-;;
-;; Status/Tweet
-;;
 
-(define-element tweet ((user twitter-user))
-  "A status element consisting of information on a status and a nested
-   user element"
-  (id "" nil)
-  (contributors nil nil)
-  (created-at "" nil)
-  (text "" nil)
-  (source "" nil)
-  (truncated "" nil)
-  (favorited "" nil)
-  (in-reply-to-status-id "" nil)
-  (in-reply-to-user-id "" nil)
-  (in-reply-to-screen-name "" nil)
-  (geo "" nil)
-  (geo-enabled "" nil)
-  ;; embedded user
-  (user "" nil))
-
-(defmethod print-object ((tweet tweet) stream)
-  (format stream "#<TWEET '~A' id:~A>" 
-	  (if (tweet-user tweet)
-	      (twitter-user-screen-name (tweet-user tweet))
-	      "none")
-	  (tweet-id tweet)))
-
-(defmethod describe-object ((tweet tweet) stream)
-  (format stream "status: \"~A\"~%by: ~A (~A) on: ~A"
-	  (tweet-text tweet)
-	  (if (tweet-user tweet)
-	      (twitter-user-name (tweet-user tweet))
-	      "")
-	  (if (tweet-user tweet)
-	      (twitter-user-screen-name (tweet-user tweet))
-	      "none")
-	  (tweet-created-at tweet)))
-
-(defmethod print-tweet ((tweet (eql nil)))
-  ())
-
-(defmethod print-tweet (tweet)
-  (format t "~A~%by ~A at ~A~%~%"
-	  (tweet-text tweet)
-	  (twitter-user-screen-name (tweet-user tweet))
-	  (tweet-created-at tweet)))
-
-
-(defun lookup-tweet (rec)
-  #-allegro (declare (ignore rec))
-  nil)
-
-(defmethod register-twitter-object ((tweet tweet))
-  nil)
-
-
-;;
-;; Messages
-;;
-
-(define-element twitter-message ((sender twitter-user) (recipient twitter-user))
-  "This is a twitter message record"
-  (id "" nil)
-  (created-at "" nil)
-  (text "" nil)
-  (sender-id "" nil)
-  (sender-screen-name "" nil)
-  (recipient-id "" nil)
-  (recipient-screen-name "" nil)
-  (sender "" nil)
-  (recipient "" nil))
-
-(defmethod print-object ((msg twitter-message) stream)
-  (format stream "#<message '~A' id:~A>" 
-	  (twitter-message-sender-screen-name msg)
-	  (twitter-message-id msg)))
-
-(defmethod describe-object ((msg twitter-message) stream)
-  (format stream "~A: ~A" 
-	  (twitter-message-sender-screen-name msg)
-	  (twitter-message-text msg)))
-
-(defun lookup-message (rec)
-  #-allegro (declare (ignore rec))
-  nil)
-
-(defmethod register-twitter-object ((msg twitter-message))
-  nil)
 
 ;;
 ;; Search results
@@ -417,7 +330,6 @@ If the user has been logged in via basic authorization, returns
 (defmethod print-object ((ref search-ref) stream)
   (format stream "#<TWITTER-SEARCH-REF '~A'>" (search-ref-from-user ref)))
 
-
 (defun lookup-search-ref (rec)
   (declare (ignore rec)))
 
@@ -427,3 +339,7 @@ If the user has been logged in via basic authorization, returns
 	  (search-ref-text ref)))
 
 (defmethod register-twitter-object ((ref search-ref)))
+
+
+
+

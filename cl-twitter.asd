@@ -13,11 +13,18 @@
     :licence "LLGPL"
     :description "A simple interface to Twitter"
     :components ((:file "package")
+		 (:file "twitter-vars")
 		 (:file "utils")
+		 (:file "url-shortners")
 		 (:file "elements")
 		 (:file "commands")
 		 (:file "dictionary")
 		 (:file "conditions")
+		 (:file "twitter-op")
+		 (:file "twitter-user")
+		 (:file "twitter-timeline")
+		 (:file "twitter-tweet-status")
+		 (:file "twitter-trends")
 		 (:file "serialize-access")
 		 (:file "twitter"))
     :serial t

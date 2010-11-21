@@ -49,6 +49,15 @@
 	(setf (gethash lisp-key *lisp->twitter-symbols*) twitter-sym
 	      (gethash twitter-sym *twitter->lisp-symbols*) lisp-key)))))
 
+(defun maybe-add-conversion-from-twitter (twitter-sym)
+  "Add a conversion between _ and - forms of argument symbols starting with a twitter symbol"
+  (let* ((twitter-key (as-keyword twitter-sym))
+	 (twitter-name (symbol-name twitter-key)))
+    (when (find #\_ twitter-name)
+      (let ((lisp-key (intern (convert-from-twitter twitter-name) :keyword)))
+	(setf (gethash lisp-key *lisp->twitter-symbols*) twitter-sym
+	      (gethash twitter-sym *twitter->lisp-symbols*) lisp-key)))))
+
 (defun convert-to-twitter (string)
   (intern (string-upcase (substitute #\_ #\-  (copy-seq string))) :keyword))
 
@@ -56,6 +65,12 @@
   (string-upcase (substitute #\- #\_ (copy-seq string))))
 
 (defun rem-keywords (list keywords)
+  "Remove keywords from a keylist"
+  (loop for (value indicator) on list by #'cddr
+	unless (member value keywords)
+	  nconc (list value indicator)))
+
+(defun rem-nil-keywords (list keywords)
   "Remove keywords from a keylist"
   (loop for (value indicator) on list by #'cddr
 	unless (member value keywords)

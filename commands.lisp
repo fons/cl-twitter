@@ -12,6 +12,30 @@
   (format stream "#<TWITTER-CMD '~A'>" (command-name cmd)))
 
 ;;
+;; The commands are defined in terms of twitter symbols i.e. a literal rendition
+;; of the twitter api args. I want to convert those to lisp commands..
+;;
+
+(defun add-conversions-from-twitter (args)
+    "Add twitter->lisp conversions for define-element args"
+    (progn
+      (mapcar #'maybe-add-conversion-from-twitter (mapcar #'car args))
+      args))
+
+;;;-> plist->alist gives :
+;;((:TRIM_USER
+;;  . "When set to either true, t or 1, each tweet returned in a timeline will include a user object including only the status authors numerical ID. Omit this parameter to receive the complete user object.")
+;; (:INCLUDE_ENTITIES
+;;  . "When set to either true, t or 1, each tweet will include a node called entities. "))
+
+;;(command-argmap (get-command :statuses/public-timeline))
+;;(gethash :TO-USER *lisp->twitter-symbols*)
+
+;;
+;;(maphash (lambda (k v) (format t "~A->~A~%" k v)) *lisp->twitter-symbols*)
+;;
+
+;;
 ;; Command definition macro
 ;;
 
@@ -33,7 +57,7 @@
 	      :return-type ',return-type
 	      :base-url ,base-url
 	      :description ,description
-	      :argmap ',(plist->alist args))))))
+	      :argmap ',(add-conversions-from-twitter (plist->alist args)))))))
 
 ;;
 ;; Command API
@@ -67,6 +91,15 @@
 (defun argument-help (argument)
   (format t "  ~A: ~A~%" (car argument) (cdr argument)))
 
+;;; HERE 
+;;; Fix args here...
+;;; reason for this when using the api calls with &rest args an extra nil is passed in
+;;;
+(defun fix-args (args)
+  (if (eql 1 (mod (length args) 2)) 
+      (nreverse (cons nil (nreverse args )))
+      args))
+
 (defun command-request-arguments (command args)
   "A command reference and a plist of arguments.
    Returns multiple values: url auth post-params parse-type"
@@ -75,13 +108,14 @@
     (let ((newargs (lisp->twitter-plist args)))
       (case (command-method cmd)
 	(:get (get-command-request cmd newargs))
-	(:post (post-command-request cmd newargs))
+	(:post (post-command-request cmd (fix-args newargs)))
 	(:get-id (get-id-command-request cmd newargs))
 	(:post-id (post-id-command-request cmd newargs))))))
 
 ;;
 ;; URI generators
 ;;
+
 
 (defun get-command-request (cmd args)
   (values 
