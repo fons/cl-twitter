@@ -157,7 +157,7 @@
 (define-command friendships/outgoing (:get :identity)
     (twitter-app-uri "friendships/outgoing.json")
     "Returns an array of numeric IDs for every protected user for whom the authenticating user has a pending follow request."
-    :cursor "Breaks the results into pages. This is recommended for users who are following many users. Provide a value of -1 to begin paging.")
+  :cursor "Breaks the results into pages. This is recommended for users who are following many users. Provide a value of -1 to begin paging.")
 ;; Provide values as returned in the response body's next_cursor and previous_cursor attributes to page back and forth in the list.
 
 
