@@ -6,6 +6,7 @@
   (:export 
    ;;------revised api -------
    ;;----lisp rest api ------
+
    ;; Time line resources as per 
    #:public-timeline
    #:home-timeline
@@ -15,6 +16,7 @@
    #:retweeted-by-me
    #:retweeted-to-me
    #:retweets-of-me
+
    ;;  Tweets resources
    #:get-status
    #:update-status
@@ -32,6 +34,7 @@
    #:retweet
    #:retweets
    #:retweeted-by
+
    ;; Trends resources
    #:trends
    #:current-trends
@@ -47,15 +50,76 @@
    :direct-messages-sent
    :send-direct-message
    :delete-direct-message
-
    ;;  Direct Messages resources api
    #:send-message
    #:delete-message
    #:messages
    #:sent-messages
 
+   ;;  Favorites resources
+   #:favorites
+   #:create-favorite
+   #:delete-favorite
+   ;;  Favorites resources api
+   #:favor-tweet
+   #:unfavor-tweet
 
-   ;;------------------------
+   ;; Block resources
+   #:create-block
+   #:remove-block
+   #:blocks
+   #:blocked-user-ids
+   ;; Block resources api
+   #:is-blocked?
+
+   ;;   Account resources : partially supported
+   #:verify-credentials
+   #:rate-limit-status
+   #:end-session
+   #:update-profile-colors
+   #:update-profile
+
+
+   ;; User resources
+   #:show-user
+   #:show-user-by-id
+   #:lookup-users
+   #:search-users
+   ;;cursors not supported
+   #:friends-statuses
+   ;; cursors not supported
+   #:followers-statuses
+
+   ;; Friendship Methods
+   #:follow
+   #:unfollow
+   #:user-a-following-user-b?
+   #:follower-relationship
+   ;; cursors not supported
+   #:incoming-follow-requests
+   ;; cursors not supported
+   #:outgoing-follow-requests 
+
+   ;; Saved Searches resources
+   
+   #:saved-searches
+   #:saved-search
+   #:save-search
+   #:delete-search
+   ;; Saved Searches resources api
+   #:show-search
+   #:rm-search
+
+   ;; Social Graph Methods
+   ;;  Friends and Followers resources :
+   #:friend-ids
+   #:follower-ids
+
+   ;;  Friends and Followers resources api:
+   #:with-cursor
+   #:collect-followers
+   #:collect-friends
+
    ;;--------------------
 
 
@@ -165,7 +229,59 @@
    #:search-ref-iso-language-code
    #:search-ref-profile-image-url
 
+
+   ;;Rate Limit
+   #:rate-limit-reset-time
+   #:rate-limit-reset-time-in-seconds
+   #:rate-limit-remaining-hits
+   #:rate-limit-hourly-limit
+
+   ;;End Session
+   #:end-session-request
+   #:end-session-error
+
+   ;;place type
+   #:place-type-code
+   #:place-type-name
+
+   ;;place 
+   #:place-ural
+   #:place-placetype
+   #:place-country
+   #:place-woeid
+   #:place-name
+
+   ;;trend
+   #:trend-url
+   #:trend-query
+   #:trend-promoted-content
+   #:trend-events
+   #:trend-name
+
+   ;;trend list
+   #:trend-list-created-at
+   #:trend-list-locations
+   #:trend-list-trends
+   #:trend-list-as-of
+
+   ;;saved search
+   #:saved-search-id
+   #:saved-search-query
+   #:saved-search-created-at
+   #:saved-search-id-str
+   #:saved-search-name
+   #:saved-search-position
+
+   ;; social graph ;Friends and Followers resources :
+   #:cursor-id-id
+   #:cursor-id-next-cursor-str
+   #:cursor-id-next-cursor
+   #:cursor-id-previous-cursor-str
+   #:cursor-id-previous-cursor
+   #:cursor-id-ids
+
    ;; conditions
    #:return-code))
+
    
 

@@ -28,6 +28,6 @@
 		 (:file "serialize-access")
 		 (:file "twitter"))
     :serial t
-    :depends-on (:cl-json :trivial-http :drakma :anaphora :cl-ppcre :closer-mop :cl-oauth))
+    :depends-on (:cl-json :trivial-http :drakma :anaphora :cl-ppcre :closer-mop :cl-oauth :cl-rewrite))
 
 

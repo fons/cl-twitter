@@ -73,7 +73,7 @@
 (defun rem-nil-keywords (list keywords)
   "Remove keywords from a keylist"
   (loop for (value indicator) on list by #'cddr
-	unless (member value keywords)
+	unless (and (member value keywords) (null indicator))
 	  nconc (list value indicator)))
 
 
@@ -140,8 +140,13 @@
     (string (intern sym package))
     (symbol (intern (symbol-name sym) package))))
 
+;;(defun to-uri-param (arg escape-p)
+;;  (if escape-p 
+;;      (trivial-http:escape-url-query 
+;;       (princ-to-string arg))
+;;      (princ-to-string arg)))
+
 (defun to-uri-param (arg escape-p)
   (if escape-p 
-      (trivial-http:escape-url-query 
-       (princ-to-string arg))
+      (url-rewrite:url-encode (princ-to-string arg))
       (princ-to-string arg)))

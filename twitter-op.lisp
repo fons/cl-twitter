@@ -48,8 +48,15 @@
 
 
 (defun send-command (command args)
+  ;;(format t "command {~A} args : {~A} ~%" command args)
   (multiple-value-bind (method url auth post-params) (command-request-arguments command args)
     (let ((socket nil))
+      ;;(progn
+	;;(format t "args : {~A} ~%" args)
+	;;(format t "post params : {~A} ~%" post-params)
+	;;(format t "method : {~A} ~%" method)
+	;;(format t "url : {~A} ~%" url)
+	;;(format t "act post params : {~A} ~%" (plist->alist post-params)))
       (unwind-protect
 	   (multiple-value-bind (response code)
 	       (destructuring-bind (&optional auth-method &rest auth-spec) (or auth  (user-http-auth *twitter-user*))
@@ -59,7 +66,7 @@
 			      :external-format-out :utf-8)))
 		   (if (member auth-method '(nil :basic-authorization))
 		       (apply *http-request-function*
-			      url
+			      (puri:parse-uri url)
 			      :method method
 			      :basic-authorization auth-spec
 			      :parameters (plist->alist post-params)
@@ -87,7 +94,7 @@
 
 
 (defmethod twitter-op (command &rest args)
-  (format t "command : [~S] [~s]~%" command args)
+  ;;(format t "command : [~S] [~s]~%" command args)
   (let ((cmd (get-command command)))
     (multiple-value-bind (response code)
 	(send-command cmd (lisp->twitter-plist args))

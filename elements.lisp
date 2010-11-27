@@ -99,9 +99,11 @@
 
 (defun parse-element-record (type rec embedded unique-p)
   "Generic parsing function"		     
+  ;;(format t "*) ~A:~A:~A:~A~%" type rec embedded unique-p)
   (let* ((lisprec (twitter->lisp-alist rec))
 	 (existing (when (fboundp (lookup-fn-name type))
 		     (funcall (lookup-fn-name type) lisprec))))
+    ;;(format t "~S:~A~%" lisprec existing)
     (if existing
 	(prog1 existing
 	  (unless unique-p ;; maintains eq, but refreshes values
@@ -112,15 +114,20 @@
 	  (register-twitter-object new)
 	  new))))
 
+
 (defun default-make-element (rec type)
   "Make an element of type from record."
+  ;;(format t "=====> ~S:~S <<====~%" rec type)
   (let* ((valid-initargs (mapcar (lambda (slot)
 				   (intern (symbol-name (closer-mop:slot-definition-name slot)) :keyword))
 				 (closer-mop:class-direct-slots (find-class type))))
-	 (apply-args (alist->plist (remove-if-not #'(lambda (initarg) (member initarg valid-initargs))
-						  rec :key #'car))))
-    #+nil
-    (format t "Making element: ~A ~S~%" apply-fn apply-args)
+	 (apply-args (alist->plist (remove-if-not #'(lambda (initarg)
+						      (progn
+							;;(format t "[~S]~%" initarg)
+							(member initarg valid-initargs))) rec :key #'car))))
+    ;;#+nil
+    ;;(format t "valid : ~S - apply ~S ~%" valid-initargs apply-args)
+    ;;(format t "Making element: ~A ~S~%" type apply-args)
     (apply #'make-instance type apply-args)))
 
 (defun update-element-fields (element rec)
@@ -135,11 +142,14 @@
 (defun create-embedded-elements (elt embedded)
   "For any slot value that is designated embedded, take the alist
    and create an instance of that embedded object"
+  ;;(format t "***) ~A:~A~%" elt embedded)
   (when (stringp (slot-value elt 'id))
     (setf (slot-value elt 'id)
 	  (parse-integer (slot-value elt 'id))))
   (loop for (argname type) in embedded do
        (let ((value (slot-value elt argname)))
+	 ;;(format t "***??) ~A:~A~%" elt argname)
+	 ;;(format t "-----> value : ~A~%" value)
 	 (when value
 	   (setf (slot-value elt argname)
 		 (parse-embedded-element type value))))))
@@ -180,65 +190,6 @@
 (defvar *twitter-users* (make-hash-table :test #'equal)
   "A hash of previously seen users to avoid re-parsing")
 
-(define-element twitter-user ((status tweet)) 
-  "This is the record for a twitter user; it stores both basic 
-     and extended info."
-  (id "A permanent unique id referencing an object, such as user or status" nil)
-  (name "" nil)
-  (screen-name "" nil)
-  (password "" nil)
-  (access-token nil nil)
-  (description "" nil)
-  (location "" nil)
-  (profile-image-url "" nil)
-  (url "" nil)
-  (protected "" nil)
-  (verified "" nil)
-  (verified-profile "" nil)
-  (contributors-enabled nil nil)
-  (lang nil nil)
-  ;; Embedded status
-  (status "" nil)
-  ;; Extended
-  (geo "" nil)
-  (geo-enabled "" nil)
-  (created-at "" nil)
-  (following "" nil)
-  (followers-count "" nil)
-  (statuses-count "" nil)
-  (friends-count "" nil)
-  (favourites-count "" nil)
-  (notifications "" nil)
-  (utc-offset "" nil)
-  (time-zone "" nil)
-  (profile-text-color "" nil)
-  (profile-link-color "" nil)
-  (profile-sidebar-color "" nil)
-  (profile-sidebar-border-color "" nil)
-  (profile-sidebar-fill-color "" nil)
-  (profile-background-color "" nil)
-  (profile-background-image-url "" nil)
-  (profile-background-tile "" nil))
-
-(defun get-user (ref)
-  (when ref
-    (if (twitter-user-p ref) ref
-	(aif (gethash ref *twitter-users*) it
-	     (show-user ref)))))
-
-
-(defun lookup-twitter-user (rec)
-  (let ((name (get-value :screen-name rec)))
-    (gethash name *twitter-users*)))
-  
-
-(defmethod print-object ((user twitter-user) stream)
-  (format stream "#<TWITTER-USER '~A'>" (twitter-user-screen-name user)))
-
-
-(defmethod register-twitter-object ((user twitter-user))
-  (setf (gethash (twitter-user-screen-name user) *twitter-users*) user))
-
 (defun user-http-auth (user)
   "If the given USER has no login credentials, returns NIL.  If the
 user has been logged in via OAUTH, returns
@@ -257,23 +208,6 @@ If the user has been logged in via basic authorization, returns
 		  (twitter-user-screen-name user)
 		  (twitter-user-password user)))
 	   (t (cerror "Continue" "User has no auth credentials: ~S" user)))))
-
-(defmethod describe-object ((user twitter-user) stream)
-  (format stream "Name: ~A ('~A') id:~A~%" 
-	  (twitter-user-name user)
-	  (twitter-user-screen-name user)
-	  (twitter-user-id user))
-  (format stream "Created at: ~A~%" (twitter-user-created-at user))
-  (format stream "Description: ~A~%" (twitter-user-description user))
-  (format stream "Counts: friends ~A, followers ~A, statuses ~A~%" 
-	  (twitter-user-friends-count user)
-	  (twitter-user-followers-count user)
-	  (twitter-user-statuses-count user))
-  (format stream "Location: ~A~%" (twitter-user-location user))
-  (format stream "Time Zone: ~A~%" (twitter-user-time-zone user)))
-
-
-
 
 ;;
 ;; Search results

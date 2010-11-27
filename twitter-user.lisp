@@ -1,5 +1,79 @@
 (in-package :twitter)
 
+
+(define-element twitter-user ((status tweet)) 
+  "This is the record for a twitter user; it stores both basic 
+     and extended info."
+  (id "A permanent unique id referencing an object, such as user or status" nil)
+  (name "" nil)
+  (screen-name "" nil)
+  (password "" nil)
+  (access-token nil nil)
+  (description "" nil)
+  (location "" nil)
+  (profile-image-url "" nil)
+  (url "" nil)
+  (protected "" nil)
+  (verified "" nil)
+  (verified-profile "" nil)
+  (contributors-enabled nil nil)
+  (lang nil nil)
+  ;; Embedded status
+  (status "" nil)
+  ;; Extended
+  (geo "" nil)
+  (geo-enabled "" nil)
+  (created-at "" nil)
+  (following "" nil)
+  (followers-count "" nil)
+  (statuses-count "" nil)
+  (friends-count "" nil)
+  (favourites-count "" nil)
+  (notifications "" nil)
+  (utc-offset "" nil)
+  (time-zone "" nil)
+  (profile-text-color "" nil)
+  (profile-link-color "" nil)
+  (profile-sidebar-color "" nil)
+  (profile-sidebar-border-color "" nil)
+  (profile-sidebar-fill-color "" nil)
+  (profile-background-color "" nil)
+  (profile-background-image-url "" nil)
+  (profile-background-tile "" nil))
+
+(defun get-user (ref)
+  (when ref
+    (if (twitter-user-p ref) ref
+	(aif (gethash ref *twitter-users*) it
+	     (show-user ref)))))
+
+
+(defun lookup-twitter-user (rec)
+  (let ((name (get-value :screen-name rec)))
+    (gethash name *twitter-users*)))
+  
+
+(defmethod print-object ((user twitter-user) stream)
+  (format stream "#<TWITTER-USER '~A'>" (twitter-user-screen-name user)))
+
+
+(defmethod register-twitter-object ((user twitter-user))
+  (setf (gethash (twitter-user-screen-name user) *twitter-users*) user))
+
+(defmethod describe-object ((user twitter-user) stream)
+  (format stream "Name: ~A ('~A') id:~A~%" 
+	  (twitter-user-name user)
+	  (twitter-user-screen-name user)
+	  (twitter-user-id user))
+  (format stream "Created at: ~A~%" (twitter-user-created-at user))
+  (format stream "Description: ~A~%" (twitter-user-description user))
+  (format stream "Counts: friends ~A, followers ~A, statuses ~A~%" 
+	  (twitter-user-friends-count user)
+	  (twitter-user-followers-count user)
+	  (twitter-user-statuses-count user))
+  (format stream "Location: ~A~%" (twitter-user-location user))
+  (format stream "Time Zone: ~A~%" (twitter-user-time-zone user)))
+
 ;;
 ;; User resources
 ;;   users/show
@@ -7,7 +81,7 @@
 ;;   users/search
 ;;   users/suggestions
 ;;   users/suggestions/twitter
-;;   users/profile_image/twitter
+;;   users/profile_image/twitter X
 ;;   statuses/friends
 ;;   statuses/followers
 
@@ -61,7 +135,7 @@
 ;;This method must not be used as the image source URL presented to users of your application.
 ;; Doesn't work with twitter-op because it doesn't return json.
 
-(define-command users/profile-image/?screen_name (:get-id (:identity) )
+(define-command users/profile-image/?screen-name (:get-id (:identity) )
     (twitter-app-uri "users/profile_image/<id>.json")
     "Access the profile image in various sizes for the user with the indicated screen_name. "
   :id   "Required ; screen name of the user" 
@@ -71,6 +145,7 @@
 
 ;; TODO : cursor doesn't work : this does not return a "twitter-user" list.
 ;; Probably better to create a seperate 'cursor' command ?
+;;(define-command statuses/friends (:get :identity )
 (define-command statuses/friends (:get (:twitter-user) )
     (twitter-app-uri "statuses/friends.json")
     "Returns the authenticating user's friends, each with current status inline. They are ordered by the order in which they were added as friends. 
@@ -93,24 +168,33 @@
 
 ;; ---level 1 api --------------------------------
 
-(defun show-user (screen-name &rest args)
+(defun show-user (screen-name &rest args &key (user-id nil) (include-entities nil) )
+  (declare (ignore user-id include-entities))
   (apply 'twitter-op :users/show :screen_name screen-name  args))
 
-(defun show-user-by-id (user-id &rest args)
+(defun show-user-by-id (user-id &rest args &key (screen-name nil) (include-entities nil) )
+  (declare (ignore screen-name include-entities))
   (apply 'twitter-op :users/show :user_id user-id  args))
 
 ;; probably should built in some resiliency in that the user can pass in a list ??
-(defun lookup-users (screen-names user-ids)
-  (apply 'twitter-op :users/lookup :user_id user-ids :screen_name screen-names  args))
+(defun lookup-users (screen-names &rest args &key (user-id nil) (include-entities nil) )
+  (declare (ignore user-id include-entities))
+  (apply 'twitter-op :users/lookup :screen-name screen-names args))
 
 ;; does the query need to be url encoded ????
-(defun search-users (query)
+;; used url-rewrite for encoding; gets same result set as twitter for simple name queries..
+;;
+(defun search-users (query &rest args &key (per-page nil) (page nil) (include-entities nil) )
+  (declare (ignore per-page page include-entities))
   (apply 'twitter-op :users/search :q query  args))
 
-(defun friends-statuses (&rest args)
+;; cursor not supported
+(defun friends-statuses (&rest args &key (user-id nil) (screen-name nil) (include-entities nil) )
+  (declare (ignore  user-id screen-name include-entities))
   (apply 'twitter-op :statuses/friends  args))
 
-(defun follower-statuses (&rest args)
+(defun followers-statuses (&rest args &key (user-id nil) (screen-name nil) (include-entities nil) )
+  (declare (ignore user-id screen-name include-entities))
   (apply 'twitter-op :statuses/followers  args))
 
 ;;--------------------------------------------------------------

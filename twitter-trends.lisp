@@ -1,7 +1,7 @@
 (in-package :twitter)
 
-;;;---> define place element with a place type embedded in it..
-
+;;---> define place element with a place type embedded in it..
+;;
 (define-element place-type ()
   "a place type"
   (id   "" nil)

@@ -124,6 +124,7 @@
    (or (getf args :auth) (user-http-auth (get-user (getf args :user nil))))
    nil))
 
+
 (defun get-id-command-request (cmd args)
   (multiple-value-bind (method url auth)
       (get-command-request cmd (strip-keyword :id args))
