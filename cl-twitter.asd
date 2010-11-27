@@ -25,9 +25,15 @@
 		 (:file "twitter-timeline")
 		 (:file "twitter-tweet-status")
 		 (:file "twitter-trends")
+		 (:file "twitter-social-graph")
+		 (:file "twitter-account")
+		 (:file "twitter-blocks") 
 		 (:file "serialize-access")
+		 (:file "twitter-messages")
+		 (:file "twitter-friendship")
+		 (:file "twitter-saved-searches")
 		 (:file "twitter"))
     :serial t
-    :depends-on (:cl-json :trivial-http :drakma :anaphora :cl-ppcre :closer-mop :cl-oauth :cl-rewrite))
+    :depends-on (:cl-json :trivial-http :drakma :anaphora :cl-ppcre :closer-mop :cl-oauth :url-rewrite))
 
 

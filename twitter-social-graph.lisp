@@ -82,7 +82,14 @@
   `(let ,(loop for n in names collect `(,n (gensym)))
      ,@body))
 
-(defmacro with-cursor ((&key (max -1) (collector #'identity) (skip 0) (controller #'cursor-id-next-cursor))  &rest body)
+
+;;
+;; A quick nore on the controller : ordinarily I would have set the controllor default to
+;; cursor-id-next-cursor. Unfortunatly that leads to an error message in sbcl because the
+;; defintion for generic methods cannot be dumped into fasl files.
+;; Hence this work-around...
+;;
+(defmacro with-cursor ((&key (max -1) (collector #'identity) (skip 0) (controller nil) )  &rest body)
      (with-gensyms ($max $skip fn kargs _cursor_ args cursor-id fn_ args_)
        `(macrolet ((unpack$ ( (,fn_ &rest ,args_) )
 		     `(values (quote ,,fn_) (list ,@,args_))))
@@ -97,7 +104,9 @@
 		      (if (zerop ,$skip)
 			  (funcall ,collector (cursor-id-ids ,cursor-id))
 			  (decf ,$skip))
-		      (setf ,_cursor_ (funcall ,controller ,cursor-id)))))))))))
+		      (if (null ,controller)
+ 			   (setf ,_cursor_ (cursor-id-next-cursor ,cursor-id) )
+			   (setf ,_cursor_ (funcall ,controller ,cursor-id))))))))))))
 
 (defun collect-followers (screen-name)
   (let ((lst))
