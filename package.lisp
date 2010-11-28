@@ -120,6 +120,12 @@
    #:collect-followers
    #:collect-friends
 
+   ;;  Search resources
+   #:twitter-search
+
+   ;;  Search resources api
+   #:with-paging
+   #:do-search 
    ;;--------------------
 
 
@@ -153,6 +159,7 @@
    #:list-commands
    #:command-help
    #:element-help
+
    ;; User Element
    #:twitter-user
    #:twitter-user-id
@@ -228,7 +235,9 @@
    #:search-ref-created-at
    #:search-ref-iso-language-code
    #:search-ref-profile-image-url
-
+   ;; Search Meta Data
+   #:search-ref-metadata-result-type
+   #:search-ref-metadata-recent-retweets
 
    ;;Rate Limit
    #:rate-limit-reset-time

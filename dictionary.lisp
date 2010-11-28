@@ -238,34 +238,3 @@
 ;;  The Twitter Streaming API allows high-throughput near-realtime access to various subsets of public and protected Twitter data. 
 ;;  Developers are strongly encouraged to read all of the documentation linked to by this document thoroughly.
 
-;; 
-;; SEARCH API
-;;
-;;
-;;  Search resources
-;;         search
-
-(define-command search (:get :search-result)
-    (twitter-search-uri "search.json")
-    "Returns tweets that match a specified query."
-  :q "Required. The search string"
-  :callback "Only available for JSON format. If supplied, the response will use the JSONP format with a callback of the given name."
-  :lang "Restricts tweets to a particular language given by an ISO 639-1 code."
-  :locale "Specify the language of the query you are sending (only ja is currently effective). "
-  :rpp "The number of tweets to return per page, up to 100."
-  :page "The page number."
-  :since_id "Returns tweets with status ids greater than the given id"
-  :geocode "Returns tweets by users located within a given radius of the given
-            latitude/longitude, where the user's location is taken from their 
-            Twitter profile.  The parameter value is specified by
-            'latitude, longitude, radius' where radius units must be
-            specified as either miles or kilometers"
-  :show-user "When 'true' adds '<user>:' to the beginning of the tweet.  This is
-              useful for readers that do not display Atom's author field.  The
-              default is 'false'"
-  :result_type "Optional. Specifies what type of search results you would prefer to receive. The current default is 'mixed.' 
-                Valid values include:
-                             mixed: Include both popular and real time results in the response.
-                             recent: return only the most recent results in the response
-                             popular: return only the most popular results in the response.")
-

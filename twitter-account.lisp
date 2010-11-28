@@ -23,6 +23,10 @@
 
 (defmethod register-twitter-object ((ref rate-limit)))
 
+(defun rate-limit-exceeded ()
+  (let ((rls (rate-limit-status)))
+    (zerop (rate-limit-remaining-hits rls))))
+
 ;; end session element
 ;;((:REQUEST . "/1/account/end_session.json") (:ERROR . "Logged out."))
 

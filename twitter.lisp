@@ -96,14 +96,6 @@ the user has been logged in to Twitter via OAuth."
 
 (defun print-tweets (tweets)
   (mapc #'print-tweet tweets))
-;;
-;; Search API
-;;
-
-(defun do-search (query &rest args)
-  (let ((result (apply 'twitter-op :search :q query args)))
-    (values (search-results result) result)))
-
 
 
   

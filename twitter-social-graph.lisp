@@ -89,7 +89,9 @@
 ;; defintion for generic methods cannot be dumped into fasl files.
 ;; Hence this work-around...
 ;;
-(defmacro with-cursor ((&key (max -1) (collector #'identity) (skip 0) (controller nil) )  &rest body)
+
+;;max and skip refer to pages (of 5000 each) !!
+(defmacro with-cursor ((&key (max -1) (collector #'identity) (skip 0) (controller nil) (test (lambda() nil) ))  &rest body)
      (with-gensyms ($max $skip fn kargs _cursor_ args cursor-id fn_ args_)
        `(macrolet ((unpack$ ( (,fn_ &rest ,args_) )
 		     `(values (quote ,,fn_) (list ,@,args_))))
@@ -98,7 +100,7 @@
 	      (let ((,$max (+ 1 ,max ,skip))
 		    (,$skip ,skip)
 		    (,_cursor_ (or cursor -1)))
-		(do () ((or (zerop ,_cursor_) (zerop (decf ,$max))))
+		(do () ((or (zerop ,_cursor_) (zerop (decf ,$max)) (funcall ,test)))
 		  (progn
 		    (let ((,cursor-id (funcall ,fn ,args :cursor ,_cursor_)))
 		      (if (zerop ,$skip)
@@ -112,13 +114,13 @@
   (let ((lst))
     (labels ((collect-it (l)
 	       (setf lst (nconc lst l))))
-      (with-cursor (:collector #'collect-it) (follower-ids screen-name)))
+      (with-cursor (:collector #'collect-it :test #'rate-limit-exceeded ) (follower-ids screen-name)))
     lst))
 
 (defun collect-friends (screen-name)
   (let ((lst))
     (labels ((collect-it (l)
 	       (setf lst (nconc lst l))))
-      (with-cursor (:collector #'collect-it) (friend-ids screen-name)))
+      (with-cursor (:collector #'collect-it :test #'rate-limit-exceeded ) (friend-ids screen-name)))
     lst))
     
