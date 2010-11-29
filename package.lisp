@@ -121,7 +121,7 @@
    #:collect-friends
 
    ;;  Search resources
-   #:twitter-search
+   #:search-twitter
 
    ;;  Search resources api
    #:with-paging
