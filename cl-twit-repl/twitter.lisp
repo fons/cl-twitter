@@ -31,7 +31,6 @@ redirected to the web page specified on the https://twitter.com/apps page for th
 (defun oauth-authenticate-user (request-token)
   "Called after the user has been redirected to some page on a twitter app's web site with a `oauth_token=<request-token-string>' parameter.
 Authenticates the user as if by AUTHENTICATE-USER.
-
 If REQUEST-TOKEN is a string, we look up the CL-OAUTH:REQUEST-TOKEN in the *REQUEST-TOKEN-CACHE* list.  Otherwise, if it is a
 CL-OAUTH:REQUEST-TOKEN already, we use that to authorize the request token and then obtain an OAuth access token.  Once this is obtained,
 the user has been logged in to Twitter via OAuth."
@@ -84,8 +83,7 @@ the user has been logged in to Twitter via OAuth."
 
 ;;	(twitter-op :users/show :user_id user-id  :auth (list :oauth access-token))))
 
-(defun authenticated-user ()
-  *twitter-user*)
+(defun authenticated-user () *twitter-user*)
 
 
 ;;---------------------------------------------
