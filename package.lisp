@@ -117,8 +117,8 @@
 
    ;;  Friends and Followers resources api:
    #:with-cursor
-   #:collect-followers
-   #:collect-friends
+   #:collect-follower-ids
+   #:collect-friend-ids
 
    ;;  Search resources
    #:search-twitter
@@ -126,8 +126,34 @@
    ;;  Search resources api
    #:with-paging
    #:do-search 
-   ;;--------------------
 
+   ;; Notification resources
+   #:follow-notification
+   #:leave-notification
+
+   ;; miscellaneous resources
+   #:twitter-test
+   #:twitter-terms-of-service
+   #:twitter-privacy
+   #:report-spam
+
+   ;; Notification resources
+   #:follow-notification
+   #:leave-notification
+
+   ;; Geo resources
+   
+   #:geo-query
+   #:geo-similar-places
+   #:geo-reverse-geocode
+   #:geo-place-by-id
+   #:geo-register-place
+
+   ;; Geo resources api :
+   #:geo-print-places
+   #:geo-token
+
+   ;;--------------------
 
    #:*access-file*
    #:*http-request-function*
@@ -141,8 +167,6 @@
    #:repl-authenticate-user
    #:get-authenticated-user
    ;; Updates
-   #:do-search
-   ;; Actions
 
    ;; I/O
    #:print-tweets
@@ -288,6 +312,47 @@
    #:cursor-id-previous-cursor-str
    #:cursor-id-previous-cursor
    #:cursor-id-ids
+
+   ;;geo resources
+   
+   #:geo-coordinate-id
+   #:geo-coordinate-long
+   #:geo-coordinate-lat
+
+   #:geo-bounding-box-id
+   #:geo-bounding-box-coordinates
+   #:geo-bounding-box-type
+
+   #:geo-query-id
+   #:geo-query-type
+   #:geo-query-params
+   #:geo-query-url
+
+   #:geo-result-id
+   #:geo-result-result
+   #:geo-result-query
+
+   #:geo-places-id
+   #:geo-places-token
+   #:geo-places-places
+
+   #:geo-place-id
+   #:geo-place-code
+   #:geo-place-name
+   #:geo-place-attributes
+   #:geo-place-url
+   #:geo-place-place-type
+   #:geo-place-full-name
+   #:geo-place-country
+   #:geo-place-bounding-box
+   #:geo-place-geometry
+   #:geo-place-country-code
+   #:geo-place-polylines
+   #:geo-place-contained-within
+   #:print-geo-place
+
+   #:geo-token
+   #:geo-print-places
 
    ;; conditions
    #:return-code))

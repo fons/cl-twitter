@@ -143,9 +143,10 @@
   "For any slot value that is designated embedded, take the alist
    and create an instance of that embedded object"
   ;;(format t "***) ~A:~A~%" elt embedded)
-  (when (stringp (slot-value elt 'id))
-    (setf (slot-value elt 'id)
-	  (parse-integer (slot-value elt 'id))))
+  ;;NOT ALL ID'S are integers
+;;  (when (stringp (slot-value elt 'id))
+;;    (setf (slot-value elt 'id) (parse-integer (slot-value elt 'id))))
+	  
   (loop for (argname type) in embedded do
        (let ((value (slot-value elt argname)))
 	 ;;(format t "***??) ~A:~A~%" elt argname)

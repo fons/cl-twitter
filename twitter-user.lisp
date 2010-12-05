@@ -74,6 +74,26 @@
   (format stream "Location: ~A~%" (twitter-user-location user))
   (format stream "Time Zone: ~A~%" (twitter-user-time-zone user)))
 
+(define-element cursor-user ((users (twitter-user)))
+  "a cursor element "
+  (id                  "" nil)
+  (next-cursor-str     ""  nil)
+  (previous-cursor-str "" nil)
+  (next-cursor         ""  nil)
+  (users               ""  nil)
+  (previous-cursor     ""  nil))
+
+(defmethod print-object ((ref cursor-user) stream)
+  (format stream "#<TWITTER-CURSOR-USER '~A:~A'>" (cursor-user-next-cursor ref) (length (cursor-user-users ref)) ))
+
+(defun lookup-cursor-user (rec)
+  (declare (ignore rec)))
+
+(defun print-cursor-user (ref)
+  (format t "~A: ~A ~A~%" (cursor-user-previous-cursor ref) (cursor-user-next-cursor ref) (length (cursor-user-ids ref))))
+
+(defmethod register-twitter-object ((ref cursor-user)))
+
 ;;
 ;; User resources
 ;;   users/show
@@ -145,8 +165,9 @@
 
 ;; TODO : cursor doesn't work : this does not return a "twitter-user" list.
 ;; Probably better to create a seperate 'cursor' command ?
-;;(define-command statuses/friends (:get :identity )
-(define-command statuses/friends (:get (:twitter-user) )
+;;
+
+(define-command statuses/friends (:get :cursor-user )
     (twitter-app-uri "statuses/friends.json")
     "Returns the authenticating user's friends, each with current status inline. They are ordered by the order in which they were added as friends. 
      It's also possible to request another user's recent friends list via the id parameter below."
@@ -156,8 +177,9 @@
           Provide values as returned in the response body's next_cursor and previous_cursor attributes to page back and forth in the list."
   :include_entities "When set to either true, t or 1, each tweet will include a node called entities." )
 
+;;(define-command statuses/followers (:get :identity )
 
-(define-command statuses/followers (:get (:twitter-user) )
+(define-command statuses/followers (:get :cursor-user )
     (twitter-app-uri "statuses/followers.json")
     "Returns the authenticating user's followers, each with current status inline. "
   :user_id "The ID of the user for whom to return results for." 
@@ -188,14 +210,34 @@
   (declare (ignore per-page page include-entities))
   (apply 'twitter-op :users/search :q query  args))
 
-;; cursor not supported
-(defun friends-statuses (&rest args &key (user-id nil) (screen-name nil) (include-entities nil) )
-  (declare (ignore  user-id screen-name include-entities))
+
+(defun friends-statuses (&rest args &key (user-id nil) (screen-name nil) (include-entities nil) (cursor -1) )
+  (declare (ignore  user-id screen-name include-entities cursor))
   (apply 'twitter-op :statuses/friends  args))
 
-(defun followers-statuses (&rest args &key (user-id nil) (screen-name nil) (include-entities nil) )
-  (declare (ignore user-id screen-name include-entities))
+;;cursor is required to get results as a twitter-cursor-user..
+(defun followers-statuses (&rest args &key (user-id nil) (screen-name nil) (include-entities nil) (cursor -1) )
+  (declare (ignore user-id screen-name include-entities cursor))
   (apply 'twitter-op :statuses/followers  args))
 
 ;;--------------------------------------------------------------
 
+
+(defun collect-follower-statuses (screen-name &key (max -1) (skip 0))
+  (let ((ht (make-hash-table  :test 'equal :size 100)))
+    (labels ((collect-it (lst)
+	       (dolist (item lst)
+		 (setf (gethash (twitter-user-id item) ht) item))))
+      (with-cursor (:extractor #'cursor-user-users :controller #'cursor-user-next-cursor 
+			       :collector #'collect-it :skip skip :max max :test (lambda() nil)) (followers-statuses :screen-name screen-name )))
+    ht))
+
+
+(defun collect-friend-statuses (screen-name &key (max -1) (skip 0))
+  (let ((ht (make-hash-table  :test 'equal :size 100)))
+    (labels ((collect-it (lst)
+	       (dolist (item lst)
+		 (setf (gethash (twitter-user-id item) ht) item))))
+      (with-cursor (:extractor #'cursor-user-users :controller #'cursor-user-next-cursor 
+			       :collector #'collect-it :skip skip :max max :test (lambda() nil)) (friends-statuses :screen-name screen-name )))
+    ht))

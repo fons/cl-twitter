@@ -94,9 +94,8 @@
 
 (defun plist->uri-params (plist &optional escape-p)
   (when (valid-plist plist)
-    (cons (string-downcase (as-string (first plist)))
-	  (cons (to-uri-param (second plist) escape-p)
-		(plist->uri-params (cddr plist))))))
+    (cons (string-downcase (as-string (first plist))) (cons (to-uri-param (second plist) escape-p) (plist->uri-params (cddr plist) escape-p)))))
+		
 
 (defun plist-keywords (plist)
   (when (valid-plist plist)
@@ -150,3 +149,9 @@
   (if escape-p 
       (url-rewrite:url-encode (princ-to-string arg))
       (princ-to-string arg)))
+
+(defun split-to-key (lst)
+  (let ((e))
+    (do () ((or (null lst) (keywordp (car lst)))) 
+      (push (pop lst) e))
+    (values (nreverse e) lst)))

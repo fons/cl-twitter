@@ -100,6 +100,8 @@
       (nreverse (cons nil (nreverse args )))
       args))
 
+;; Only post-id-.. seems to rewrite the url
+;; plist->uri-params
 (defun command-request-arguments (command args)
   "A command reference and a plist of arguments.
    Returns multiple values: url auth post-params parse-type"
@@ -107,8 +109,8 @@
     (check-arguments cmd args)
     (let ((newargs (lisp->twitter-plist args)))
       (case (command-method cmd)
-	(:get (get-command-request cmd newargs))
-	(:post (post-command-request cmd (fix-args newargs)))
+	(:get    (get-command-request cmd newargs))
+	(:post   (post-command-request cmd (fix-args newargs)))
 	(:get-id (get-id-command-request cmd newargs))
 	(:post-id (post-id-command-request cmd newargs))))))
 
@@ -173,6 +175,6 @@
 		       (or (get-request-argument args :id) "show")))
 
 (defun generate-get-url (cmd args)
-  (format nil "~A?~{~A=~A~^&~}" (command-base-url cmd)
-	  (plist->uri-params args t)))
+  (format nil "~A?~{~A=~A~^&~}" (command-base-url cmd) (plist->uri-params args t)))
+	  
 

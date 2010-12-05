@@ -15,6 +15,7 @@
     :components ((:file "package")
 		 (:file "twitter-vars")
 		 (:file "utils")
+		 (:file "twitter-macro")
 		 (:file "url-shortners")
 		 (:file "elements")
 		 (:file "commands")
@@ -33,6 +34,9 @@
 		 (:file "twitter-friendship")
 		 (:file "twitter-saved-searches")
 		 (:file "twitter-search")
+		 (:file "twitter-notifications")
+		 (:file "twitter-miscellaneous")
+		 (:file "twitter-geo")
 		 (:file "twitter"))
     :serial t
     :depends-on (:cl-json :trivial-http :drakma :anaphora :cl-ppcre :closer-mop :cl-oauth :url-rewrite))

@@ -21,7 +21,7 @@
   ref)
 
 (define-element cursor-id ((ids (identity)))
-  "a saved search "
+  "a cursor element "
   (id                  "" nil)
   (next-cursor-str     ""  nil)
   (previous-cursor-str "" nil)
@@ -78,49 +78,20 @@
 (defun follower-ids (screen-name &key (cursor -1))
   (apply 'twitter-op :followers/ids :screen-name screen-name :cursor cursor nil ))
 
-(defmacro with-gensyms ((&rest names) &rest body)
-  `(let ,(loop for n in names collect `(,n (gensym)))
-     ,@body))
-
-
-;;
-;; A quick nore on the controller : ordinarily I would have set the controllor default to
-;; cursor-id-next-cursor. Unfortunatly that leads to an error message in sbcl because the
-;; defintion for generic methods cannot be dumped into fasl files.
-;; Hence this work-around...
-;;
-
 ;;max and skip refer to pages (of 5000 each) !!
-(defmacro with-cursor ((&key (max -1) (collector #'identity) (skip 0) (controller nil) (test (lambda() nil) ))  &rest body)
-     (with-gensyms ($max $skip fn kargs _cursor_ args cursor-id fn_ args_)
-       `(macrolet ((unpack$ ( (,fn_ &rest ,args_) )
-		     `(values (quote ,,fn_) (list ,@,args_))))
-	  (multiple-value-bind (,fn ,kargs) (unpack$ ,@body)
-	    (destructuring-bind (,args &key cursor) ,kargs
-	      (let ((,$max (+ 1 ,max ,skip))
-		    (,$skip ,skip)
-		    (,_cursor_ (or cursor -1)))
-		(do () ((or (zerop ,_cursor_) (zerop (decf ,$max)) (funcall ,test)))
-		  (progn
-		    (let ((,cursor-id (funcall ,fn ,args :cursor ,_cursor_)))
-		      (if (zerop ,$skip)
-			  (funcall ,collector (cursor-id-ids ,cursor-id))
-			  (decf ,$skip))
-		      (if (null ,controller)
- 			   (setf ,_cursor_ (cursor-id-next-cursor ,cursor-id) )
-			   (setf ,_cursor_ (funcall ,controller ,cursor-id))))))))))))
 
-(defun collect-followers (screen-name)
+(defun collect-follower-ids (screen-name &key (max -1) (skip 0))
   (let ((lst))
     (labels ((collect-it (l)
 	       (setf lst (nconc lst l))))
-      (with-cursor (:collector #'collect-it :test #'rate-limit-exceeded ) (follower-ids screen-name)))
+      (with-cursor (:skip skip :max max :extractor #'cursor-id-ids :controller #'cursor-id-next-cursor :collector #'collect-it :test #'rate-limit-exceeded ) (follower-ids screen-name)))
     lst))
 
-(defun collect-friends (screen-name)
+
+(defun collect-friend-ids (screen-name &key (max -1) (skip 0))
   (let ((lst))
     (labels ((collect-it (l)
 	       (setf lst (nconc lst l))))
-      (with-cursor (:collector #'collect-it :test #'rate-limit-exceeded ) (friend-ids screen-name)))
+      (with-cursor (:skip skip :max max :extractor #'cursor-id-ids :controller #'cursor-id-next-cursor :collector #'collect-it :test #'rate-limit-exceeded ) (friend-ids screen-name)))
     lst))
     
