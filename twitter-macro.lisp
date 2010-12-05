@@ -25,6 +25,9 @@
 			  (decf ,$skip))
 		      (setf ,_cursor_ (funcall ,controller ,cursor-id)))))))))))
 
+;;(defmacro with-paging ( (&key (max 1500) (skip 0) (collector nil) ) &rest body)
+;; based on the with-cursor macro
+
 (defmacro with-paging ((&key (max 1500) (max-pages 15) (collector #'identity) (skip 0) (controller nil) (test (lambda() nil)) )  &rest body)
   (with-gensyms ($results $max $skip fn kargs _page_ args twitter-search fn_ args_ $rpp)
     `(macrolet ((unpack$ ( (,fn_ &rest ,args_) )

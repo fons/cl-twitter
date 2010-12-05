@@ -7,8 +7,8 @@
 
 (defsystem cl-twitter
     :name "CL-TWITTER"
-    :version "0.9"
-    :maintainer "Ian Eslick"
+    :version "0.5"
+    :maintainer "Fons Haffmans"
     :author "Ian Eslick"
     :licence "LLGPL"
     :description "A simple interface to Twitter"

@@ -128,31 +128,7 @@
 
 ;;---------------------------------------------------------------------------------------------------------------------------
 
-;;(defmacro with-paging ( (&key (max 1500) (skip 0) (collector nil) ) &rest body)
-;; based on the with-cursor macro
 
-(defmacro with-paging ((&key (max 1500) (max-pages 15) (collector #'identity) (skip 0) (controller nil) (test (lambda() nil)) )  &rest body)
-  (with-gensyms ($results $max $skip fn kargs _page_ args twitter-search fn_ args_ $rpp)
-    `(macrolet ((unpack$ ( (,fn_ &rest ,args_) )
-		  `(values (quote ,,fn_) (list ,@,args_))))
-       (multiple-value-bind (,fn ,kargs) (unpack$ ,@body)
-	 (destructuring-bind (,args &key callback lang locale rpp page since-id until geocode show-user result-type) ,kargs
-	   (let ((,$max ,max)
-		 (,$skip ,skip)
-		 (,$results 0)
-		 (,$rpp (or rpp 100))
-		 (,_page_ (or page 1)))
-	     (do () ((or (> ,_page_ ,max-pages) (> 0 (- ,$max ,$results)) (funcall ,test) ))
-	       (progn
-		 (let ((,twitter-search (funcall ,fn ,args :page ,_page_ :rpp ,$rpp :lang lang :callback callback :locale locale :since-id since-id 
-						 :until until :geocode geocode :show-user show-user :result-type result-type )))
-		   (incf ,$results (length (search-result-results ,twitter-search)))
-		   (if (zerop ,$skip)
-		       (funcall ,collector (search-results ,twitter-search))
-		       (decf ,$skip ,$results ))
-		   (if (null ,controller)
-		       (incf ,_page_)
-		       (setf ,_page_ (funcall ,controller ,twitter-search))))))))))))
 
 (defun do-search (query &key (max-pages 15) )
   (let ((ht (make-hash-table  :test 'equal :size 1500)))
