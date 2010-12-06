@@ -32,15 +32,13 @@
 		   (:file "twitter-social-graph")
 		   (:file "twitter-account")
 		   (:file "twitter-blocks") 
-		   (:file "serialize-access")
 		   (:file "twitter-messages")
 		   (:file "twitter-friendship")
 		   (:file "twitter-saved-searches")
 		   (:file "twitter-search")
 		   (:file "twitter-notifications")
 		   (:file "twitter-miscellaneous")
-		   (:file "twitter-geo")
-		   (:file "twitter"))))
+		   (:file "twitter-geo"))))
     :depends-on (:cl-json :trivial-http :drakma :anaphora :cl-ppcre :closer-mop :cl-oauth :url-rewrite))
 
 
