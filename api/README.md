@@ -12,13 +12,13 @@ should be easy to fix and you can also refer to the twitter APIs.
 
 ## Search API:
 
-
 The search API returns a 'search-result element which contains a set
 of 'search-ref elements accessible via (search-result-results elt)
 
 (twitter-search "query string" &rest args) - is a shortcut for
    (twitter-op :search :q "query string" &rest args)
    and returns two values: the list of refs and the 'search-result elt.
+
 
 (twitter-trends) - returns the top 20 twitter search trends
 
