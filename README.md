@@ -20,4 +20,16 @@ I split the code into three pieces :
 
 ## Current status
 
+### api status
+ 
+The rest api is fully covered except for the [list resources](http://dev.twitter.com/doc) , list member resources and list subscriber resources.  
+
+The streams tweets resources have not been implemented either.
+
+### twitter repl client
+
+The twitter repl client is functional. What's missing are good pretty printer outputs for some twitter resources.
+
+### db api
+See the README for that module.
 
