@@ -45,9 +45,7 @@
   (declare (ignore rec)))
 
 (defun print-search-ref (ref)
-  (format t "~A: ~A~%" 
-	  (search-ref-from-user ref)
-	  (search-ref-text ref)))
+  (format t "[~A] ~20<~A:~;~>~A~%" (search-ref-created-at ref) (search-ref-from-user ref) (search-ref-text ref)))
 
 (defmethod register-twitter-object ((ref search-ref)))
 

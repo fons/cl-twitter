@@ -126,6 +126,7 @@
    ;;  Search resources api
    #:with-paging
    #:do-search 
+   #:print-search-ref 
 
    ;; Notification resources
    #:follow-notification

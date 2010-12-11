@@ -9,21 +9,7 @@
 (defun twitter-search-uri (method)
   (concatenate 'string *twitter-search-uri* method))
 
-;;
-;; TODO NEED URL ENCODING !!!!! hunchentoot:url-encode ?? ==> use url-rewrite !!!!
-;;
-;; List resources
-;;    :user/lists
-;;    :user/lists/:id
-;;    :user/lists
-;;    :user/lists/:id
-;;    :user/lists/:id
-;;    :user/lists/:id/statuses
-;;    :user/lists/memberships
-;;    :user/lists/subscriptions
-;; This required both the replacement of :id and :user in the url.
-;;
-;;============>> TBD
+
 
 ;;List Members resources
 ;;   :user/:list_id/members

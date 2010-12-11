@@ -44,7 +44,7 @@
   "Capture all the key syntax for Twitter commands:
    command name | method | arguments | return-type | base-url 
 
-   method = { :get | :post | :get-id | :post-id }
+   method = { :get | :post | :get-id | get-user-id | :post-id }
    return-type = { :status | (:status) | :user-basic | 
                    :user-ext | :message | (:message) |
                    :id | (:id) | :value"
@@ -109,10 +109,14 @@
     (check-arguments cmd args)
     (let ((newargs (lisp->twitter-plist args)))
       (case (command-method cmd)
-	(:get    (get-command-request cmd newargs))
-	(:post   (post-command-request cmd (fix-args newargs)))
-	(:get-id (get-id-command-request cmd newargs))
-	(:post-id (post-id-command-request cmd newargs))))))
+	(:get                (get-command-request cmd newargs))
+	(:post              (post-command-request cmd (fix-args newargs)))
+	(:get-id            (get-id-command-request cmd newargs))
+	(:get-user        (get-user-command-request cmd newargs))
+	(:get-user-id    (get-user-id-command-request cmd newargs))
+	(:post-user-id  (post-user-id-command-request cmd newargs))
+	(:post-user     (post-user-command-request cmd newargs))
+	(:post-id          (post-id-command-request cmd newargs))))))
 
 ;;
 ;; URI generators
@@ -126,11 +130,22 @@
    (or (getf args :auth) (user-http-auth (get-user (getf args :user nil))))
    nil))
 
-
 (defun get-id-command-request (cmd args)
   (multiple-value-bind (method url auth)
       (get-command-request cmd (strip-keyword :id args))
     (values method (inject-url-id cmd url args)
+	    auth nil)))
+
+(defun get-user-command-request (cmd args)
+  (multiple-value-bind (method url auth)
+      (get-command-request cmd (strip-keyword :user args))
+    (values method (inject-url-user cmd url args)
+	    auth nil)))
+
+(defun get-user-id-command-request (cmd args)
+  (multiple-value-bind (method url auth)
+      (get-command-request cmd (strip-keyword :user (strip-keyword :id args)))
+    (values method (inject-url-user-id cmd url args)
 	    auth nil)))
 
 (defun post-command-request (cmd args)
@@ -146,6 +161,18 @@
   (multiple-value-bind (method url auth post)
       (post-command-request cmd (strip-keyword :id args))
     (values method (inject-url-id cmd url args)
+	    auth post)))
+
+(defun post-user-command-request (cmd args)
+  (multiple-value-bind (method url auth post)
+      (post-command-request cmd (strip-keyword :user args))
+    (values method (inject-url-user cmd url args)
+	    auth post)))
+
+(defun post-user-id-command-request (cmd args)
+  (multiple-value-bind (method url auth post)
+      (post-command-request cmd (strip-keyword :user (strip-keyword :id args)))
+    (values method (inject-url-user-id cmd url args)
 	    auth post)))
 
 ;;
@@ -171,8 +198,17 @@
 
 (defun inject-url-id (cmd url args)
   (declare (ignorable cmd))
-  (ppcre:regex-replace "<id>" url 
-		       (or (get-request-argument args :id) "show")))
+  (ppcre:regex-replace "<id>" url  (or (get-request-argument args :id) "show")))
+
+(defun inject-url-user (cmd url args)
+  (declare (ignorable cmd))
+  (ppcre:regex-replace "<user>" url  (or (get-request-argument args :user) "show")))
+
+(defun inject-url-user-id (cmd url args)
+  (declare (ignorable cmd))
+  (let ((new-url (ppcre:regex-replace "<user>" url  (or (get-request-argument args :user) "show"))))
+    (inject-url-id cmd new-url args)))
+	 
 
 (defun generate-get-url (cmd args)
   (format nil "~A?~{~A=~A~^&~}" (command-base-url cmd) (plist->uri-params args t)))
