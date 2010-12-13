@@ -56,7 +56,7 @@
       ;;	(format t "post params : {~A} ~%" post-params)
       ;;	(format t "method : {~A} ~%" method)
       ;;	(format t "url : {~A} ~%" url)
-      ;;	(format t "act post params : {~A} ~%" (plist->alist post-params)))
+      ;; (format t "act post params : {~A} ~%" (plist->alist post-params)))
       (unwind-protect
 	   (multiple-value-bind (response code)
 	       (destructuring-bind (&optional auth-method &rest auth-spec) (or auth  (user-http-auth *twitter-user*))

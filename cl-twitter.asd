@@ -38,6 +38,8 @@
 		   (:file "twitter-search")
 		   (:file "twitter-notifications")
 		   (:file "twitter-lists")
+		   (:file "twitter-list-members")
+		   (:file "twitter-list-subscribers")
 		   (:file "twitter-miscellaneous")
 		   (:file "twitter-geo"))))
     :depends-on (:cl-json :trivial-http :drakma :anaphora :cl-ppcre :closer-mop :cl-oauth :url-rewrite))

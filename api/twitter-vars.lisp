@@ -7,6 +7,9 @@
 ;; Main API
 ;;
 ;;    ("X-Twitter-Client-URL" . "http://common-lisp.net/project/cl-twitter/"))
+(defvar *twitter-app-uri*       "http://api.twitter.com/1/")
+(defvar *twitter-search-uri*    "http://search.twitter.com/")
+
 
 (defvar *twitter-user*)
 

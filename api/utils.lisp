@@ -1,5 +1,12 @@
 (in-package :twitter)
 
+(defun twitter-app-uri (method)
+  (concatenate 'string *twitter-app-uri* method))
+
+(defun twitter-search-uri (method)
+  (concatenate 'string *twitter-search-uri* method))
+
+
 ;;
 ;; Support for parsing element records
 ;;
@@ -104,6 +111,8 @@
 (defun valid-plist (plist)
   (and (consp plist) (consp (cdr plist))))
 
+
+
 (defun strip-keyword (keyword plist)
   (when (valid-plist plist)
     (if (eq (car plist) keyword)
@@ -111,6 +120,11 @@
 	(cons (first plist)
 	      (cons (second plist)
 		    (strip-keyword keyword (cddr plist)))))))
+
+(defun strip-keywords (keyword-list plist)
+  (if keyword-list
+      (strip-keywords (cdr keyword-list) (strip-keyword (car keyword-list) plist))
+      plist))
 
 (defun strip-keyword-if (predicate plist)
   (when (valid-plist plist)

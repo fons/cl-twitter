@@ -167,7 +167,7 @@
 (defun tweet? (id &key (trim-user nil) (include-entities nil))
   (get-status id :trim-user trim-user :include-entities include-entities))
 
-(defun send-tweet (text &key (tiny-url-p t) (in-reply-to-status-id nil) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities nil))
+(defun tweet (text &key (tiny-url-p t) (in-reply-to-status-id nil) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities nil))
   (let ((newtext (if tiny-url-p (convert-to-tinyurl text) text)))
     (if (<= (length newtext) 140)
 	(update-status newtext :in-reply-to-status-id in-reply-to-status-id :place-id place-id :lat lat :long long :display-coordinates display-coordinates :trim-user trim-user :include-entities include-entities)

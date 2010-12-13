@@ -3,7 +3,7 @@
 ## Introduction
 
 [On 2010-10-24 I cloned](http://cl-twitter.blogspot.com/2010/11/cl-twitter-blog.html) cl-twitter's [darcs repository](http://www.common-lisp.net/project/cl-twitter/darcs/cl-twitter) 
-of Ian Ieslick's [common lisp twitter package.](http://common-lisp.net/project/cl-twitter/).
+of Ian Eslick's [common lisp twitter package.](http://common-lisp.net/project/cl-twitter/).
 
 The package in the repo no longer compiled. After getting it to compile I found that it did not work with twitter's oauth protocol 
 which at that point was the only way to get authorized access to twitter.

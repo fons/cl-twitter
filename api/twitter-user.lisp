@@ -54,7 +54,7 @@
   
 
 (defmethod print-object ((user twitter-user) stream)
-  (format stream "#<TWITTER-USER '~A'>" (twitter-user-screen-name user)))
+  (format stream "#<TWITTER-USER '~A:~A'>" (twitter-user-id user) (twitter-user-screen-name user)))
 
 
 (defmethod register-twitter-object ((user twitter-user))
@@ -210,7 +210,6 @@
   (declare (ignore per-page page include-entities))
   (apply 'twitter-op :users/search :q query  args))
 
-
 (defun friends-statuses (&rest args &key (user-id nil) (screen-name nil) (include-entities nil) (cursor -1) )
   (declare (ignore  user-id screen-name include-entities cursor))
   (apply 'twitter-op :statuses/friends  args))
@@ -232,7 +231,6 @@
 			       :collector #'collect-it :skip skip :max max :test (lambda() nil)) (followers-statuses :screen-name screen-name )))
     ht))
 
-
 (defun collect-friend-statuses (screen-name &key (max -1) (skip 0))
   (let ((ht (make-hash-table  :test 'equal :size 100)))
     (labels ((collect-it (lst)
@@ -240,4 +238,26 @@
 		 (setf (gethash (twitter-user-id item) ht) item))))
       (with-cursor (:extractor #'cursor-user-users :controller #'cursor-user-next-cursor 
 			       :collector #'collect-it :skip skip :max max :test (lambda() nil)) (friends-statuses :screen-name screen-name )))
+    ht))
+
+;;with-cursor expects a :cursor keyword, but paging is identical
+;;this is a shim to enable use to use :page.
+(defun %search-users% ( q &key  (cursor 1))
+  (search-users  q :page cursor :per-page 20))
+
+(defun do-user-search (q &key (max -1) (skip 0) (container (make-hash-table  :test 'equal :size 100)))
+   (let ((ht container)
+	(ht-size 0)
+	(page 1))
+    (labels ((collect-it (lst)
+	       (dolist (item lst)
+		 (setf (gethash (twitter-user-id item) ht) item)))
+	     (stop-it ()
+	       (prog1 
+		   (or (rate-limit-exceeded) (and (< 0 ht-size) (= ht-size (hash-table-count ht))))
+		 (setf ht-size (hash-table-count ht))))
+	     (next-page (item)
+	       (declare (ignore item))
+	       (incf page)))
+      (with-cursor (:skip skip :max max :extractor #'identity :controller #'next-page :collector #'collect-it :test #'stop-it ) (%search-users%  q :cursor 1)))
     ht))

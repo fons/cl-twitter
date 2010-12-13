@@ -27,7 +27,7 @@
    #:status-retweeted-by-ids
    ;;  Tweets resources: app api
    #:tweet?
-   #:send-tweet
+   #:tweet
    #:reply-to
    #:@reply-to
    #:delete-tweet
@@ -85,10 +85,13 @@
    #:show-user-by-id
    #:lookup-users
    #:search-users
-   ;;cursors not supported
    #:friends-statuses
-   ;; cursors not supported
    #:followers-statuses
+   
+   ;; User Resources api
+   #:collect-friend-statuses
+   #:collect-follower-statuses
+   #:do-user-search
 
    ;; Friendship Methods
    #:follow
@@ -127,7 +130,35 @@
    #:with-paging
    #:do-search 
    #:print-search-ref 
-
+ 
+  ;; List resources
+   #:create-user-list
+   #:update-user-list
+   #:get-user-list
+   #:get-user-lists
+   #:delete-user-lists
+   #:statuses-user-lists
+   #:memberships-user-lists
+   #:subscriptions-user-lists
+   #:collect-user-lists
+   #:collect-user-list-memberships
+   #:collect-user-list-subscriptions
+   #:collect-user-list-statuses
+   #:user-list-timeline
+   
+   ;;List Members resources
+   #:user-list-members
+   #:collect-user-list-members
+   #:add-user-list-members
+   #:delete-user-list-members
+   #:user-list-members-p
+   ;; List Subscribers resources
+  #:user-list-subscribers
+   #:collect-user-list-subscribers
+   #:add-user-list-subscribers
+   #:delete-user-list-subscribers
+   #:user-list-subscribers-p
+   
    ;; Notification resources
    #:follow-notification
    #:leave-notification
@@ -313,6 +344,23 @@
    #:cursor-id-previous-cursor-str
    #:cursor-id-previous-cursor
    #:cursor-id-ids
+   ;;list resources
+   #:cursor-user-lists-id
+   #:cursor-user-lists-next-cursor-str
+   #:cursor-user-lists-next-cursor
+   #:cursor-user-lists-previous-cursor-str
+   #:cursor-user-lists-previous-cursor
+   #:cursor-user-lists-lists
+
+   #:list-type-id
+   #:list-type-mode
+   #:list-type-description
+   #:list-type-slug
+   #:list-type-uri
+   #:list-type-member-count
+   #:list-type-id-str
+   #:list-type-full-name
+   #:list-type-user
 
    ;;geo resources
    

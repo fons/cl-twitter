@@ -22,19 +22,6 @@
       (mapcar #'maybe-add-conversion-from-twitter (mapcar #'car args))
       args))
 
-;;;-> plist->alist gives :
-;;((:TRIM_USER
-;;  . "When set to either true, t or 1, each tweet returned in a timeline will include a user object including only the status authors numerical ID. Omit this parameter to receive the complete user object.")
-;; (:INCLUDE_ENTITIES
-;;  . "When set to either true, t or 1, each tweet will include a node called entities. "))
-
-;;(command-argmap (get-command :statuses/public-timeline))
-;;(gethash :TO-USER *lisp->twitter-symbols*)
-
-;;
-;;(maphash (lambda (k v) (format t "~A->~A~%" k v)) *lisp->twitter-symbols*)
-;;
-
 ;;
 ;; Command definition macro
 ;;
@@ -109,14 +96,17 @@
     (check-arguments cmd args)
     (let ((newargs (lisp->twitter-plist args)))
       (case (command-method cmd)
-	(:get                (get-command-request cmd newargs))
-	(:post              (post-command-request cmd (fix-args newargs)))
-	(:get-id            (get-id-command-request cmd newargs))
-	(:get-user        (get-user-command-request cmd newargs))
-	(:get-user-id    (get-user-id-command-request cmd newargs))
-	(:post-user-id  (post-user-id-command-request cmd newargs))
-	(:post-user     (post-user-command-request cmd newargs))
-	(:post-id          (post-id-command-request cmd newargs))))))
+	(:get                    (get-command-request cmd newargs))
+	(:post                  (post-command-request cmd (fix-args newargs)))
+	(:get-id                (get-id-command-request cmd newargs))
+	(:get-user            (get-user-command-request cmd newargs))
+	(:get-user-id        (get-user-id-command-request cmd newargs))
+	(:get-user-list-id   (get-user-list-id-command-request cmd newargs))
+	(:get-user-list-id-id   (get-user-list-id-id-command-request cmd newargs))
+	(:post-user-id       (post-user-id-command-request cmd newargs))
+	(:post-user-list-id  (post-user-list-id-command-request cmd newargs))
+	(:post-user           (post-user-command-request cmd newargs))
+	(:post-id               (post-id-command-request cmd newargs))))))
 
 ;;
 ;; URI generators
@@ -144,9 +134,17 @@
 
 (defun get-user-id-command-request (cmd args)
   (multiple-value-bind (method url auth)
-      (get-command-request cmd (strip-keyword :user (strip-keyword :id args)))
+      (get-command-request cmd (strip-keywords '(:user :id) args))
     (values method (inject-url-user-id cmd url args)
 	    auth nil)))
+
+(defun get-user-list-id-command-request (cmd args)
+  (multiple-value-bind (method url auth)  (get-command-request cmd (strip-keywords '(:user :list_id) args))
+    (values method (inject-url-user-list-id cmd url args) auth nil)))
+
+(defun get-user-list-id-id-command-request (cmd args)
+  (multiple-value-bind (method url auth)  (get-command-request cmd (strip-keywords '(:user :list_id :id) args))
+    (values method (inject-url-user-list-id-id cmd url args) auth nil)))
 
 (defun post-command-request (cmd args)
   (values
@@ -171,9 +169,13 @@
 
 (defun post-user-id-command-request (cmd args)
   (multiple-value-bind (method url auth post)
-      (post-command-request cmd (strip-keyword :user (strip-keyword :id args)))
+      (post-command-request cmd (strip-keywords '(:user :id) args))
     (values method (inject-url-user-id cmd url args)
 	    auth post)))
+
+(defun post-user-list-id-command-request (cmd args)
+  (multiple-value-bind (method url auth post) (post-command-request cmd (strip-keywords '(:user :list_id) args))
+    (values method (inject-url-user-list-id cmd url args)  auth post)))
 
 ;;
 ;; Helpers
@@ -200,6 +202,10 @@
   (declare (ignorable cmd))
   (ppcre:regex-replace "<id>" url  (or (get-request-argument args :id) "show")))
 
+(defun inject-url-list-id (cmd url args)
+  (declare (ignorable cmd))
+  (ppcre:regex-replace "<list-id>" url  (or (get-request-argument args :list_id) "show")))
+
 (defun inject-url-user (cmd url args)
   (declare (ignorable cmd))
   (ppcre:regex-replace "<user>" url  (or (get-request-argument args :user) "show")))
@@ -208,6 +214,16 @@
   (declare (ignorable cmd))
   (let ((new-url (ppcre:regex-replace "<user>" url  (or (get-request-argument args :user) "show"))))
     (inject-url-id cmd new-url args)))
+	 
+(defun inject-url-user-list-id (cmd url args)
+  (declare (ignorable cmd))
+  (let ((new-url (ppcre:regex-replace "<user>" url  (or (get-request-argument args :user) "show"))))
+    (inject-url-list-id cmd new-url args)))
+	 
+(defun inject-url-user-list-id-id (cmd url args)
+  (declare (ignorable cmd))
+  (let ((new-url (ppcre:regex-replace "<id>" url  (or (get-request-argument args :id) "show"))))
+    (inject-url-user-list-id cmd new-url args)))
 	 
 
 (defun generate-get-url (cmd args)

@@ -77,9 +77,7 @@
   (declare (ignore rec)))
 
 (defun print-geo-result (ref)
-  (format t "~A: ~A~%" 
-	  (geo-result-name ref)
-	  (geo-result-code ref)))
+  (format t "~A: ~A~%" (geo-result-query ref) (geo-result-result ref)))
 
 (defmethod register-twitter-object ((ref geo-result)))
 ;;-------------------------------------------------------------------------
