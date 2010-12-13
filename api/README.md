@@ -2,38 +2,55 @@
 
 ## API Status:
 
+All of [twitter's rest api calls](http://dev.twitter.com/doc/) are covered, asof 12/13/2010.
 
-This interface was interactively tested, but bugs remain and not all
-features have been exercised.  Help tracking down the last of the 
-bugs is always appreciated!
+The api consists of two layers. The first layer is relatively low level and is nothing more than a wrapper around the rest api call. 
+The second layer provides the same functionality, but is usually a littel easier to use. 
 
-I have also not completely documented all the element slots.  This
-should be easy to fix and you can also refer to the twitter APIs.
+For example the first level call to get the user id's for a user's followers looks like :
 
-## Search API:
-
-The search API returns a 'search-result element which contains a set
-of 'search-ref elements accessible via (search-result-results elt)
-
-(twitter-search "query string" &rest args) - is a shortcut for
-   (twitter-op :search :q "query string" &rest args)
-   and returns two values: the list of refs and the 'search-result elt.
+    (defun follower-ids (screen-name &key (cursor -1))
+       (apply 'twitter-op :followers/ids :screen-name screen-name :cursor cursor nil ))
 
 
-(twitter-trends) - returns the top 20 twitter search trends
+The cursor keyword is used to used to retrieve subsequent pages of ids. 
+The *collect-follower-ids* uses *follower-ids* and the *with-cursor* macro to retrieve a list of all the followers.
 
-
-## Error Handling:
-
-
-Any API call errors throw a twitter-api-condition which provides
-the return code and short and long code messages.  It also provides
-the failing URI and the specific server message.  The accessors are
-not exported to avoid conflicts, but the slotnames are: 
-    return-code, short, long, request, uri.
-
-You can play with this, for example, by trying to perform an API
-command with invalid user authentication.
+    (defun collect-follower-ids (screen-name &key (max -1) (skip 0))
+       (let ((lst))
+           (labels ((collect-it (l)
+	        (setf lst (nconc lst l))))
+           (with-cursor (:skip skip :max max :extractor #'cursor-id-ids :controller #'cursor-id-next-cursor :collector #'collect-it :test #'rate-limit-exceeded ) (follower-ids screen-name)))
+        lst))
 
 
 
+Data is returned as json. cl-twitter has a way of defining the return type, and using the json to instantiate that type. 
+
+*follower-ids* in the previous example returns a list of ids, so that pretty straightforward. *tweets* however carry a lot more information. Internally a tweet is defined using the *define-element*
+macro :
+
+    (define-element tweet ((user twitter-user))
+      "A status element consisting of information on a status and a nested
+       user element"
+      (id "" nil)
+      (contributors nil nil)
+      (created-at "" nil)
+      (text "" nil)
+      (source "" nil)
+      (truncated "" nil)
+      (favorited "" nil)
+      (in-reply-to-status-id "" nil)
+      (in-reply-to-user-id "" nil)
+      (in-reply-to-screen-name "" nil)
+      (geo "" nil)
+      (geo-enabled "" nil)
+      ;; embedded user
+     (user "" nil))
+
+
+The caller can access the tweet data using standard *(tweet-... )* generic functions, like *tweet-id* or *tweet-text*.
+
+## API Overview
+ 
+TBD 

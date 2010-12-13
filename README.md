@@ -14,17 +14,18 @@ of the [twitter api](http://apiwiki.twitter.com/w/page/22554679/Twitter-API-Docu
 
 I split the code into three pieces : 
 
-* an api piece, which enables calls to twitter's rest api 
+* an api piece, which enables calls to twitter's rest api.
 * a twitter repl client. 
 * a database store.
 
+Consult the respective readme's for more information.
 ## Current status
 
 ### api status
  
-The rest api is fully covered except for the [list resources](http://dev.twitter.com/doc) , list member resources and list subscriber resources.  
+The rest api is fully covered. 
 
-The streams tweets resources have not been implemented either.
+The streams tweets resources have not been implemented.
 
 ### twitter repl client
 
