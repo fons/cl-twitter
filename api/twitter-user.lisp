@@ -242,8 +242,6 @@
 
 ;;with-cursor expects a :cursor keyword, but paging is identical
 ;;this is a shim to enable use to use :page.
-(defun %search-users% ( q &key  (cursor 1))
-  (search-users  q :page cursor :per-page 20))
 
 (defun do-user-search (q &key (max -1) (skip 0) (container (make-hash-table  :test 'equal :size 100)))
    (let ((ht container)
@@ -259,5 +257,5 @@
 	     (next-page (item)
 	       (declare (ignore item))
 	       (incf page)))
-      (with-cursor (:skip skip :max max :extractor #'identity :controller #'next-page :collector #'collect-it :test #'stop-it ) (%search-users%  q :cursor 1)))
+      (with-cursor (:skip skip :max max :extractor #'identity :controller #'next-page :collector #'collect-it :test #'stop-it :cursor :page) (search-users  q :page 1 :per-page 100)))
     ht))

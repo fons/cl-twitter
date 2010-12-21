@@ -145,10 +145,10 @@
 (defun delete-user-lists (id &key (list-owner (twitter-user-screen-name *twitter-user*)))
   (apply 'twitter-op :?user/lists/?id/_delete :id id :user list-owner  :_method "DELETE" nil)) 
 
-;;page is called cursor so i can work with the with-cursor macro.
-(defun statuses-user-lists (&rest args &key (list-owner (twitter-user-screen-name *twitter-user*)) (id nil)  (cursor 1) (per-page 20)  (since-id nil) (max-id nil) (include-entities nil) )
+
+(defun statuses-user-lists (&rest args &key (list-owner (twitter-user-screen-name *twitter-user*)) (id nil)  (page 1) (per-page 20)  (since-id nil) (max-id nil) (include-entities nil) )
   (declare (ignore id per-page  since-id max-id include-entities))
-  (apply 'twitter-op :?user/lists/?id/statuses :user list-owner :page cursor (strip-keywords '(:cursor :list-owner) args) ))
+  (apply 'twitter-op :?user/lists/?id/statuses :user list-owner :page page (strip-keywords '(:cursor :list-owner) args) ))
 
 (defun memberships-user-lists ( &key (screen-name (twitter-user-screen-name *twitter-user*))  (cursor -1))
   (apply 'twitter-op :?user/lists/memberships :user screen-name :cursor cursor nil))
@@ -185,24 +185,10 @@
 			       :collector #'collect-it :skip skip :max max :test (lambda() nil)) (subscriptions-user-lists :screen-name screen-name )))
     ht))
   
-;;I use a hashtable becuase pages appear to return identical results.. 
+;;I use a hashtable because pages appear to return identical results.. 
 ;;stop when the hash table has no more new elements
 (defun collect-user-list-statuses (list-owner list-id &key (max -1) (skip 0) (container (make-hash-table  :test 'equal :size 100)))
-  (let ((ht container)
-	(ht-size 0)
-	(page 1))
-    (labels ((collect-it (lst)
-	       (dolist (item lst)
-		 (setf (gethash (tweet-id item) ht) item)))
-	     (stop-it ()
-	       (prog1 
-		   (or (rate-limit-exceeded) (and (< 0 ht-size) (= ht-size (hash-table-count ht))))
-		 (setf ht-size (hash-table-count ht))))
-	     (next-page (item)
-	       (declare (ignore item))
-	       (incf page)))
-      (with-cursor (:skip skip :max max :extractor #'identity :controller #'next-page :collector #'collect-it :test #'stop-it ) (statuses-user-lists :list-owner list-owner :id list-id :cursor 1)))
-    ht))
+  (collect-tweets (:max max :skip skip) statuses-user-lists :list-owner list-owner :id list-id :page 1))
 
 ;;---------------------------------------------------------------------------------------------------------------------------------------
 (defun user-list-timeline (list-owner &key (max-per-list 1) )

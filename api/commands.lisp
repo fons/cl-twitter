@@ -97,16 +97,16 @@
     (let ((newargs (lisp->twitter-plist args)))
       (case (command-method cmd)
 	(:get                    (get-command-request cmd newargs))
-	(:post                  (post-command-request cmd (fix-args newargs)))
-	(:get-id                (get-id-command-request cmd newargs))
-	(:get-user            (get-user-command-request cmd newargs))
-	(:get-user-id        (get-user-id-command-request cmd newargs))
-	(:get-user-list-id   (get-user-list-id-command-request cmd newargs))
-	(:get-user-list-id-id   (get-user-list-id-id-command-request cmd newargs))
-	(:post-user-id       (post-user-id-command-request cmd newargs))
-	(:post-user-list-id  (post-user-list-id-command-request cmd newargs))
-	(:post-user           (post-user-command-request cmd newargs))
-	(:post-id               (post-id-command-request cmd newargs))))))
+	(:post                   (post-command-request cmd (fix-args newargs)))
+	(:get-id                 (get-id-command-request cmd newargs))
+	(:get-user               (get-user-command-request cmd newargs))
+	(:get-user-id            (get-user-id-command-request cmd newargs))
+	(:get-user-list-id       (get-user-list-id-command-request cmd newargs))
+	(:get-user-list-id-id    (get-user-list-id-id-command-request cmd newargs))
+	(:post-user-id           (post-user-id-command-request cmd newargs))
+	(:post-user-list-id      (post-user-list-id-command-request cmd newargs))
+	(:post-user              (post-user-command-request cmd newargs))
+	(:post-id                (post-id-command-request cmd newargs))))))
 
 ;;
 ;; URI generators
@@ -227,6 +227,7 @@
 	 
 
 (defun generate-get-url (cmd args)
+  (format t "generate url : ~S ~S ~%" cmd args)
   (format nil "~A?~{~A=~A~^&~}" (command-base-url cmd) (plist->uri-params args t)))
 	  
 

@@ -7,7 +7,8 @@
   `(let ,(loop for n in names collect `(,n (gensym)))
      ,@body))
 
-(defmacro with-cursor ((&key (max -1) (collector #'identity) (skip 0) (extractor nil) (controller (lambda (x) (declare (ignore x)) 0))  (test (lambda() nil) ))  &rest body)
+;; max -> max calls not max results
+(defmacro with-cursor ((&key (max -1) (collector #'identity) (skip 0) (extractor nil) (controller (lambda (x) (declare (ignore x)) 0))  (test (lambda() nil) ) (cursor :cursor))  &rest body)
      (with-gensyms ($max $skip fn targs kargs _cursor_ cursor-id fn_ args_ args)
        `(macrolet ((unpack$ ( (,fn_ &rest ,args_) )
 		     `(values (quote ,,fn_) (list ,@,args_))))
@@ -15,11 +16,11 @@
 	    (multiple-value-bind (,args ,kargs) (split-to-key ,targs)
 	      (let ((,$max (+ 1 ,max ,skip))
 		    (,$skip ,skip)
-		    (,_cursor_ (or (cadr (member :cursor ,kargs)) -1)))
+		    (,_cursor_ (or (cadr (member ,cursor ,kargs)) -1)))
 		(do () ((or (zerop ,_cursor_) (zerop (decf ,$max)) (funcall ,test)))
 		  (progn
 		    ;;(format t "[~A] ~A ~S~%" ,kargs ,fn (nconc ,args (strip-keyword :cursor ,kargs) (list :cursor ,_cursor_)))
-		    (let ((,cursor-id (apply ,fn (nconc ,args (strip-keyword :cursor ,kargs) (list :cursor ,_cursor_)))))
+		    (let ((,cursor-id (apply ,fn (nconc ,args (strip-keyword ,cursor ,kargs) (list ,cursor ,_cursor_)))))
 		      (if (zerop ,$skip)
 			  (funcall ,collector (funcall ,extractor ,cursor-id))
 			  (decf ,$skip))
@@ -27,6 +28,25 @@
 
 ;;(defmacro with-paging ( (&key (max 1500) (skip 0) (collector nil) ) &rest body)
 ;; based on the with-cursor macro
+
+(defmacro collect-tweets ((&key (max 1) (skip 0) (container (make-hash-table  :test 'equal :size 100))) &rest body)
+  (with-gensyms (ht ht-size page lst item)
+    `(let ((,ht-size 0)
+	   (,ht nil)
+	   (,page 1))
+       (labels ((collect-it (,lst)
+		  (dolist (,item ,lst)
+		    (setf (gethash (tweet-id ,item) ,ht) ,item)))
+		(stop-it ()
+		  (prog1 
+		      (or (rate-limit-exceeded) (and (< 0 ,ht-size) (= ,ht-size (hash-table-count ,ht))))
+		    (setf ,ht-size (hash-table-count ,ht))))
+	      (next-page (,item)
+		(declare (ignore ,item))
+		(incf ,page)))
+	 (setf ,ht ,container)
+	 (with-cursor (:skip ,skip :max ,max :extractor #'identity :controller #'next-page :collector #'collect-it :test #'stop-it :cursor :page) (,@body :page 1)))
+       ,ht)))
 
 (defmacro with-paging ((&key (max 1500) (max-pages 15) (collector #'identity) (skip 0) (controller nil) (test (lambda() nil)) )  &rest body)
   (with-gensyms ($results $max $skip fn kargs _page_ args twitter-search fn_ args_ $rpp)
@@ -50,3 +70,5 @@
 		   (if (null ,controller)
 		       (incf ,_page_)
 		       (setf ,_page_ (funcall ,controller ,twitter-search))))))))))))
+
+

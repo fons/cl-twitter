@@ -4,6 +4,11 @@
   (:use :cl :drakma :json :anaphora); :trivial-http)
   (:nicknames :cl-twitter :twit)
   (:export 
+   ;;helper functions
+
+   #:twitter-oauth-uri 
+   #:show
+
    ;;------revised api -------
    ;;----lisp rest api ------
 
@@ -16,6 +21,11 @@
    #:retweeted-by-me
    #:retweeted-to-me
    #:retweets-of-me
+
+   ;;Time Line Resources api
+   #:collect-home-timeline
+   #:collect-friends-timeline
+   #:collect-user-timeline
 
    ;;  Tweets resources
    #:get-status
@@ -92,6 +102,8 @@
    #:collect-friend-statuses
    #:collect-follower-statuses
    #:do-user-search
+   #:get-user
+   #:lookup-twitter-user
 
    ;; Friendship Methods
    #:follow
@@ -175,7 +187,7 @@
 
    ;; Geo resources
    
-   #:geo-query
+   #:geo-search
    #:geo-similar-places
    #:geo-reverse-geocode
    #:geo-place-by-id
@@ -220,6 +232,7 @@
    #:twitter-user
    #:twitter-user-id
    #:twitter-user-name
+   #:twitter-user-access-token
    #:twitter-user-screen-name
    #:twitter-user-password
    #:twitter-user-location
@@ -282,6 +295,7 @@
    #:search-result-completed-in
    #:search-result-query
    ;; Search Reference
+   #:search-ref
    #:search-ref-id
    #:search-ref-text
    #:search-ref-to-user
@@ -317,6 +331,7 @@
    #:place-name
 
    ;;trend
+   #:trend
    #:trend-url
    #:trend-query
    #:trend-promoted-content
@@ -324,6 +339,7 @@
    #:trend-name
 
    ;;trend list
+   #:trend-list
    #:trend-list-created-at
    #:trend-list-locations
    #:trend-list-trends

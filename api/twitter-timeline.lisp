@@ -135,3 +135,13 @@
   (declare (ignore trim-user include-entities since-id max-id count page ))
   (apply 'twitter-op :statuses/retweets-of-me args))
 
+;;----------------------------------------------------------------------------------------------------------------------------------------------------
+
+(defun collect-home-timeline (&key (max 3) (skip 0) (container (make-hash-table  :test 'equal :size 100)))
+  (collect-tweets (:max max :skip skip :container container) home-timeline))
+
+(defun collect-friends-timeline (&key (max 3) (skip 0) (container (make-hash-table  :test 'equal :size 100)))
+  (collect-tweets (:max max :skip skip :container container) friends-timeline))
+
+(defun collect-user-timeline (&key (max 3) (skip 0) (container (make-hash-table  :test 'equal :size 100)))
+  (collect-tweets (:max max :skip skip :container container) user-timeline))

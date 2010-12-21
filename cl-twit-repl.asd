@@ -17,5 +17,6 @@
       :serial t
       :components ((:file "package")
 		   (:file "serialize-access")
+		   (:file "cl-twit-repl")
 		   (:file "twitter"))))
     :depends-on (:cl-twitter))

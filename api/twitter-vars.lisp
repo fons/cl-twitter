@@ -9,6 +9,7 @@
 ;;    ("X-Twitter-Client-URL" . "http://common-lisp.net/project/cl-twitter/"))
 (defvar *twitter-app-uri*       "http://api.twitter.com/1/")
 (defvar *twitter-search-uri*    "http://search.twitter.com/")
+(defvar *twitter-oauth-uri*  "http://api.twitter.com/oauth/")   
 
 
 (defvar *twitter-user*)
@@ -26,11 +27,4 @@
 (defparameter *http-request-function* 'drakma:http-request "Function used to make HTTP requests.  Must conform exactly to Drakma's specifications.")
 
 
-(defvar *oauth-request-token-cache-max-length* 100 "Max number of request tokens that can be cached by CL-Twitter.")
-(defvar *oauth-request-token-cache* nil  
-"A list of request tokens that have been generated for OAuth
-authentication by OAUTH-MAKE-TWITTER-AUTHORIZATION-URI.  These are
-stored in between when the user is directed to a login URI and when
-the user is authenticated.  Automatically pruned every once in a
-while (by calls to OAUTH-AUTHENTICATE-USER).")
 

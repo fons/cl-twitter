@@ -22,11 +22,6 @@
 
 (defmethod register-twitter-object ((ref place-type)))
 
-;; ((:URL . "http://where.yahooapis.com/v1/place/23424975")
-;;  (:PLACETYPE (:CODE . 12) (:NAME . "Country")) (:COUNTRY . "United Kingdom")
-;;  (:COUNTRYCODE . "GB") (:WOEID . 23424975) (:NAME . "United Kingdom"))
-;; id is required, but is not in the actual message..
-
 (define-element place ((placetype place-type))
   "a place "
   (id  "" nil)
@@ -50,17 +45,6 @@
 	  (place-woeid ref)))
 
 (defmethod register-twitter-object ((ref place)))
-
-
-;;  (:TRENDS
-;;   ((:URL . "http://search.twitter.com/search?q=Bellingham")
-;;    (:QUERY . "Bellingham") (:PROMOTED-CONTENT) (:EVENTS)
-;;    (:NAME . "Bellingham"))
-
-;;)(((:CREATED-AT . "2010-11-20T23:33:21Z")
-;;  (:LOCATIONS ((:WOEID . 2490383) (:NAME . "Seattle")))
-;;  (:TRENDS....
-
 
 (define-element trend ()
   "a trend "
@@ -199,6 +183,8 @@
 ;;-----------------------------------------------------
 
 (defun trending-locations (&key (lat nil) (long nil))
-  (let ((loc-trend-list (location-trends :lat lat :long long)))
+  (let ((loc-trend-list (location-trends :lat lat :long long))
+	(lst ()))
     (dolist (loc-trend loc-trend-list)
-      (format t "~S~%" (trends@location (place-woeid loc-trend))))))
+      (push (trends@location (place-woeid loc-trend))) lst)
+    lst))

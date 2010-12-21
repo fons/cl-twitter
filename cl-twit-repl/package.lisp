@@ -1,7 +1,7 @@
 (in-package :cl-user)
 
-(defpackage :twit-repl
-  (:use :cl :cl-twitter); :trivial-http)
+(defpackage :cl-twit-repl
+  (:use #:cl #:cl-twitter); :trivial-http)
   (:nicknames :cl-twit-repl :twit-repl)
   (:export 
 

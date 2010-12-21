@@ -6,6 +6,8 @@
 (defun twitter-search-uri (method)
   (concatenate 'string *twitter-search-uri* method))
 
+(defun twitter-oauth-uri (method)
+  (concatenate 'string *twitter-oauth-uri* method))
 
 ;;
 ;; Support for parsing element records
@@ -101,7 +103,7 @@
 
 (defun plist->uri-params (plist &optional escape-p)
   (when (valid-plist plist)
-    (cons (string-downcase (as-string (first plist))) (cons (to-uri-param (second plist) escape-p) (plist->uri-params (cddr plist) escape-p)))))
+    (cons (fix-attribute (string-downcase (as-string (first plist)))) (cons (to-uri-param (second plist) escape-p) (plist->uri-params (cddr plist) escape-p)))))
 		
 
 (defun plist-keywords (plist)
@@ -153,11 +155,9 @@
     (string (intern sym package))
     (symbol (intern (symbol-name sym) package))))
 
-;;(defun to-uri-param (arg escape-p)
-;;  (if escape-p 
-;;      (trivial-http:escape-url-query 
-;;       (princ-to-string arg))
-;;      (princ-to-string arg)))
+;;this is for attributes in the geo specification. in lisp I use attribute->entity syntax; twitter expects attribute:entity but :k:l is invalid syntax in lisp.
+(defun fix-attribute (arg)
+  (ppcre:regex-replace "->" arg ":" ))
 
 (defun to-uri-param (arg escape-p)
   (if escape-p 
