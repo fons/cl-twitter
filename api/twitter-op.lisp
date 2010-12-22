@@ -48,15 +48,15 @@
 
 
 (defun send-command (command args)
-  (format t "command {~A} args : {~A} ~%" command args)
+  ;;(format t "command {~A} args : {~A} ~%" command args)
   (multiple-value-bind (method url auth post-params) (command-request-arguments command args)
     (let ((socket nil))
-      (progn
-      	(format t "args : {~S} ~%" args)
-      	(format t "post params : {~S} ~%" post-params)
-      	(format t "method : {~S} ~%" method)
-      	(format t "url : {~S} ~%" url)
-       (format t "act post params : {~S} ~%" (plist->alist post-params)))
+      ;;(progn
+      ;;	(format t "args : {~S} ~%" args)
+     ;; 	(format t "post params : {~S} ~%" post-params)
+     ;; 	(format t "method : {~S} ~%" method)
+     ;; 	(format t "url : {~S} ~%" url)
+     ;;  (format t "act post params : {~S} ~%" (plist->alist post-params)))
       (unwind-protect
 	   (multiple-value-bind (response code)
 	       (destructuring-bind (&optional auth-method &rest auth-spec) (or auth  (user-http-auth *twitter-user*))

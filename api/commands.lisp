@@ -227,7 +227,6 @@
 	 
 
 (defun generate-get-url (cmd args)
-  (format t "generate url : ~S ~S ~%" cmd args)
   (format nil "~A?~{~A=~A~^&~}" (command-base-url cmd) (plist->uri-params args t)))
 	  
 

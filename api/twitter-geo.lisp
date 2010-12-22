@@ -132,8 +132,9 @@
   (polylines        "" nil)
   (contained-within "" nil))
 
-(defmethod geo-place-attribute-street-address ((obj nil))
+(defmethod geo-attribute-street-address ((obj (eql nil)))
   )
+
 (defmethod print-object ((ref geo-place) stream)
   (format stream "#<TWITTER-GEO-PLACE '~A'>" (geo-place-name ref)))
 

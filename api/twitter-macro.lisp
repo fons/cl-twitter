@@ -26,8 +26,6 @@
 			  (decf ,$skip))
 		      (setf ,_cursor_ (funcall ,controller ,cursor-id)))))))))))
 
-;;(defmacro with-paging ( (&key (max 1500) (skip 0) (collector nil) ) &rest body)
-;; based on the with-cursor macro
 
 (defmacro collect-tweets ((&key (max 1) (skip 0) (container (make-hash-table  :test 'equal :size 100))) &rest body)
   (with-gensyms (ht ht-size page lst item)

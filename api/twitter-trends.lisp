@@ -32,6 +32,9 @@
   (woeid  "" nil)
   (name "" nil))
 
+(defmethod place-name ((obj (eql nil)))
+  "N/A")
+
 (defmethod print-object ((ref place) stream)
   (format stream "#<TWITTER-PLACE '~A:~A'>" (place-woeid ref) (place-name ref)))
 
@@ -186,5 +189,5 @@
   (let ((loc-trend-list (location-trends :lat lat :long long))
 	(lst ()))
     (dolist (loc-trend loc-trend-list)
-      (push (trends@location (place-woeid loc-trend))) lst)
+      (push (trends@location (place-woeid loc-trend)) lst))
     lst))
