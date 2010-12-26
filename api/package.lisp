@@ -152,20 +152,25 @@
    #:statuses-user-lists
    #:memberships-user-lists
    #:subscriptions-user-lists
+
    #:collect-user-lists
    #:collect-user-list-memberships
    #:collect-user-list-subscriptions
    #:collect-user-list-statuses
+
    #:user-list-timeline
-   
+   #:member-list-timeline 
+   #:subscriber-list-timeline
+
    ;;List Members resources
    #:user-list-members
    #:collect-user-list-members
    #:add-user-list-members
    #:delete-user-list-members
    #:user-list-members-p
-   ;; List Subscribers resources
-  #:user-list-subscribers
+ 
+  ;; List Subscribers resources
+   #:user-list-subscribers
    #:collect-user-list-subscribers
    #:add-user-list-subscribers
    #:delete-user-list-subscribers

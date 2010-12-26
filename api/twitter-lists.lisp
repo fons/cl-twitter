@@ -188,13 +188,31 @@
 ;;I use a hashtable because pages appear to return identical results.. 
 ;;stop when the hash table has no more new elements
 (defun collect-user-list-statuses (list-owner list-id &key (max -1) (skip 0) (container (make-hash-table  :test 'equal :size 100)))
-  (collect-tweets (:max max :skip skip) statuses-user-lists :list-owner list-owner :id list-id :page 1))
+  (collect-tweets (:max max :skip skip :container container) statuses-user-lists :list-owner list-owner :id list-id :page 1))
 
 ;;---------------------------------------------------------------------------------------------------------------------------------------
 (defun user-list-timeline (list-owner &key (max-per-list 1) )
   (let ((user-list-ids (mapcar #'list-type-id (cursor-user-lists-lists (get-user-lists :list-owner list-owner))))
 	  (container (make-hash-table  :test 'equal :size 100)))
 	(dolist (list-id user-list-ids)
-	  (collect-user-list-statuses list-owner list-id :max max-per-list :container container))
+	  (setf container (collect-user-list-statuses list-owner list-id :max max-per-list :container container)))
 	container))
       
+(defun member-list-timeline (user &key (max-per-list 1) )
+  (labels ((user-list-data (ul)
+	     (list (twitter-user-screen-name (list-type-user ul)) (list-type-slug ul)))) 
+    (let ((ulst (mapcar #'user-list-data (cursor-user-lists-lists (memberships-user-lists :screen-name user))))
+	  (container (make-hash-table  :test 'equal :size 100)))
+      (dolist (item ulst)
+	(setf container (collect-user-list-statuses (car item) (cadr item) :max max-per-list :container container)))
+      container)))
+	
+(defun subscriber-list-timeline (user &key (max-per-list 1) )
+  (labels ((user-list-data (ul)
+	     (list (twitter-user-screen-name (list-type-user ul)) (list-type-slug ul)))) 
+    (let ((ulst (mapcar #'user-list-data (cursor-user-lists-lists (subscriptions-user-lists :screen-name user))))
+	  (container (make-hash-table  :test 'equal :size 100)))
+      (dolist (item ulst)
+	(setf container (collect-user-list-statuses (car item) (cadr item) :max max-per-list :container container)))
+      container)))
+	

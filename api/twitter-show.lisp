@@ -55,8 +55,17 @@
   (format t "~90twoeid : ~A~110tcoutry code : ~A" (place-woeid place) (place-countrycode place) )
   (format t "~&~A" *seperator*))
 
+(defmethod show ((list-type list-type))
+  (format t "~&~1t~a~35t~a~90t~a" (list-type-slug list-type) (list-type-full-name list-type) (list-type-description list-type))
+  (format t "~&~90tid : ~a~100towner : ~a members : ~a mode :~a " (list-type-id list-type) (twitter-user-screen-name (list-type-user list-type)) (list-type-member-count list-type) (list-type-mode list-type) )
+  (format t "~&~A" *seperator*))
+
+
 (defmethod show ((geo-places geo-places))
   (mapcar #'show (geo-places-places geo-places)))
   
 (defmethod show ((geo-result geo-result))
   (show (geo-result-result geo-result)))
+
+(defmethod show ((cursor-user-lists cursor-user-lists))
+  (mapcar #'show (cursor-user-lists-lists cursor-user-lists)))

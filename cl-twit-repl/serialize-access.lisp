@@ -5,8 +5,13 @@
 ;;secret user-data token-consumer session-handle expires authorization-expires origin-uri)
 (defvar *access-file* "access.ht")
 
+(defun get-dirs ()
+  #+sbcl (directory "./.")
+  #+ccl  (directory "*" :directories t)
+  #-(or sbcl ccl) (directory "./"))
+
 (defun default-access-path ()
-  (let ((dirs (mapcar #'sb-ext:native-namestring (directory "./."))))
+  (let ((dirs (mapcar #'namestring (get-dirs))))
     (labels ((cl-twitter-root (path)
 	       (multiple-value-bind (start end reg1 reg2) (ppcre:scan "/cl-twitter/" path)
 		 (declare (ignore start reg1 reg2))
