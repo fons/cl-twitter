@@ -1,4 +1,4 @@
-(in-package :twitter)
+(in-package :cl-twitter)
 
 ;;
 ;; Errors
@@ -6,10 +6,10 @@
 
 (define-condition twitter-api-condition (error)
   ((return-code :reader return-code :initarg :code)
-   (short    :reader short-message :initarg :short)
-   (long     :reader long-message  :initarg :long)
-   (request :reader request-message :initarg :request)
-   (uri      :reader request-uri :initarg :uri))
+   (short       :reader short-message :initarg :short)
+   (long        :reader long-message  :initarg :long)
+   (request     :reader request-message :initarg :request)
+   (uri         :reader request-uri :initarg :uri))
   (:report (lambda (c stream)
 	     (format stream "Error code ~A (~A): '~A'~%in request to ~A"
 		     (return-code c) (short-message c)
@@ -28,3 +28,11 @@
 
 
   
+(defmacro with-error-handler ((&key (verbose nil)) &rest body)
+  `(progn
+     (handler-case
+	 ,@body
+       (twitter-api-condition (c) 
+	 (when ,verbose (format t "twitter signaled an error : ~S : ~S ~%" (return-code c) (short-message c))))
+       (error (c)
+	 (when ,verbose (format t "an error occured : ~S ~%" c))))))

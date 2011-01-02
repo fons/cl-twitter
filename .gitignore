@@ -5,3 +5,4 @@
 *.lx64fsl
 *.fasl
 *.ht
+*.alias

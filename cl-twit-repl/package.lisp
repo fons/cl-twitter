@@ -8,8 +8,11 @@
    ;;--------------------
 
    #:*access-file*
+   #:alias
+   #:unalias
+   #:cl-twit-repl
+   #:done-twittering
 
-   ;; Interactive API
    #:authenticate-user
    #:authenticated-user
    #:*twitter-user*
@@ -20,10 +23,6 @@
    #:repl-authenticate-user
    #:get-authenticated-user
 
-   ;; I/O
-   #:print-tweets
-   #:get-tinyurl
-   
    ))
 
    

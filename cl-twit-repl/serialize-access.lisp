@@ -10,7 +10,7 @@
   #+ccl  (directory "*" :directories t)
   #-(or sbcl ccl) (directory "./"))
 
-(defun default-access-path ()
+(defun default-access-path (dirname filename)
   (let ((dirs (mapcar #'namestring (get-dirs))))
     (labels ((cl-twitter-root (path)
 	       (multiple-value-bind (start end reg1 reg2) (ppcre:scan "/cl-twitter/" path)
@@ -18,11 +18,11 @@
 		 (subseq path 0 end))))
       (let ((root-dirs (mapcar #'cl-twitter-root dirs)))
 	(if root-dirs
-	    (concatenate 'string (car root-dirs) "access/" *access-file*)
+	    (concatenate 'string (car root-dirs) dirname filename)
 	    ())))))
 
 (defun access-file ()
-  (default-access-path))
+  (default-access-path "access/" *access-file*))
 
 (defun serialize-user-data (token)
   (mapcar (lambda (e) (list (car e) (cdr e))) (oauth::token-user-data token)))
@@ -55,13 +55,13 @@
   (let ((ht  (read-access-info))
 	(lst (serialize-access-token (twitter-user-access-token twitter-user))))
     (setf (gethash (car lst) ht) lst)
-    (with-open-file (stream (access-file) :direction :output :if-exists :supersede)
-      (maphash (lambda (key lst) (format stream "~S~%" lst)) ht)))) 
+    (with-open-file (stream (access-file) :direction :output :if-exists :supersede :if-does-not-exist :create)
+      (maphash (lambda (key lst) (declare (ignore key)) (format stream "~S~%" lst)) ht)))) 
 		 
 
 (defun read-access-info()
   (let ((ht (make-hash-table :test 'equal)))
-    (with-open-file (stream (access-file) :direction :input )
+    (with-open-file (stream (access-file) :direction :input :if-does-not-exist :create)
       (do ((line (read stream nil) (read stream nil))) 
 	  ((null line))
 	(setf (gethash (car line) ht) line))) 
@@ -94,11 +94,18 @@
 	(arglist  (cadr lst)))
     (cons fun (reduce (lambda (l r) (append l r)) (mapcar #'unpack  arglist) ))))
 
+
+(define-condition missing-user-credentials (error)
+  ((who :initarg :who :initform "??" :reader who))
+  (:report (lambda (condition stream)
+	     (format stream "Missing twitter login credentials for ~@(~A~) from access.ht."
+		     (who condition)))))
+
 (defun get-access-token (user)
   (labels ((check-name (ht)
 	     (let ((lst (gethash user ht)))
 	       (if lst
 		   (cadr lst)
-		   (error (format nil "access credentials for user ~A not found~%" user)))))) 
+		   (error 'missing-user-credentials :who user))))) 
     (eval (maker (check-name (read-access-info))))))
 

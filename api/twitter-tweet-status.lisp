@@ -1,4 +1,4 @@
-(in-package :twitter)
+(in-package :cl-twitter)
 
 
 ;;
@@ -174,12 +174,19 @@
 	(error "Tweet updates must be less than 140 characters.  Length is ~A" (length newtext)))))
 
 (defun reply-to (tweet text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities nil))
-  (send-tweet text :in-reply-to-status-id (tweet-id tweet) :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates :trim-user trim-user :include-entities include-entities))
+  (tweet text :in-reply-to-status-id (tweet-id tweet) :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates 
+	 :trim-user trim-user :include-entities include-entities))
 
 (defun @reply-to (tweet text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities nil))
   (let ((fmt (format nil "@~A ~A" (twitter-user-screen-name (tweet-user tweet)) text)))
-    (send-tweet fmt :in-reply-to-status-id (tweet-id tweet) :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates :trim-user trim-user :include-entities include-entities)))
+    (tweet fmt :in-reply-to-status-id (tweet-id tweet) :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates 
+	   :trim-user trim-user :include-entities include-entities)))
 
+(defun @mention (name text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities nil))
+  (let ((fmt (format nil "@~A ~A" (twitter-user-screen-name (show-user name)) text)))
+    (tweet fmt :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates :trim-user trim-user :include-entities include-entities)))
+	   
+  
 (defun delete-tweet (tweet &key (trim-user nil) (include-entities nil))
   (delete-status (tweet-id tweet) :trim-user trim-user :include-entities include-entities))
 

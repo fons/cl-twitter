@@ -1,5 +1,15 @@
 (in-package :twitter)
 
+(defun day-of-week (i)
+  (nth i *day-of-week-strings*))
+
+(defun month (i)
+  (nth i *month-strings*))
+
+(defun current-utc (stream)
+  (multiple-value-bind (s m h date month year dow &rest args) (decode-universal-time (get-universal-time) 0)
+    (format stream "~A ~A ~A ~A:~A:~A ~A" (day-of-week dow) (month month) date h m s year)))
+
 (defun twitter-app-uri (method)
   (concatenate 'string *twitter-app-uri* method))
 

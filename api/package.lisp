@@ -44,6 +44,7 @@
    #:retweet
    #:retweets
    #:retweeted-by
+   #:@mention
 
    ;; Trends resources
    #:trends
