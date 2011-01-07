@@ -9,16 +9,23 @@
 (defvar *twitter-types* (list 'tweet 'cl-twitter::geo-places 'cl-twitter::geo-place 'cl-twitter::place 'cl-twitter::list-type 'cl-twitter::geo-result 'twitter-user 'search-ref 'trend-list 
 			      'cl-twitter::rate-limit) "list of types in the twitter api for which we 're going to use the show method instead of the pp")
 
+(defun car-ht-value (ht)
+  (with-hash-table-iterator (it ht) 
+    (multiple-value-bind (exists-p key value) (it)
+      (declare (ignore key))
+      (when exists-p (return-from car-ht-value value)))))
+
 (defun twitterp (obj)
   (member (type-of obj) *twitter-types*))
 
 (defun pp-show (s o)
-  (if (or (twitterp o) (and (consp o) (twitterp (car o))) (hash-table-p o))
+  (if (or (twitterp o) (and (consp o) (twitterp (car o))) (and (hash-table-p o) (twitterp (car-ht-value o))))
       (show o (or *cl-twit-repl-stream* s))
       (funcall *saved-pprint-dispatch-cons* s o)))
 
 (defun install-new-dispatchers ()
   (mapcar (lambda (type) (set-pprint-dispatch type #'pp-show)) *twitter-types*))
+
 
 (defun cl-twit-repl ()
   (use-package :cl-twitter)
@@ -30,7 +37,8 @@
   (install-new-dispatchers)
   (unless (probe-file (access-file)) (repl-authenticate-user))
   (cl-twitter::with-error-handler (:verbose nil)
-      (verify-credentials)))
+    (verify-credentials)))
+
 
 (defun done-twittering ()
   (when *saved-print-pprint-dispatch* 
@@ -38,6 +46,7 @@
     (setf *saved-print-pprint-dispatch* nil))
   ;;order is important
   (when *alias-registry* (dump-alias))
+  (unalias)
   (setf *alias-registry*  nil)
   (cl-twitter::with-error-handler (:verbose nil)
     (end-session))
