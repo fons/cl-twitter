@@ -90,7 +90,7 @@
   (declare (ignore rec)))
 
 (defun print-cursor-user (ref)
-  (format t "~A: ~A ~A~%" (cursor-user-previous-cursor ref) (cursor-user-next-cursor ref) (length (cursor-user-ids ref))))
+  (format t "~A: ~A ~A~%" (cursor-user-previous-cursor ref) (cursor-user-next-cursor ref) (length (cursor-user-id ref))))
 
 (defmethod register-twitter-object ((ref cursor-user)))
 

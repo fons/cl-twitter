@@ -85,12 +85,6 @@ the user has been logged in to Twitter via OAuth."
 
 ;;---------------------------------------------
 
-;;
-;; Objects
-;;
-
-(defun print-tweets (tweets)
-  (mapc #'print-tweet tweets))
 
 
   
