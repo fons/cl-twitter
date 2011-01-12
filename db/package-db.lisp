@@ -1,8 +1,9 @@
 (in-package :cl-user)
 
-(defpackage :twitter-db
+(defpackage :cl-twitter-db
   (:use :cl :twitter :elephant)
   (:import-from :twitter :register-twitter-object)
+  (:nicknames :twitter-db)
   (:export 
    #:*twitter-db-spec*
    #:open-twitter-db

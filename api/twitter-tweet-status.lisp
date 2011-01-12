@@ -50,15 +50,6 @@
 	  (twitter-user-screen-name (tweet-user tweet))
 	  (tweet-created-at tweet)))
 
-
-(defun lookup-tweet (rec)
-  #-allegro (declare (ignore rec))
-  nil)
-
-(defmethod register-twitter-object ((tweet tweet))
-  nil)
-
-
 ;;
 ;;  Tweets resources
 ;;           statuses/show/:id

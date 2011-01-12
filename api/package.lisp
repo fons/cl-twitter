@@ -104,7 +104,6 @@
    #:collect-follower-statuses
    #:do-user-search
    #:get-user
-   #:lookup-twitter-user
 
    ;; Friendship Methods
    #:follow

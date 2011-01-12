@@ -1,15 +1,13 @@
 (in-package :twitter-db)
 
 
-(defvar *twitter-db-spec* nil
-  "Use to setup the elephant spec to store stuff at")
+(defvar *twitter-db-spec* nil  "Use to setup the elephant spec to store stuff at")
 
 ;;
 ;; Basic database operations
 ;;
 
-(defvar *twitter-db* nil
-  "Stores the open twitter db controller")
+(defvar *twitter-db* nil "Stores the open twitter db controller")
 
 (defvar *users* nil)
 (defvar *tweets* nil)
@@ -81,20 +79,27 @@
      (with-transaction (:store-controller *twitter-db*)
        ,@body)))
 
-(defmethod register-twitter-object :after ((user twitter-user))
-  (with-twitter-db ()
-    (unless (get-value (twitter-user-id user) *users*))
-      (setf (get-value (twitter-user-id user) *users*) user))))
+;;(defmethod register-twitter-object :after ((user twitter-user))
+;;  (format t "-----> calling after twitter user method on ~S~%" user)
+;;  )
 
-(defmethod register-twitter-object :after ((tweet tweet))
-  (with-twitter-db ()
-    (unless (get-value (tweet-id tweet) *tweets*)
-      (setf (get-value (tweet-id tweet) *tweets*) tweet))))
 
-(defmethod register-twitter-object :after ((msg twitter-message))
-  (with-twitter-db ()
-    (unless (get-value (twitter-message-id msg) *msgs*)
-      (setf (get-value (twitter-message-id msg) *msgs*) msg))))
+;;  (with-twitter-db ()
+;;    (unless (get-value (twitter-user-id user) *users*))
+;;    (setf (get-value (twitter-user-id user) *users*) user)))
+
+;;(defmethod register-twitter-object :after ((tweet tweet))
+;;  (format t "-----> calling after tweet method on ~S~%" tweet)
+;;  )
+
+;;  (with-twitter-db ()
+;;    (unless (get-value (tweet-id tweet) *tweets*)
+;;      (setf (get-value (tweet-id tweet) *tweets*) tweet))))
+
+;;(defmethod register-twitter-object :after ((msg twitter-message))
+;;  (with-twitter-db ()
+;;    (unless (get-value (twitter-message-id msg) *msgs*)
+;;      (setf (get-value (twitter-message-id msg) *msgs*) msg))))
   
 ;;
 ;; Retrieval
@@ -190,3 +195,6 @@
 	   v))
     (map-user-msgs #'identity-v user t)))
   
+
+;;-------------
+

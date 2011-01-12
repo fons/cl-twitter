@@ -19,13 +19,8 @@
 (defmethod print-object ((ref saved-search) stream)
   (format stream "#<TWITTER-SAVED-SEARCH '~A:~A'>" (saved-search-id ref)(saved-search-name ref) ))
 
-(defun lookup-saved-search (rec)
-  (declare (ignore rec)))
-
 (defun print-saved-search (ref)
   (format t "~A: ~A ~A~%" (saved-search-name ref) (saved-search-query ref) (saved-search-id  ref)))
-
-(defmethod register-twitter-object ((ref saved-search)))
 
 ;;
 ;; Saved Searches resources

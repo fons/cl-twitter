@@ -32,13 +32,8 @@
 (defmethod print-object ((ref cursor-id) stream)
   (format stream "#<TWITTER-CURSOR-ID '~A:~A'>" (cursor-id-next-cursor ref) (length (cursor-id-ids ref)) ))
 
-(defun lookup-cursor-id (rec)
-  (declare (ignore rec)))
-
 (defun print-cursor-id (ref)
   (format t "~A: ~A ~A~%" (cursor-id-previous-cursor ref) (cursor-id-next-cursor ref) (length (cursor-id-ids ref))))
-
-(defmethod register-twitter-object ((ref cursor-id)))
 
 
 ;; Social Graph Methods

@@ -99,7 +99,7 @@
 
 (defun parse-element-record (type rec embedded unique-p)
   "Generic parsing function"		     
-  ;;(format t "*) ~A:~A:~A:~A~%" type rec embedded unique-p)
+  ;;(format t "generic parsing function *) ~A:~A:~A:~A~%" type rec embedded unique-p)
   (let* ((lisprec (twitter->lisp-alist rec))
 	 (existing (when (fboundp (lookup-fn-name type))
 		     (funcall (lookup-fn-name type) lisprec))))
@@ -114,6 +114,12 @@
 	  (register-twitter-object new)
 	  new))))
 
+;;default implementation
+(defmethod register-twitter-object ((ref t)))
+
+(defun new-install ()
+  (defmethod register-twitter-object ((ref tweet))
+    (format t "a tweet !!!~&")))
 
 (defun default-make-element (rec type)
   "Make an element of type from record."
@@ -188,8 +194,6 @@
 (defvar *twitter-user* nil
   "The authenticated user")
 
-(defvar *twitter-users* (make-hash-table :test #'equal)
-  "A hash of previously seen users to avoid re-parsing")
 
 (defun user-http-auth (user)
   "If the given USER has no login credentials, returns NIL.  If the

@@ -9,13 +9,10 @@
 (defmethod print-object ((ref geo-attribute) stream)
   (format stream "#<TWITTER-GEO-ATTRIBUTE '~A'>" (geo-attribute-street-address ref)))
 
-(defun lookup-geo-attribute (rec)
-  (declare (ignore rec)))
 
 (defun print-geo-attribute (ref)
   (format t "address :~A " (geo-attribute-street-address ref)))
 
-(defmethod register-twitter-object ((ref geo-attribute)))
 ;;-----------------------------------------------------
 (define-element geo-coordinate ()
   "coordinate"
@@ -27,13 +24,9 @@
 (defmethod print-object ((ref geo-coordinate) stream)
   (format stream "#<TWITTER-GEO-COORDINATE '~A:~A'>" (geo-coordinate-long ref) (geo-coordinate-lat ref)))
 
-(defun lookup-geo-coordinate (rec)
-  (declare (ignore rec)))
 
 (defun print-geo-coordinate (ref)
   (format t "long :~A ; lat: ~A" (geo-coordinate-long ref) (geo-coordinate-lat ref)))
-
-(defmethod register-twitter-object ((ref geo-coordinate)))
 
 ;;-----------------------------------------------------
 ;;(default-make-element '((:long 89) (:lat 67)) 'geo-coordinate)
@@ -52,13 +45,9 @@
 (defmethod print-object ((ref geo-bounding-box) stream)
   (format stream "#<TWITTER-GEO-BOUNDING-BOX '~A'>" (geo-bounding-box-coordinates ref)))
 
-(defun lookup-geo-bounding-box (rec)
-  (declare (ignore rec)))
 
 (defun print-geo-bounding-box (ref)
   (format t "~A" (geo-bounding-box-coordinates ref)))
-
-(defmethod register-twitter-object ((ref geo-bounding-box)))
 
 ;;----------------------------------------------------
 (define-element geo-query ((params identity))
@@ -71,15 +60,12 @@
 (defmethod print-object ((ref geo-query) stream)
   (format stream "#<TWITTER-GEO-QUERY '~A'>" (geo-query-url ref)))
 
-(defun lookup-geo-query (rec)
-  (declare (ignore rec)))
 
 (defun print-geo-query (ref)
   (format t "~A: ~A~%" 
 	  (geo-query-url ref)
 	  (geo-query-type ref)))
 
-(defmethod register-twitter-object ((ref geo-query)))
 ;;-------------------------------------------------------------------------
 (define-element geo-result ( (result geo-places) (query geo-query))
   "a geo result"
@@ -90,13 +76,10 @@
 (defmethod print-object ((ref geo-result) stream)
   (format stream "#<TWITTER-GEO-RESULT '~A':~A'>" (geo-result-result ref)  (geo-result-query ref) ))
 
-(defun lookup-geo-result (rec)
-  (declare (ignore rec)))
 
 (defun print-geo-result (ref)
   (format t "~A: ~A~%" (geo-result-query ref) (geo-result-result ref)))
 
-(defmethod register-twitter-object ((ref geo-result)))
 ;;-------------------------------------------------------------------------
 (define-element geo-places ( (places (geo-place)) )
   "a geo place result"
@@ -107,13 +90,9 @@
 (defmethod print-object ((ref geo-places) stream)
   (format stream "#<TWITTER-GEO-PLACES '~A'>" (geo-places-places ref)))
 
-(defun lookup-geo-places (rec)
-  (declare (ignore rec)))
-
 (defun print-geo-places (ref)
   (format t "~A~%" (geo-places-places ref)))
 	  
-(defmethod register-twitter-object ((ref geo-places)))
 ;;-------------------------------------------------------------------------
 
 (define-element geo-place ( (bounding-box geo-bounding-box) (contained-within (geo-place)) (attributes geo-attribute) (geometry geo-bounding-box))
@@ -137,9 +116,6 @@
 
 (defmethod print-object ((ref geo-place) stream)
   (format stream "#<TWITTER-GEO-PLACE '~A'>" (geo-place-name ref)))
-
-(defun lookup-geo-place (rec)
-  (declare (ignore rec)))
 
 (defvar *geo-print-offset* 0)
 
@@ -173,8 +149,6 @@
     (pr "polylines"   (geo-place-polylines ref))
     (pr nil nil :before #'end)
   ref))
-
-(defmethod register-twitter-object ((ref geo-place)))
 
 ;;--------------------------helper functions----------------------
 
@@ -283,4 +257,5 @@
 
 (defun geo-register-place (lat long name contained-id token)
   (apply 'twitter-op :geo/place :name name :contained_within contained-id :token token :lat lat :long long nil))
+
 

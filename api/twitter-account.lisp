@@ -15,13 +15,9 @@
 (defmethod print-object ((ref rate-limit) stream)
   (format stream "#<TWITTER-RATE-LIMIT '~A:~A'>" (rate-limit-remaining-hits ref) (rate-limit-hourly-limit ref)))
 
-(defun lookup-rate-limit (rec)
-  (declare (ignore rec)))
 
 (defun print-rate-limit (ref)
   (format t "~A: ~A~%" (rate-limit-remaining-hits ref) (rate-limit-hourly-limit ref)))
-
-(defmethod register-twitter-object ((ref rate-limit)))
 
 (defun rate-limit-exceeded ()
   (let ((rls (rate-limit-status)))
@@ -39,13 +35,8 @@
 (defmethod print-object ((ref end-session) stream)
   (format stream "#<TWITTER-END-SESSION '~A:~A'>" (end-session-request ref) (end-session-error ref)))
 
-(defun lookup-end-session (rec)
-  (declare (ignore rec)))
-
 (defun print-end-session (ref)
   (format t "~A: ~A~%" (end-session-request ref) (end-session-error ref)))
-
-(defmethod register-twitter-object ((ref end-session)))
 
 ;;
 ;; ACCOUNT METHODS

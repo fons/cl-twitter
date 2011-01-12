@@ -27,17 +27,12 @@
 (defmethod print-object ((ref list-type) stream)
   (format stream "#<TWITTER-LIST-TYPE '~A:~A'>" (list-type-id ref) (list-type-full-name ref)))
 
-
-(defun lookup-list-type (rec)
-  (declare (ignore rec)))
-
 (defun print-list-type (ref)
   (format t "~A:~A: ~A~%" 
 	  (list-type-full-name ref)
 	  (list-type-id ref)
 	  (list-type-slug ref)))
 
-(defmethod register-twitter-object ((ref list-type)))
 ;;---------------------------------------------------------------
 
 (define-element cursor-user-lists ((lists (list-type)))
@@ -53,14 +48,10 @@
 (defmethod print-object ((ref cursor-user-lists) stream)
   (format stream "#<TWITTER-CURSOR-USER-LISTS '~A:~A:~A'>" (cursor-user-lists-previous-cursor ref) (cursor-user-lists-next-cursor ref) (length (cursor-user-lists-lists ref) )))
 
-(defun lookup-cursor-user-lists (rec)
-  (declare (ignore rec)))
-
 (defun print-cursor-user-lists (ref)
   (format t "~A:~A: ~A~%" (cursor-user-lists-previous-cursor ref) (cursor-user-lists-next-cursor ref) (length (cursor-user-lists-lists ref) )))
 
 
-(defmethod register-twitter-object ((ref cursor-user-lists)))
 
 ;;--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;; Not sure what the point of the user field is. Testing seems to suggest that it matters littel as long as the user exists.

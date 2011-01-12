@@ -26,12 +26,6 @@
 	  (twitter-message-sender-screen-name msg)
 	  (twitter-message-text msg)))
 
-(defun lookup-message (rec)
-  #-allegro (declare (ignore rec))
-  nil)
-
-(defmethod register-twitter-object ((msg twitter-message))
-  nil)
 
 ;;
 ;; DIRECT MESSAGES

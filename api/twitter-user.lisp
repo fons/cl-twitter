@@ -47,18 +47,8 @@
 	(aif (gethash ref *twitter-users*) it
 	     (show-user ref)))))
 
-
-(defun lookup-twitter-user (rec)
-  (let ((name (get-value :screen-name rec)))
-    (gethash name *twitter-users*)))
-  
-
 (defmethod print-object ((user twitter-user) stream)
   (format stream "#<TWITTER-USER '~A:~A'>" (twitter-user-id user) (twitter-user-screen-name user)))
-
-
-(defmethod register-twitter-object ((user twitter-user))
-  (setf (gethash (twitter-user-screen-name user) *twitter-users*) user))
 
 (defmethod describe-object ((user twitter-user) stream)
   (format stream "Name: ~A ('~A') id:~A~%" 
@@ -86,13 +76,9 @@
 (defmethod print-object ((ref cursor-user) stream)
   (format stream "#<TWITTER-CURSOR-USER '~A:~A'>" (cursor-user-next-cursor ref) (length (cursor-user-users ref)) ))
 
-(defun lookup-cursor-user (rec)
-  (declare (ignore rec)))
 
 (defun print-cursor-user (ref)
   (format t "~A: ~A ~A~%" (cursor-user-previous-cursor ref) (cursor-user-next-cursor ref) (length (cursor-user-id ref))))
-
-(defmethod register-twitter-object ((ref cursor-user)))
 
 ;;
 ;; User resources

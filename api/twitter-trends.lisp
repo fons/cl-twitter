@@ -12,15 +12,12 @@
 (defmethod print-object ((ref place-type) stream)
   (format stream "#<TWITTER-PLACE-TYPE '~A'>" (place-type-name ref)))
 
-(defun lookup-place-type (rec)
-  (declare (ignore rec)))
 
 (defun print-place-type (ref)
   (format t "~A: ~A~%" 
 	  (place-type-name ref)
 	  (place-type-code ref)))
 
-(defmethod register-twitter-object ((ref place-type)))
 
 (define-element place ((placetype place-type))
   "a place "
@@ -38,16 +35,11 @@
 (defmethod print-object ((ref place) stream)
   (format stream "#<TWITTER-PLACE '~A:~A'>" (place-woeid ref) (place-name ref)))
 
-(defun lookup-place (rec)
-  (declare (ignore rec)))
-
 (defun print-place (ref)
   (format t "~A: ~A ~A~%" 
 	  (place-name ref)
 	  (place-country ref)
 	  (place-woeid ref)))
-
-(defmethod register-twitter-object ((ref place)))
 
 (define-element trend ()
   "a trend "
@@ -61,16 +53,12 @@
 (defmethod print-object ((ref trend) stream)
   (format stream "#<TWITTER-TREND '~A'>" (trend-name ref)))
 
-(defun lookup-trend (rec)
-  (declare (ignore rec)))
-
 (defun print-trend (ref)
   (format t "~A: ~A ~A~%" 
 	  (trend-name ref)
 	  (trend-query ref)
 	  (trend-url  ref)))
 
-(defmethod register-twitter-object ((ref trend)))
 
 (define-element trend-list ((locations (place)) (trends (trend)))
   "a trend at a location"
@@ -83,16 +71,11 @@
 (defmethod print-object ((ref trend-list) stream)
   (format stream "#<TWITTER-TREND-LIST '~A:~A:~A'>" (trend-list-as-of ref) (trend-list-locations ref) (trend-list-trends ref)))
 
-(defun lookup-trend-list (rec)
-  (declare (ignore rec)))
-
 (defun print-trend-list (ref)
   (format t "~A: ~A ~%" 
 	  (trend-list-trends ref)
 	  (trend-list-as-of ref)))
 
-
-(defmethod register-twitter-object ((ref trend-list)))
 
 ;;
 ;; In some cases (like daily-trends) the data doesn't follow the format of having a predefined static key.

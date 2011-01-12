@@ -27,15 +27,9 @@
 (defmethod print-object ((ref follow-target) stream)
   (format stream "#<TWITTER-FOLLOW-TARGET '~A'>" (follow-target-screen-name ref)))
 
-
-(defun lookup-follow-target (rec)
-  (declare (ignore rec)))
-
 (defun print-follow-target (ref)
   (format t "~A: ~A ~A~%" (follow-target-screen-name ref) (follow-target-id ref)  (follow-target-following  ref)))
 
-
-(defmethod register-twitter-object ((ref follow-target)))
 
 (define-element follow-source ()
   "a follower "
@@ -54,14 +48,8 @@
 (defmethod print-object ((ref follow-source) stream)
   (format stream "#<TWITTER-FOLLOW-SOURCE '~A'>" (follow-source-screen-name ref) ))
 
-
-(defun lookup-follow-source (rec)
-  (declare (ignore rec)))
-
 (defun print-follow-source (ref)
   (format t "print-follow-source ~%"))
-
-(defmethod register-twitter-object ((ref follow-source)))
 
 (define-element relationship ((source follow-source) (target follow-target))
   "a follower "
@@ -74,13 +62,9 @@
       (format stream "#<TWITTER-RELATIONSHIP '~A following ~A'>" (relationship-source ref) (relationship-target ref))
       (format stream "#<TWITTER-RELATIONSHIP '~A is followed by ~A'>" (relationship-source ref) (relationship-target ref))))
 
-(defun lookup-relationship (rec)
-  (declare (ignore rec)))
-
 (defun print-relationship (ref)
   (format t "~A: ~A ~%" (relationship-source ref) (relationship-target  ref)))
 
-(defmethod register-twitter-object ((ref relationship)))
 
 (define-element relationships ((relationship relationship) )
   "a follower "
@@ -91,15 +75,9 @@
 (defmethod print-object ((ref relationships) stream)
   (format stream "#<TWITTER-RELATIONSHIPS '~A'>" (relationships-relationship ref) ))
 
-(defun lookup-relationships (rec)
-  (declare (ignore rec)))
-
 (defun print-relationships (ref)
   (format t "~A~%" (relationships-relationship ref)))
-	  
 
-
-(defmethod register-twitter-object ((ref relationships)))
 
 ;;
 ;; Friendship Methods

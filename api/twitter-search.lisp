@@ -13,15 +13,10 @@
 (defmethod print-object ((ref search-ref-metadata) stream)
   (format stream "#<TWITTER-SEARCH-REF-META-DATA '~A'>" (search-ref-metadata-result-type ref)))
 
-(defun lookup-search-ref-metadata (rec)
-  (declare (ignore rec)))
-
 (defun print-search-ref-metadata (ref)
   (format t "~A: ~A~%" 
 	  (search-ref-metadata-result-type ref)
 	  (search-ref-metadata-recent-retweets ref)))
-
-(defmethod register-twitter-object ((ref search-ref-metadata)))
 
 (define-element search-ref ( (metadata search-ref-metadata))
   "An individual search reference"
@@ -41,13 +36,9 @@
 (defmethod print-object ((ref search-ref) stream)
   (format stream "#<TWITTER-SEARCH-REF '~A'>" (search-ref-from-user ref)))
 
-(defun lookup-search-ref (rec)
-  (declare (ignore rec)))
 
 (defun print-search-ref (ref)
   (format t "[~A] ~20<~A:~;~>~A~%" (search-ref-created-at ref) (search-ref-from-user ref) (search-ref-text ref)))
-
-(defmethod register-twitter-object ((ref search-ref)))
 
 (define-element search-result ((results (search-ref)))
    "This is the results of a twitter search.  Metadata plus
@@ -68,11 +59,6 @@
 
 (defmethod print-object ((results search-result) stream)
   (format stream "#<TWITTER-SEARCH '~A'>" (search-result-query results)))
-
-(defun lookup-search-result (rec)
-  #-allegro (declare (ignore rec)))
-
-(defmethod register-twitter-object ((result search-result)))
 
 (defun search-results (result)
   (search-result-results result))
