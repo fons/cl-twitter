@@ -100,7 +100,7 @@
 
 ;;-----------
 (defun send-message (user message)
-  (let (( user-id (twitter-user-id (get-user user))))
+  (let (( user-id (twitter-user-id (show-user user))))
     (send-direct-message user message :user-id user-id)))
 
 (defun delete-message (message)

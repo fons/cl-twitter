@@ -26,8 +26,10 @@
 (defun get-value (name object)
   (awhen (assoc name object)
     (cdr it)))
+
 (defun set-value (value name object) 
   (setf (cdr (assoc name object)) value))
+
 (defsetf get-value set-value)
 
 ;;
@@ -70,6 +72,7 @@
 
 (defun maybe-add-conversion-from-twitter (twitter-sym)
   "Add a conversion between _ and - forms of argument symbols starting with a twitter symbol"
+  #+nil(format t "twitter sym : ~S~%" twitter-sym)
   (let* ((twitter-key (as-keyword twitter-sym))
 	 (twitter-name (symbol-name twitter-key)))
     (when (find #\_ twitter-name)
@@ -122,8 +125,6 @@
 
 (defun valid-plist (plist)
   (and (consp plist) (consp (cdr plist))))
-
-
 
 (defun strip-keyword (keyword plist)
   (when (valid-plist plist)
@@ -179,3 +180,22 @@
     (do () ((or (null lst) (keywordp (car lst)))) 
       (push (pop lst) e))
     (values (nreverse e) lst)))
+
+;;-------------------------------------------------------------------------------------------------
+
+(defun get-dirs ()
+  #+sbcl (directory "./.")
+  #+ccl  (directory "*" :directories t)
+  #-(or sbcl ccl) (directory "./"))
+
+
+(defun default-file-path (dirname filename)
+  (let ((dirs (mapcar #'namestring (get-dirs))))
+    (labels ((cl-twitter-root (path)
+	       (multiple-value-bind (start end reg1 reg2) (ppcre:scan "/cl-twitter/" path)
+		 (declare (ignore start reg1 reg2))
+		 (subseq path 0 end))))
+      (let ((root-dirs (mapcar #'cl-twitter-root dirs)))
+	(if root-dirs
+	    (concatenate 'string (car root-dirs) dirname filename)
+	    ())))))

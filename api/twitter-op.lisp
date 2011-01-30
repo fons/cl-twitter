@@ -40,7 +40,7 @@
     (declare (special json:*json-identifier-name-to-lisp* 
 		      json:*lisp-identifier-name-to-json*))
     (handler-case 
-	(json:decode-json response-stream)
+	  (json:decode-json response-stream)
       #+nil
       (t () 
 	;; what to do with decoding errors?
@@ -50,12 +50,13 @@
   ;;(format t "command {~A} args : {~A} ~%" command args)
   (multiple-value-bind (method url auth post-params) (command-request-arguments command args)
     (let ((socket nil))
-      ;;(progn
-      ;;	(format t "args : {~S} ~%" args)
-     ;; 	(format t "post params : {~S} ~%" post-params)
-     ;; 	(format t "method : {~S} ~%" method)
-     ;; 	(format t "url : {~S} ~%" url)
-     ;;  (format t "act post params : {~S} ~%" (plist->alist post-params)))
+      #+nil
+      (progn
+      	(format t "args : {~S} ~%" args)
+      	(format t "post params : {~S} ~%" post-params)
+     	(format t "method : {~S} ~%" method)
+      	(format t "url : {~S} ~%" url)
+       (format t "act post params : {~S} ~%" (plist->alist post-params)))
       (unwind-protect
 	   (multiple-value-bind (response code)
 	       (destructuring-bind (&optional auth-method &rest auth-spec) (or auth  (user-http-auth *twitter-user*))
@@ -93,10 +94,27 @@
 
 
 (defmethod twitter-op (command &rest args)
-  ;;(format t "command : [~S] [~s]~%" command args)
+  #+nil(format t "command : [~S] [~s]~%" command args)
   (let ((cmd (get-command command)))
     (multiple-value-bind (response code)
 	(send-command cmd (lisp->twitter-plist args))
       (if (eq code 200)
-	  (parse-command-response response (command-return-type cmd))
+	  (progn
+	    #+nil(format t "~A~%" response)
+	    (parse-command-response response (command-return-type cmd)))
 	  (parse-error-response response code)))))
+
+;;
+;;enriches the response with the arguments so those can be used in the element definition 
+;;for an example see the social graph. Twitter returns list of ids. This ensures the scrren-name is added.
+(defmethod twitter-op-ext (command &rest args)
+  #+nil (format t "command : [~S] [~s]~%" command args)
+  (let ((cmd (get-command command)))
+    (multiple-value-bind (response code)
+	(send-command cmd (lisp->twitter-plist args))
+      (if (eq code 200)
+	  (progn
+	    #+nil (format t "~A~%"  (nconc (plist->alist (nconc (list :command command) args)) response))
+	    (parse-command-response (nconc (plist->alist (nconc (list :command command) args)) response) (command-return-type cmd)))
+	  (parse-error-response response code)))))
+

@@ -80,9 +80,15 @@
     (intern (concatenate 'string "LOOKUP-" (symbol-name type))
 	    #.(find-package :twitter))))
 
+(defun lookup-id-name (type)
+    "Given a type, return the name lookup fn. User defined."
+    (intern (concatenate 'string (symbol-name type) "-ID")  #.(find-package :twitter)))
+
+
 ;;
 ;; Parsing records
 ;;
+
 
 (defgeneric parse-record (response prim-type)
   (:documentation "Default response parser for primitive types; assume target structure")
@@ -95,14 +101,16 @@
   (:method (response (prim-type (eql :identity)))
     response))
 
-;;move to after register-twitter-object is defined
 
+
+
+;;move to after register-twitter-object is defined
+;;	 (existing (when (fboundp (lookup-fn-name type)) (funcall (lookup-fn-name type) lisprec))))
 (defun parse-element-record (type rec embedded unique-p)
   "Generic parsing function"		     
   ;;(format t "generic parsing function *) ~A:~A:~A:~A~%" type rec embedded unique-p)
-  (let* ((lisprec (twitter->lisp-alist rec))
-	 (existing (when (fboundp (lookup-fn-name type))
-		     (funcall (lookup-fn-name type) lisprec))))
+  (let* ((lisprec  (twitter->lisp-alist rec))
+	 (existing (lookup-twitter-object type lisprec)))
     ;;(format t "~S:~A~%" lisprec existing)
     (if existing
 	(prog1 existing
@@ -111,15 +119,11 @@
 	    (create-embedded-elements existing embedded)))
 	(let ((new (default-make-element lisprec type)))
 	  (create-embedded-elements new embedded)
-	  (register-twitter-object new)
+	  (register-twitter-object new lisprec)
 	  new))))
 
-;;default implementation
-(defmethod register-twitter-object ((ref t)))
-
-(defun new-install ()
-  (defmethod register-twitter-object ((ref tweet))
-    (format t "a tweet !!!~&")))
+(defgeneric register-twitter-object (ref lisprec))
+(defgeneric lookup-twitter-object (ref lisprec))
 
 (defun default-make-element (rec type)
   "Make an element of type from record."

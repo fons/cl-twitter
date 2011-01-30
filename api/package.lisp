@@ -103,7 +103,6 @@
    #:collect-friend-statuses
    #:collect-follower-statuses
    #:do-user-search
-   #:get-user
 
    ;; Friendship Methods
    #:follow
@@ -337,6 +336,8 @@
 
    ;;trend
    #:trend
+   #:trend-id
+
    #:trend-url
    #:trend-query
    #:trend-promoted-content
@@ -345,6 +346,7 @@
 
    ;;trend list
    #:trend-list
+   #:trend-list-id
    #:trend-list-created-at
    #:trend-list-locations
    #:trend-list-trends
@@ -359,7 +361,9 @@
    #:saved-search-position
 
    ;; social graph ;Friends and Followers resources :
+   #:cursor-id
    #:cursor-id-id
+   #:cursor-id-screen-name
    #:cursor-id-next-cursor-str
    #:cursor-id-next-cursor
    #:cursor-id-previous-cursor-str
@@ -424,8 +428,34 @@
    #:geo-token
    #:geo-print-places
 
+   ;;persistence/lookup hooks
+   #:register-twitter-object
+   #:lookup-twitter-object
+
    ;; conditions
-   #:return-code))
+
+   #:return-code 
+   #:default-file-path
+   #:get-user
+   
+   ;; db/cache 
+   #:use-cache
+   #:unique-id
+   #:caches
+   #:drop-cache
+   #:read-cache-spec
+   #:write-cache-spec
+   #:cache-map-reduce
+   #:map-reduce-cache
+
+   #:db-initialize
+   #:db-shutdown
+   #:db-store-object
+   #:db-map-reduce
+   #:db-status
+   #:use-db
+   ))
+
 
    
 

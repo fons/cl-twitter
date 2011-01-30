@@ -50,6 +50,10 @@
   (events           "" nil)
   (name             "" nil))
 
+;;twitter doesn't provide a unique id; use name instead
+(defmethod unique-id ((trend trend))
+  (trend-name trend))
+
 (defmethod print-object ((ref trend) stream)
   (format stream "#<TWITTER-TREND '~A'>" (trend-name ref)))
 
@@ -76,6 +80,11 @@
 	  (trend-list-trends ref)
 	  (trend-list-as-of ref)))
 
+;; override because api doesn't supply id..
+
+(defmethod unique-id ((trend-list trend-list))
+  #+nil(format t "unique id on trendlist~%")
+  (cons (trend-list-as-of trend-list) (trend-list-locations trend-list))) 
 
 ;;
 ;; In some cases (like daily-trends) the data doesn't follow the format of having a predefined static key.

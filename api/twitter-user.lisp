@@ -41,12 +41,6 @@
   (profile-background-image-url "" nil)
   (profile-background-tile "" nil))
 
-(defun get-user (ref)
-  (when ref
-    (if (twitter-user-p ref) ref
-	(aif (gethash ref *twitter-users*) it
-	     (show-user ref)))))
-
 (defmethod print-object ((user twitter-user) stream)
   (format stream "#<TWITTER-USER '~A:~A'>" (twitter-user-id user) (twitter-user-screen-name user)))
 
@@ -245,3 +239,9 @@
 	       (incf page)))
       (with-cursor (:skip skip :max max :extractor #'identity :controller #'next-page :collector #'collect-it :test #'stop-it :cursor :page) (search-users  q :page 1 :per-page 100)))
     ht))
+
+(defun get-user (ref)
+  (when ref
+    (if (twitter-user-p ref) ref
+	(aif (lookup-twitter-object ref nil) it
+	     (show-user ref)))))

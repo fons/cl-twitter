@@ -67,7 +67,6 @@
   (mapcar #'print-search-ref (search-results result)))
 
 
-
 ;; 
 ;; SEARCH API
 ;;

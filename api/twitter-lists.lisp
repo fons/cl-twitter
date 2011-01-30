@@ -147,7 +147,7 @@
 (defun subscriptions-user-lists ( &key (screen-name (twitter-user-screen-name *twitter-user*))  (cursor -1))
   (apply 'twitter-op :?user/lists/subscriptions :user screen-name :cursor cursor nil))
 
-;;--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+;;-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 (defun collect-user-lists (list-owner &key (max -1) (skip 0))
   (let ((ht (make-hash-table  :test 'equal :size 100)))

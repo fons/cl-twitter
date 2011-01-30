@@ -22,15 +22,25 @@
 
 (define-element cursor-id ((ids (identity)))
   "a cursor element "
-  (id                  "" nil)
+  (id                  "recompile override below" nil)
   (next-cursor-str     ""  nil)
   (previous-cursor-str "" nil)
   (next-cursor         ""  nil)
   (ids                 ""  nil)
+  (screen-name         ""  nil)
+  (command             ""  nil)
   (previous-cursor     ""  nil))
 
 (defmethod print-object ((ref cursor-id) stream)
-  (format stream "#<TWITTER-CURSOR-ID '~A:~A'>" (cursor-id-next-cursor ref) (length (cursor-id-ids ref)) ))
+  (format stream "#<TWITTER-CURSOR-ID '~A:~A'>" (cursor-id-screen-name ref) (length (cursor-id-ids ref)) ))
+;;override because api doesn't return an id
+;; the id is constructed with the assumption that the head of the list is always the latest follower/friend
+
+(defmethod unique-id ((ref cursor-id))
+  (let ((id (cons (cursor-id-screen-name ref) (cons (car (cursor-id-ids ref)) (cursor-id-command ref)))))
+    #+nil(format t "unique cursor id ~S [~A : ~A] ~%" id (cursor-id-previous-cursor ref) (cursor-id-next-cursor ref))
+    id))
+  
 
 (defun print-cursor-id (ref)
   (format t "~A: ~A ~A~%" (cursor-id-previous-cursor ref) (cursor-id-next-cursor ref) (length (cursor-id-ids ref))))
@@ -46,7 +56,6 @@
 ;; The response from the API will include a previous_cursor and next_cursor to allow paging back and forth. 
 ;; If the cursor is not provided the API will attempt to return all IDs. For users with many connections this will probably fail. 
 ;; Querying without the cursor parameter is deprecated and should be avoided. The API is being updated to force the cursor to be -1 if it isn't supplied.
-;; TODO : handle the cursor...
 
 ;;(define-command friends/ids (:get (:identity))
 (define-command friends/ids (:get :cursor-id)
@@ -68,10 +77,10 @@
 ;;---------------------------------------------------------------------------------
 
 (defun friend-ids (screen-name &key (cursor -1))
-  (apply 'twitter-op :friends/ids :screen-name screen-name :cursor cursor nil ))
+  (apply 'twitter-op-ext :friends/ids :screen-name screen-name :cursor cursor nil ))
 
 (defun follower-ids (screen-name &key (cursor -1))
-  (apply 'twitter-op :followers/ids :screen-name screen-name :cursor cursor nil ))
+  (apply 'twitter-op-ext :followers/ids :screen-name screen-name :cursor cursor nil ))
 
 ;;max and skip refer to pages (of 5000 each) !!
 

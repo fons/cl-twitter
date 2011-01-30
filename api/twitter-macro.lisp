@@ -7,20 +7,32 @@
   `(let ,(loop for n in names collect `(,n (gensym)))
      ,@body))
 
+
+(defun push-until-keyword (lst &optional (accum nil))
+  (cond ((keywordp (car lst)) (values accum lst))
+	((null lst)           (values accum lst))
+	(t                    (push-until-keyword (cdr lst) (cons (car lst) accum)))))
+
+(defun strip-keyword-2 (keyword plist)
+  (multiple-value-bind (head rest) (push-until-keyword plist)
+    (nconc head (strip-keyword keyword rest))))
+
 ;; max -> max calls not max results
 (defmacro with-cursor ((&key (max -1) (collector #'identity) (skip 0) (extractor nil) (controller (lambda (x) (declare (ignore x)) 0))  (test (lambda() nil) ) (cursor :cursor))  &rest body)
-     (with-gensyms ($max $skip fn targs kargs _cursor_ cursor-id fn_ args_ args)
+     (with-gensyms ($max $skip fn targs kargs _cursor_ cursor-id fn_ args_ args nocursor_args nocursor_kargs)
        `(macrolet ((unpack$ ( (,fn_ &rest ,args_) )
 		     `(values (quote ,,fn_) (list ,@,args_))))
 	  (multiple-value-bind (,fn ,targs) (unpack$ ,@body)
 	    (multiple-value-bind (,args ,kargs) (split-to-key ,targs)
 	      (let ((,$max (+ 1 ,max ,skip))
 		    (,$skip ,skip)
-		    (,_cursor_ (or (cadr (member ,cursor ,kargs)) -1)))
+		    (,_cursor_ (or (cadr (member ,cursor ,kargs)) -1))
+		    (,nocursor_kargs (strip-keyword-2 :cursor ,kargs))
+		    (,nocursor_args (strip-keyword-2 :cursor ,args)))
 		(do () ((or (zerop ,_cursor_) (zerop (decf ,$max)) (funcall ,test)))
 		  (progn
-		    ;;(format t "[~A] ~A ~S~%" ,kargs ,fn (nconc ,args (strip-keyword :cursor ,kargs) (list :cursor ,_cursor_)))
-		    (let ((,cursor-id (apply ,fn (nconc ,args (strip-keyword ,cursor ,kargs) (list ,cursor ,_cursor_)))))
+		    #+nil(format t "[~A;~A] ~A ~S~%" ,nocursor_kargs ,nocursor_args ,fn (append ,nocursor_args ,nocursor_kargs (list :cursor ,_cursor_)))
+		    (let ((,cursor-id (apply ,fn (append ,nocursor_args ,nocursor_kargs (list ,cursor ,_cursor_)))))
 		      (if (zerop ,$skip)
 			  (funcall ,collector (funcall ,extractor ,cursor-id))
 			  (decf ,$skip))
