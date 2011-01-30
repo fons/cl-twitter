@@ -5,24 +5,8 @@
 ;;secret user-data token-consumer session-handle expires authorization-expires origin-uri)
 (defvar *access-file* "access.ht")
 
-(defun get-dirs ()
-  #+sbcl (directory "./.")
-  #+ccl  (directory "*" :directories t)
-  #-(or sbcl ccl) (directory "./"))
-
-(defun default-access-path (dirname filename)
-  (let ((dirs (mapcar #'namestring (get-dirs))))
-    (labels ((cl-twitter-root (path)
-	       (multiple-value-bind (start end reg1 reg2) (ppcre:scan "/cl-twitter/" path)
-		 (declare (ignore start reg1 reg2))
-		 (subseq path 0 end))))
-      (let ((root-dirs (mapcar #'cl-twitter-root dirs)))
-	(if root-dirs
-	    (concatenate 'string (car root-dirs) dirname filename)
-	    ())))))
-
 (defun access-file ()
-  (default-access-path "access/" *access-file*))
+  (default-file-path "access/" *access-file*))
 
 (defun serialize-user-data (token)
   (mapcar (lambda (e) (list (car e) (cdr e))) (oauth::token-user-data token)))

@@ -4,7 +4,7 @@
 (defvar *alias-file-name*  "cl-twit-repl.alias")
 
 (defun alias-file ()
-  (default-access-path "alias/" *alias-file-name*))
+  (default-file-path "alias/" *alias-file-name*))
 
 (defmacro testit (x y)
   `(destructuring-bind (name (&rest args) &rest body) ',y
