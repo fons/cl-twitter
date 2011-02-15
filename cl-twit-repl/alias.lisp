@@ -9,7 +9,17 @@
 (defmacro testit (x y)
   `(destructuring-bind (name (&rest args) &rest body) ',y
      (format nil "(defun ~S (&rest args) (apply (~S  ~S   ~S  ) args)) " ',x name  args (car body))))
+
+;;       (setf (gethash (,(intern (format nil "~A-ID" type)) twitter-obj)  (twitter-object-cache ',type)) twitter-obj)
   
+;;(defmacro twitter-object-store (type)
+;;  `(progn 
+;;     (defmethod register-twitter-object ((twitter-obj ,type) (lisprec cons))
+;;       (setf (gethash (unique-id twitter-obj)  (twitter-object-cache ',type)) twitter-obj)
+;;       (db-store-object twitter-obj lisprec))))
+
+;;(defmacro cal 
+
 (defmacro construct-alias-func (x y)
   `(if (listp ,y)
        (progn
@@ -19,6 +29,8 @@
 	     (destructuring-bind (fn &rest rest) ,y
 	       (format nil "(defun ~S (&rest args) (apply '~S  ~{ ~S ~} args))" ,x fn rest))))
        (format nil "(defun ~S (&rest args) (apply '~S args))" ,x ,y)))
+
+
 
 (defmacro alias (&optional x y)
   `(if ',x

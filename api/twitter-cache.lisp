@@ -49,7 +49,7 @@
   (funcall (lookup-id-name (type-of twitter-obj)) twitter-obj))
 
 ;;twitter-user is somewhat special..
-;;       (setf (gethash (,(intern (format nil "~A-ID" type)) twitter-obj)  (twitter-object-cache ',type)) twitter-obj)
+
 (defmacro twitter-object-store (type)
   `(progn 
      (defmethod register-twitter-object ((twitter-obj ,type) (lisprec cons))

@@ -23,12 +23,12 @@
 			   )))
     :depends-on (:cl-twitter ))
 
-
+;;--------------------------------------------------------------------------
+;;----------------berkley dbd driver ---------------------------------------
 (defpackage #:bdb-driver-asd
   (:use :cl :asdf))
 
 (in-package :bdb-driver-asd)
-
 
 (defsystem twitter-bdb-driver
   :name "BDB-DRIVER"
@@ -41,7 +41,31 @@
     ((:module "db"
 	      :serial t
 	      :components (
-			   (:file "package")
+			   (:file "bdb-driver-package")
 			   (:file "bdb-driver")
 			   )))
     :depends-on (:cl-twitter :elephant))
+
+;;--------------------------------------------------------------------------
+;;----------------mongo dbd driver ---------------------------------------
+
+(defpackage #:mongodb-driver-asd
+  (:use :cl :asdf))
+
+(in-package :mongodb-driver-asd)
+
+(defsystem twitter-mongodb-driver
+  :name "MONGODB-DRIVER"
+  :version "0.5"
+  :maintainer "Fons Haffmans"
+    :author "Fons Haffmans"
+    :licence "LLGPL"
+    :description "A mongodb driver for cl-twitter"
+    :components 
+    ((:module "db"
+	      :serial t
+	      :components (
+			   (:file "mongodb-driver-package")
+			   (:file "mongodb-driver")
+			   )))
+    :depends-on (:cl-twitter :cl-mongo))

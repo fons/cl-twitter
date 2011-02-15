@@ -8,6 +8,9 @@
   (code "" nil)
   (name "" nil))
 
+(defmethod place-type-name ((name (eql nil)))
+  nil)
+  
 
 (defmethod print-object ((ref place-type) stream)
   (format stream "#<TWITTER-PLACE-TYPE '~A'>" (place-type-name ref)))
@@ -81,10 +84,10 @@
 	  (trend-list-as-of ref)))
 
 ;; override because api doesn't supply id..
-
+;;stores react badly to cons's as unique ids
 (defmethod unique-id ((trend-list trend-list))
   #+nil(format t "unique id on trendlist~%")
-  (cons (trend-list-as-of trend-list) (trend-list-locations trend-list))) 
+  (format nil "~S" (cons (trend-list-as-of trend-list) (trend-list-locations trend-list)))) 
 
 ;;
 ;; In some cases (like daily-trends) the data doesn't follow the format of having a predefined static key.

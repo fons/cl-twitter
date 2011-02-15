@@ -15,7 +15,6 @@
 (defmethod db-shutdown  (&rest args)
   (declare (ignore args)))
 (defmethod db-map-reduce ((collection t) (map-fn function) (reduce-fn function) &key))
-
 (defmethod db-status (&rest args)
   (declare (ignore args))
   (format t "no driver loaded...~%"))

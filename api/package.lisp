@@ -361,14 +361,14 @@
    #:saved-search-position
 
    ;; social graph ;Friends and Followers resources :
-   #:cursor-id
-   #:cursor-id-id
-   #:cursor-id-screen-name
-   #:cursor-id-next-cursor-str
-   #:cursor-id-next-cursor
-   #:cursor-id-previous-cursor-str
-   #:cursor-id-previous-cursor
-   #:cursor-id-ids
+   #:social-graph-cursor-id
+   #:social-graph-cursor-id-id
+   #:social-graph-cursor-id-screen-name
+   #:social-graph-cursor-id-next-cursor-str
+   #:social-graph-cursor-id-next-cursor
+   #:social-graph-cursor-id-previous-cursor-str
+   #:social-graph-cursor-id-previous-cursor
+   #:social-graph-cursor-id-ids
    ;;list resources
    #:cursor-user-lists-id
    #:cursor-user-lists-next-cursor-str

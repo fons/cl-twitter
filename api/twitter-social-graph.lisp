@@ -20,7 +20,7 @@
 (defun parse-identity (ref)
   ref)
 
-(define-element cursor-id ((ids (identity)))
+(define-element social-graph-cursor-id ((ids (identity)))
   "a cursor element "
   (id                  "recompile override below" nil)
   (next-cursor-str     ""  nil)
@@ -31,19 +31,19 @@
   (command             ""  nil)
   (previous-cursor     ""  nil))
 
-(defmethod print-object ((ref cursor-id) stream)
-  (format stream "#<TWITTER-CURSOR-ID '~A:~A'>" (cursor-id-screen-name ref) (length (cursor-id-ids ref)) ))
+(defmethod print-object ((ref social-graph-cursor-id) stream)
+  (format stream "#<TWITTER-SOCIAL-GRAPH-CURSOR-ID '~A:~A'>" (social-graph-cursor-id-screen-name ref) (length (social-graph-cursor-id-ids ref)) ))
 ;;override because api doesn't return an id
 ;; the id is constructed with the assumption that the head of the list is always the latest follower/friend
 
-(defmethod unique-id ((ref cursor-id))
-  (let ((id (cons (cursor-id-screen-name ref) (cons (car (cursor-id-ids ref)) (cursor-id-command ref)))))
-    #+nil(format t "unique cursor id ~S [~A : ~A] ~%" id (cursor-id-previous-cursor ref) (cursor-id-next-cursor ref))
-    id))
+(defmethod unique-id ((ref social-graph-cursor-id))
+  (let ((id (cons (social-graph-cursor-id-screen-name ref) (cons (car (social-graph-cursor-id-ids ref)) (social-graph-cursor-id-command ref)))))
+    #+nil(format t "unique cursor id ~S [~A : ~A] ~%" id (social-graph-cursor-id-previous-cursor ref) (social-graph-cursor-id-next-cursor ref))
+    (format nil "~S" id)))
   
 
-(defun print-cursor-id (ref)
-  (format t "~A: ~A ~A~%" (cursor-id-previous-cursor ref) (cursor-id-next-cursor ref) (length (cursor-id-ids ref))))
+(defun print-social-graph-cursor-id (ref)
+  (format t "~A: ~A ~A~%" (social-graph-cursor-id-previous-cursor ref) (social-graph-cursor-id-next-cursor ref) (length (social-graph-cursor-id-ids ref))))
 
 
 ;; Social Graph Methods
@@ -58,7 +58,7 @@
 ;; Querying without the cursor parameter is deprecated and should be avoided. The API is being updated to force the cursor to be -1 if it isn't supplied.
 
 ;;(define-command friends/ids (:get (:identity))
-(define-command friends/ids (:get :cursor-id)
+(define-command friends/ids (:get :social-graph-cursor-id)
     (twitter-app-uri "friends/ids.json")
     "Returns an array of numeric IDs for every user the specified user is following."
   :user_id "Optional.  The ID or screen name of (the user for whom to request a list of friends."
@@ -67,7 +67,7 @@
 
 
 ;;(define-command followers/ids (:get (:identity))
-(define-command followers/ids (:get :cursor-id)
+(define-command followers/ids (:get :social-graph-cursor-id)
     (twitter-app-uri "followers/ids.json")
     "Returns an array of numeric IDs for every user following the specified user."
   :user_id "Optional.  The ID or screen name of (the user for whom to request a list of friends."
@@ -88,7 +88,7 @@
   (let ((lst))
     (labels ((collect-it (l)
 	       (setf lst (nconc lst l))))
-      (with-cursor (:skip skip :max max :extractor #'cursor-id-ids :controller #'cursor-id-next-cursor :collector #'collect-it :test #'rate-limit-exceeded ) (follower-ids screen-name)))
+      (with-cursor (:skip skip :max max :extractor #'social-graph-cursor-id-ids :controller #'social-graph-cursor-id-next-cursor :collector #'collect-it :test #'rate-limit-exceeded ) (follower-ids screen-name)))
     lst))
 
 
@@ -96,6 +96,6 @@
   (let ((lst))
     (labels ((collect-it (l)
 	       (setf lst (nconc lst l))))
-      (with-cursor (:skip skip :max max :extractor #'cursor-id-ids :controller #'cursor-id-next-cursor :collector #'collect-it :test #'rate-limit-exceeded ) (friend-ids screen-name)))
+      (with-cursor (:skip skip :max max :extractor #'social-graph-cursor-id-ids :controller #'social-graph-cursor-id-next-cursor :collector #'collect-it :test #'rate-limit-exceeded ) (friend-ids screen-name)))
     lst))
     

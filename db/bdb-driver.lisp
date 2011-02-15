@@ -1,7 +1,5 @@
 (in-package :twitter-bdb-driver)
 
-
-
 ;;(defvar *twitter-db-spec* '(:BDB "/Users/alfons/Data/BDB")  "Use to setup the elephant spec to store stuff at")
 (defvar *twitter-db-spec* nil  "Use to setup the elephant spec to store stuff at")
 ;;
@@ -70,10 +68,10 @@
   (format t "store : ~A~%" *twitter-db*) 
   (format t "walking over packages in the root~%")
   (let ((lst ()))
-    (map-root (lambda (k v) (format t "root ~A:~A~%" k v) (push k lst)) :sc *twitter-db*)
+    (map-root (lambda (k v) (format t "~1troot~21<~A ~>: ~10t ~A~%" k v) (push k lst)) :sc *twitter-db*)
     (dolist (type lst)
-      (format t "~A : ~A ~%" type (db-cache-size type)))))
-  
+      (format t "~1t~25<~A ~>: ~10t ~A ~%" type (db-cache-size type)))))
+
 (defmethod db-shutdown  (&rest args)
   (declare (ignore args))
   (close-twitter-db))
