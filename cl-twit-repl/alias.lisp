@@ -10,15 +10,6 @@
   `(destructuring-bind (name (&rest args) &rest body) ',y
      (format nil "(defun ~S (&rest args) (apply (~S  ~S   ~S  ) args)) " ',x name  args (car body))))
 
-;;       (setf (gethash (,(intern (format nil "~A-ID" type)) twitter-obj)  (twitter-object-cache ',type)) twitter-obj)
-  
-;;(defmacro twitter-object-store (type)
-;;  `(progn 
-;;     (defmethod register-twitter-object ((twitter-obj ,type) (lisprec cons))
-;;       (setf (gethash (unique-id twitter-obj)  (twitter-object-cache ',type)) twitter-obj)
-;;       (db-store-object twitter-obj lisprec))))
-
-;;(defmacro cal 
 
 (defmacro construct-alias-func (x y)
   `(if (listp ,y)
@@ -31,20 +22,25 @@
        (format nil "(defun ~S (&rest args) (apply '~S args))" ,x ,y)))
 
 
-
 (defmacro alias (&optional x y)
   `(if ',x
-       (if ',y
-	   (eval (read (make-string-input-stream (cdr (setf (gethash ',x  *alias-registry*) (cons ',y (construct-alias-func ',x ',y)))))))
-	   (car (gethash ',x *alias-registry*)))
-       (maphash (lambda (k v) (format t "~1t~S ~20t=> ~25t~S~%" k  (car v))) *alias-registry*)))
+	 (if ',y
+	     (progn
+	       (eval (read (make-string-input-stream (cdr (setf (gethash ',x  *alias-registry*) (cons ',y (construct-alias-func ',x ',y)))))))
+	       (dump-alias))
+	     (car (gethash ',x *alias-registry*)))
+       (maphash (lambda (k v) (format t "~1t~S ~20t=> ~25t~S~%" k  (car v))) *alias-registry*))) 
+
+
   
 (defmacro unalias (&optional x)
-  `(if ',x
-       (progn (remhash ',x *alias-registry*)
-	      (fmakunbound ',x))
-       (progn (maphash (lambda (k v) (declare (ignore v)) (fmakunbound k)) *alias-registry*)
-	      (setf *alias-registry* (make-hash-table :test 'equal)))))
+  `(progn (if ',x
+	      (progn (remhash ',x *alias-registry*)
+		     (fmakunbound ',x))
+	      (progn (maphash (lambda (k v) (declare (ignore v)) (fmakunbound k)) *alias-registry*)
+		     (setf *alias-registry* (make-hash-table :test 'equal))))))
+
+
 
 (defun dump-alias ()
   (with-open-file (stream (alias-file) :direction :output :if-exists :supersede)
