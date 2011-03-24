@@ -1,5 +1,7 @@
 (in-package :twitter-bdb-driver)
 
+;;Note that the spec needs to a fully specified elephant spec..
+
 ;;(defvar *twitter-db-spec* '(:BDB "/Users/alfons/Data/BDB")  "Use to setup the elephant spec to store stuff at")
 (defvar *twitter-db-spec* nil  "Use to setup the elephant spec to store stuff at")
 ;;
@@ -12,7 +14,7 @@
 (defun open-twitter-db (&optional spec)
   (when spec (setf *twitter-db-spec* spec))
   (unless *twitter-db-spec*
-    (error "You must define or provide *twitter-db-spec*, a valid elephant spec"))
+    (error "You must define or provide *twitter-db-spec*, a valid elephant spec; should be valid elephant spec"))
   (let ((*store-controller* nil))
     (declare (special *store-controller*))
     (setf *twitter-db* (open-store *twitter-db-spec*))))

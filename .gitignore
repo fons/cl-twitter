@@ -5,5 +5,5 @@
 *.lx64fsl
 *.fasl
 *.ht
-*.spec
 *.alias
+driver.spec
