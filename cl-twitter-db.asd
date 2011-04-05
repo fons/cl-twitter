@@ -19,30 +19,30 @@
 	      :serial t
 	      :components (
 ;;			   (:file "package")
-;;			   (:file "bdb-driver")
+;;			   (:file "elephant-driver")
 			   )))
     :depends-on (:cl-twitter ))
 
 ;;--------------------------------------------------------------------------
-;;----------------berkley dbd driver ---------------------------------------
-(defpackage #:bdb-driver-asd
+;;----------------elephant bd driver ---------------------------------------
+(defpackage #:elephant-driver-asd
   (:use :cl :asdf))
 
-(in-package :bdb-driver-asd)
+(in-package :elephant-driver-asd)
 
-(defsystem twitter-bdb-driver
-  :name "BDB-DRIVER"
+(defsystem twitter-elephant-driver
+  :name "ELEPHANT-DRIVER"
   :version "0.5"
   :maintainer "Fons Haffmans"
     :author "Ian Eslick"
     :licence "LLGPL"
-    :description "A berkely db driver for cl-twitter"
+    :description "An elephant db driver for cl-twitter"
     :components 
     ((:module "db"
 	      :serial t
 	      :components (
-			   (:file "bdb-driver-package")
-			   (:file "bdb-driver")
+			   (:file "elephant-driver-package")
+			   (:file "elephant-driver")
 			   )))
     :depends-on (:cl-twitter :elephant))
 
