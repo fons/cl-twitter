@@ -47,7 +47,6 @@
 
 (defun use-db (driver-package &key (spec nil specp) (tag :default))
   (when driver-package
-    (require :cl-twitter-db)
     (require driver-package)
     (use-package driver-package)
     (when specp (write-driver-spec (list :TAG tag :DRIVER driver-package :SPEC spec)))

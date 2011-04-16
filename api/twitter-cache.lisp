@@ -1,5 +1,6 @@
 (in-package :cl-twitter)
 
+(defvar *cache-spec-file* "cache.spec" "cache specification; contains types to cache")
 (defvar *twitter-object-cache*  (make-hash-table)   "twitter object cache, in memory")
 
 (defun twitter-object-cache (type)
@@ -84,7 +85,6 @@
     (let ((name (twitter-user-screen-name ref)))
       (gethash name (twitter-object-cache 'twitter-user) )))
 
-(defvar *cache-spec-file* "cache.spec" "cache specification; contains types to cache")
 
 (defun cache-spec ()
   (default-file-path "db/" *cache-spec-file*))

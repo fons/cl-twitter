@@ -4,7 +4,6 @@
 (defvar *mongodb-port* nil)
 (defvar *mongodb-db*   nil)
 
-
 (defun connection ()
   (handler-case 
       (cl-mongo:mongo :host *mongodb-host* :port *mongodb-port* :db *mongodb-db* :name :twitter)      
@@ -13,8 +12,7 @@
 	(format t "error detected when opening connection : ~S~%" c)
 	(cl-mongo:mongo-close :twitter)))))
 
-(defun mongodb-connect (connection-plist)
-  (format t "initializing mongodb..~%")
+(defun mongodb-connect (connection-plist)  (format t "initializing mongodb..~%")
   (setf *mongodb-host* (or (getf connection-plist :host) "localhost"))
   (setf *mongodb-port* (or (getf connection-plist :port) cl-mongo::+MONGO-PORT+))
   (setf *mongodb-db*   (or (getf connection-plist :db)   "twitter"))
@@ -50,7 +48,6 @@
     (dolist (item boundaries)
       (push (subseq str (car item) (cdr item)) lst))
     (nreverse lst)))
-
 
 (defun decode-to-hash-table (lst)
   (let ((ht (make-hash-table :test 'equal)))
