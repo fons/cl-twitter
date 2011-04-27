@@ -44,7 +44,6 @@
 
 (defmacro store-twitter-object (type)
  `(progn 
-    #+nil(format t "store-twitter-object =====================>~A~%" (quote ,type))
     (defmethod db-store-object ((collection ,type) (lisprec cons))
       (with-twitter-db ()
 	(let ((twitter-obj-db (twitter-object-db (type-of collection)))
