@@ -143,7 +143,7 @@
 
 (define-twitter-method follow ((screen-name)  &key (user-id nil) (follow nil) (include-entities t)) :friendships/create :screen-name )
 
-(define-twitter-method unfollow ((screen-name)  &key (user-id nil) (include-entities nil)) :friendships/destroy :screen-name )
+(define-twitter-method unfollow ((screen-name)  &key (user-id nil) (include-entities t)) :friendships/destroy :screen-name )
   
 (defun user-a-following-user-b? (user-a user-b)
   (apply 'twitter-op :friendships/exists :user-a user-a :user-b user-b nil))

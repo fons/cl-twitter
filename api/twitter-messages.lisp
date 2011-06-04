@@ -84,9 +84,8 @@
 (define-twitter-method direct-messages-received (() &key (since nil) (max-id nil) (count nil) (page nil) (include-entities t))   :direct-messages )
 (define-twitter-method direct-messages-sent (() &key (since nil) (max-id nil) (count nil) (page nil) (include-entities t))       :direct-messages/sent )
 (define-twitter-method delete-direct-message ((message-id ) &key (include-entities t))    :direct-messages/destroy/?id :id)
-
 (defun send-direct-message (screen-name text &key (user-id nil) (include-entities t))
-  (apply 'twitter-op :direct-messages/new :screen-name screen-name :text text :user-id user-id :include-entities include-entities))
+  (apply 'twitter-op :direct-messages/new :screen-name screen-name :text text :user-id user-id :include-entities include-entities ()))
 
 ;;-----------
 (defun send-message (user message)

@@ -38,7 +38,7 @@
   :include_entities "When set to either true, t or 1, each tweet will include a node called entities.")
 
 ;;------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-(defun user-list-subscribers (&key  (list-owner (twitter-user-screen-name *twitter-user*)) (list-id nil) (cursor -1) (include-entities nil))
+(defun user-list-subscribers (&key  (list-owner (twitter-user-screen-name *twitter-user*)) (list-id nil) (cursor -1) (include-entities t))
   (apply 'twitter-op :?user/?list_id/subscribers/_get :user list-owner :list_id list-id :cursor cursor :include-entities include-entities nil))
 
 (defun collect-user-list-subscribers (list-owner list-id &key (max -1) (skip 0))
@@ -56,5 +56,5 @@
 (defun delete-user-list-subscribers (list-id &key (list-owner (twitter-user-screen-name *twitter-user*)))
   (apply 'twitter-op :?user/?list_id/subscribers/_delete :user list-owner :list_id list-id  :_method "delete" nil ))
 
-(defun user-list-subscriber-p (list-id user-id &key (list-owner (twitter-user-screen-name *twitter-user*)) (include-entities nil) )
+(defun user-list-subscriber-p (list-id user-id &key (list-owner (twitter-user-screen-name *twitter-user*)) (include-entities t) )
   (apply 'twitter-op :?user/?list_id/subscribers/?id :user list-owner :list-id list-id :id user-id  :include-entities include-entities nil))
