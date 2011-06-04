@@ -170,34 +170,16 @@
 
 ;; ---level 1 api --------------------------------
 
-(defun show-user (screen-name &rest args &key (user-id nil) (include-entities nil) )
-  (declare (ignore user-id include-entities))
-  (apply 'twitter-op :users/show :screen_name screen-name  args))
-
-(defun show-user-by-id (user-id &rest args &key (screen-name nil) (include-entities nil) )
-  (declare (ignore screen-name include-entities))
-  (apply 'twitter-op :users/show :user_id user-id  args))
-
+(define-twitter-method show-user       ((screen-name) &key (user-id nil)     (include-entities t)) :users/show :screen_name)
+(define-twitter-method show-user-by-id ((user-id)     &key (screen-name nil) (include-entities t)) :users/show :user_id)
 ;; probably should built in some resiliency in that the user can pass in a list ??
-(defun lookup-users (screen-names &rest args &key (user-id nil) (include-entities nil) )
-  (declare (ignore user-id include-entities))
-  (apply 'twitter-op :users/lookup :screen-name screen-names args))
-
+(define-twitter-method lookup-users    ((screen-name) &key (user-id nil)     (include-entities t)) :users/lookup :screen-name)
 ;; does the query need to be url encoded ????
 ;; used url-rewrite for encoding; gets same result set as twitter for simple name queries..
-;;
-(defun search-users (query &rest args &key (per-page nil) (page nil) (include-entities nil) )
-  (declare (ignore per-page page include-entities))
-  (apply 'twitter-op :users/search :q query  args))
-
-(defun friends-statuses (&rest args &key (user-id nil) (screen-name nil) (include-entities nil) (cursor -1) )
-  (declare (ignore  user-id screen-name include-entities cursor))
-  (apply 'twitter-op :statuses/friends  args))
-
+(define-twitter-method search-users    ((query) &key (per-page nil) (page nil) (include-entities t) ) :users/search :q )
+(define-twitter-method friends-statuses (()     &key (user-id nil) (screen-name nil) (include-entities t) (cursor -1) ) :statuses/friends)
 ;;cursor is required to get results as a twitter-cursor-user..
-(defun followers-statuses (&rest args &key (user-id nil) (screen-name nil) (include-entities nil) (cursor -1) )
-  (declare (ignore user-id screen-name include-entities cursor))
-  (apply 'twitter-op :statuses/followers  args))
+(define-twitter-method followers-statuses (()   &key (user-id nil) (screen-name nil) (include-entities t) (cursor -1) ) :statuses/followers)
 
 ;;--------------------------------------------------------------
 
@@ -222,6 +204,8 @@
 
 ;;with-cursor expects a :cursor keyword, but paging is identical
 ;;this is a shim to enable use to use :page.
+;; NOTE : we don't have a good stopping criteria; The page number will increase and when results aren't found
+;;        twitter will throw an exception 'results not found...". The page key word is not a cursor ...
 
 (defun do-user-search (q &key (max -1) (skip 0) (container (make-hash-table  :test 'equal :size 100)))
    (let ((ht container)

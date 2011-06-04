@@ -119,21 +119,12 @@
 
 ;;----------------------- end of account methods -----------------------------------------------------------------------------
  
-(defun verify-credentials (&rest args &key (include-entities nil))
-  (declare (ignore include-entities))
-  (apply 'twitter-op :account/verify-credentials args))
+(define-twitter-method verify-credentials (() &key (include-entities t)) :account/verify-credentials)
+(define-twitter-method rate-limit-status  (())                           :account/rate-limit-status )
+(define-twitter-method end-session        (())                           :account/end-session)
 
-(defun rate-limit-status ()
-  (apply 'twitter-op :account/rate-limit-status nil))
 
-(defun end-session ()
-  (apply 'twitter-op :account/end-session nil))
+(define-twitter-method update-profile-colors (() &key (profile-background-color nil)  (profile-text-color nil)  (profile-link-color nil)  
+			      (profile-sidebar-fill-color nil)  (profile-sidebar-border-color nil)  (include_entities t))     :account-update-profile-colors )
 
-(defun update-profile-colors (&rest args &key (profile-background-color nil)  (profile-text-color nil)  (profile-link-color nil)  
-			      (profile-sidebar-fill-color nil)  (profile-sidebar-border-color nil)  (include_entities   nil) )
-  (declare (ignore profile-background-color   profile-text-color   profile-link-color profile-sidebar-fill-color   profile-sidebar-border-color   include_entities))
-  (apply 'twitter-op :account-update-profile-colors args))
-
-(defun update-profile (&rest args &key (name nil)  (url nil) (location nil) (description nil) (include_entities nil))
-  (declare (ignore name url location description  include_entities))
-  (apply 'twitter-op :account-update-profile args))
+(define-twitter-method update-profile (() &key (name nil)  (url nil) (location nil) (description nil) (include_entities t)) :account-update-profile)

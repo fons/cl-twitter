@@ -103,37 +103,29 @@
 
 ;;---------------------end of timeline resources ----------------------------------------------------------------------------
 
-(defun public-timeline ( &rest args &key (trim-user nil) (include-entities nil))
-  (declare (ignore trim-user include-entities))
-   (apply 'twitter-op :statuses/public-timeline args))
 
-(defun home-timeline (&rest args &key (since-id nil) (max-id nil) (count nil) (page nil) (trim-user nil) (include_rts nil) (include-entities nil))
-  (declare (ignore trim-user include-entities since-id max-id count page include_rts))
-   (apply 'twitter-op :statuses/home-timeline args))
+(define-twitter-method public-timeline (() &key (trim-user nil) (include-entities t)) :statuses/public-timeline )
 
-(defun friends-timeline (&rest args &key (since-id nil) (max-id nil) (count nil) (page nil) (trim-user nil) (include_rts nil) (include-entities nil))
-  (declare (ignore trim-user include-entities since-id max-id count page include_rts))
-   (apply 'twitter-op :statuses/friends-timeline args))
+(define-twitter-method home-timeline (() &key (since-id nil) (max-id nil) (count nil) (page nil) 
+					   (trim-user nil) (include_rts nil) (include-entities t)) :statuses/home-timeline )
 
-(defun user-timeline (&rest args &key (since-id nil) (max-id nil) (count nil) (page nil) (trim-user nil) (include_rts nil) (include-entities nil))
-  (declare (ignore trim-user include-entities since-id max-id count page include_rts))
-  (apply 'twitter-op :statuses/user-timeline args))
+(define-twitter-method friends-timeline (() &key (since-id nil) (max-id nil) (count nil) (page nil) 
+					      (trim-user nil) (include_rts nil) (include-entities t)) :statuses/friends-timeline )
 
-(defun mentions (&rest args &key (since-id nil) (max-id nil) (count nil) (page nil) (trim-user nil) (include_rts nil) (include-entities nil))
-  (declare (ignore trim-user include-entities since-id max-id count page include_rts))
-  (apply 'twitter-op :statuses/mentions args))
+(define-twitter-method user-timeline (() &key (since-id nil) (max-id nil) (count nil) (page nil) 
+					   (trim-user nil) (include_rts nil) (include-entities t)) :statuses/user-timeline )
 
-(defun retweeted-by-me (&rest args &key (since-id nil) (max-id nil) (count nil) (page nil) (trim-user nil) (include_rts nil) (include-entities nil))
-  (declare (ignore trim-user include-entities since-id max-id count page include_rts))
-  (apply 'twitter-op :statuses/retweeted-by-me args))
+(define-twitter-method mentions (() &key (since-id nil) (max-id nil) (count nil) (page nil) (trim-user nil) (include_rts nil) (include-entities t)) :statuses/mentions)
 
-(defun retweeted-to-me (&rest args &key (since-id nil) (max-id nil) (count nil) (page nil) (trim-user nil) (include-entities nil))
-  (declare (ignore trim-user include-entities since-id max-id count page ))
-  (apply 'twitter-op :statuses/retweeted-to-me args))
+(define-twitter-method retweeted-by-me (() &key (since-id nil) (max-id nil) (count nil) 
+					     (page nil) (trim-user nil) (include_rts nil) (include-entities t)) :statuses/retweeted-by-me)
 
-(defun retweets-of-me (&rest args &key (since-id nil) (max-id nil) (count nil) (page nil) (trim-user nil) (include-entities nil))
-  (declare (ignore trim-user include-entities since-id max-id count page ))
-  (apply 'twitter-op :statuses/retweets-of-me args))
+(define-twitter-method retweeted-to-me (() &key (since-id nil) (max-id nil) (count nil) 
+					     (page nil) (trim-user nil) (include_rts nil) (include-entities t)) :statuses/retweeted-to-me)
+
+(define-twitter-method retweets-of-me (() &key (since-id nil) (max-id nil) (count nil) 
+					    (page nil) (trim-user nil) (include_rts nil) (include-entities t)) :statuses/retweets-of-me)
+
 
 ;;----------------------------------------------------------------------------------------------------------------------------------------------------
 

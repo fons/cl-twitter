@@ -45,24 +45,15 @@
  
 ;;--------------------- end of blocks resources -----------------------------------------------
 
-(defun create-block (screen-name &rest args &key (user-id nil) (include-entities nil))
-  (declare (ignore user-id include-entities))
-  (apply 'twitter-op :blocks/create :screen-name screen-name args))
+(define-twitter-method create-block ((screen-name)  &key (user-id nil) (include-entities t)) :blocks/create :screen-name )
 
-(defun remove-block (screen-name &rest args &key (user-id nil) (include-entities nil))
-  (declare (ignore user-id include-entities))
-  (apply 'twitter-op :blocks/destroy :screen-name screen-name args))
+(define-twitter-method remove-block ((screen-name)  &key (user-id nil) (include-entities t)) :blocks/destroy :screen-name )
 
-(defun is-blocked (screen-name &rest args &key (user-id nil) (include-entities nil))
-  (declare (ignore user-id include-entities))
-  (apply 'twitter-op :blocks/exists :screen-name screen-name args))
+(define-twitter-method is-blocked ((screen-name)  &key (user-id nil) (include-entities t)) :blocks/exists :screen-name )
 
-(defun blocks (&rest args &key (page nil) (include-entities nil))
-  (declare (ignore page include-entities))
-  (apply 'twitter-op :blocks/blocking args))
+(define-twitter-method blocks ( () &key (page nil) (include-entities nil)) :blocks/blocking )
 
-(defun blocked-user-ids ()
-  (apply 'twitter-op :blocks/blocking/ids nil))
+(define-twitter-method blocked-user-ids (()) :blocks/blocking/ids)
 
 ;;--------------------------------------------------------
 

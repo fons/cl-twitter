@@ -94,10 +94,11 @@
 
 
 (defmethod twitter-op (command &rest args)
-  #+nil(format t "command : [~S] [~s]~%" command args)
+  #+nil
+  (format t "command : [~S] [~s] [~S]~%" command args (option-not-nil (lisp->twitter-plist args)))
   (let ((cmd (get-command command)))
     (multiple-value-bind (response code)
-	(send-command cmd (lisp->twitter-plist args))
+	(send-command cmd (option-not-nil (lisp->twitter-plist args)))
       (if (eq code 200)
 	  (progn
 	    #+nil(format t "~A~%" response)

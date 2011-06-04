@@ -25,11 +25,6 @@
  
 ;;-------------------------------------------------------------------------------
 
-(defun follow-notification (screen-name &rest args &key (user-id nil) (include-entities nil))
-  (declare (ignore user-id include-entities))
-  (apply 'twitter-op :notifications/follow :screen-name screen-name args))
-
-(defun leave-notification (screen-name &rest args &key (user-id nil) (include-entities nil))
-  (declare (ignore user-id include-entities))
-  (apply 'twitter-op :notifications/leave :screen-name screen-name args))
+(define-twitter-method follow-notification ((screen-name ) &key (user-id nil) (include-entities t)) :notifications/follow :screen-name )
+(define-twitter-method leave-notification ((screen-name ) &key (user-id nil) (include-entities t))  :notifications/leave :screen-name )
 

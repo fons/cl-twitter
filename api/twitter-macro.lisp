@@ -27,11 +27,11 @@
 	      (let ((,$max (+ 1 ,max ,skip))
 		    (,$skip ,skip)
 		    (,_cursor_ (or (cadr (member ,cursor ,kargs)) -1))
-		    (,nocursor_kargs (strip-keyword-2 :cursor ,kargs))
-		    (,nocursor_args (strip-keyword-2 :cursor ,args)))
+		    (,nocursor_kargs (strip-keyword-2 ,cursor ,kargs))
+		    (,nocursor_args (strip-keyword-2 ,cursor ,args)))
 		(do () ((or (zerop ,_cursor_) (zerop (decf ,$max)) (funcall ,test)))
 		  (progn
-		    #+nil(format t "[~A;~A] ~A ~S~%" ,nocursor_kargs ,nocursor_args ,fn (append ,nocursor_args ,nocursor_kargs (list :cursor ,_cursor_)))
+		    ;;#+nil(format t "**[~A;~A] ~A ~S~%" ,nocursor_kargs ,nocursor_args ,fn (append ,nocursor_args ,nocursor_kargs (list ,cursor ,_cursor_)))
 		    (let ((,cursor-id (apply ,fn (append ,nocursor_args ,nocursor_kargs (list ,cursor ,_cursor_)))))
 		      (if (zerop ,$skip)
 			  (funcall ,collector (funcall ,extractor ,cursor-id))
@@ -82,3 +82,27 @@
 		       (setf ,_page_ (funcall ,controller ,twitter-search))))))))))))
 
 
+;;
+;; Doesn't work when you have more than one argument. I would need to take the car of the twitter-command list and the cdr would
+;; have to be zipped with the arg-list... TBD for now
+;;
+(defmacro define-twitter-method (method (arg-list &rest keys) &body twitter-command)
+  (labels ((construct-arg-list (lst &optional (accum nil))
+	     (labels ((add-pair (l r lst)
+			(cons l (cons r lst))))
+	       (cond ( (null lst) accum)
+		     ( (atom (car lst)) (construct-arg-list (cdr lst) (add-pair (intern (symbol-name (car lst)) :keyword) (car lst) accum)))
+		     ( t          (construct-arg-list (cdr lst) (add-pair (intern (symbol-name (car (car lst))) :keyword) (car (car lst)) accum)))))))
+    (let ((cmd-sym (intern (symbol-name method)))
+	  (key-list (construct-arg-list (cdr keys) )))
+      `(defun ,cmd-sym (,@arg-list ,@keys)
+	 (apply 'twitter-op ,@twitter-command ,@arg-list (list ,@key-list))))))
+
+;;(define-twitter-method public-timeline (&key (trim-user nil) (include-entities t)) :statuses/public-timeline )
+
+(defun testy (var args)
+  (format t "~S|~S~%" var args ))
+
+(defmacro mtest ((var &rest args)) 
+  (let ((arg-list args ))
+    (testy var arg-list)))

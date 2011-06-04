@@ -30,17 +30,11 @@
 ;;----------------------- end of favorites -------------------------------------------------------------------------------
 
 
-(defun favorites (&rest args &key (id nil) (page nil) (include-entities nil) )
-  (declare (ignore id page include-entities))
-    (apply 'twitter-op :favorites args))
+(define-twitter-method favorites (() &key (id nil) (page nil) (include-entities t)) :favorites )
 
-(defun create-favorite (id &rest args  &key (include-entities nil) )
-  (declare (ignore include-entities))
-  (twitter-op :favorites/create/?id :id id args))
+(define-twitter-method create-favorite ((id)   &key (include-entities t) ) :favorites/create/?id :id )
 
-(defun delete-favorite (id &rest args  &key (include-entities nil) )
-  (declare (ignore include-entities))
-  (twitter-op :favorites/destroy/?id :id id args))
+(define-twitter-method delete-favorite ((id)   &key (include-entities t) ) :favorites/destroy/?id :id )
 
 ;;-----------------------------------------------------------------------------------------------------------------------
 

@@ -81,22 +81,12 @@
 ;; Messages
 ;;
 
-(defun direct-messages-received (&rest args &key (since nil) (max-id nil) (count nil) (page nil) (include-entities nil))
-  (declare (ignore since max-id count page include-entities ))
-  (apply 'twitter-op :direct-messages args))
+(define-twitter-method direct-messages-received (() &key (since nil) (max-id nil) (count nil) (page nil) (include-entities t))   :direct-messages )
+(define-twitter-method direct-messages-sent (() &key (since nil) (max-id nil) (count nil) (page nil) (include-entities t))       :direct-messages/sent )
+(define-twitter-method delete-direct-message ((message-id ) &key (include-entities t))    :direct-messages/destroy/?id :id)
 
-(defun direct-messages-sent (&rest args &key (since nil) (max-id nil) (count nil) (page nil) (include-entities nil))
-  (declare (ignore since max-id count page include-entities ))
-  (apply 'twitter-op :direct-messages/sent args))
-
-(defun send-direct-message (screen-name text &rest args &key (user-id nil) (include-entities nil))
-  (declare (ignore user-id include-entities))
-  (apply 'twitter-op :direct-messages/new :screen-name screen-name :text text args))
-
-(defun delete-direct-message (message-id &rest args &key (include-entities nil))
-  (declare (ignore include-entities))
-  (apply 'twitter-op :direct-messages/destroy/?id :id message-id args))
-
+(defun send-direct-message (screen-name text &key (user-id nil) (include-entities t))
+  (apply 'twitter-op :direct-messages/new :screen-name screen-name :text text :user-id user-id :include-entities include-entities))
 
 ;;-----------
 (defun send-message (user message)

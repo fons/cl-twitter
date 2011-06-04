@@ -45,12 +45,21 @@
   (aif (gethash sym *lisp->twitter-symbols*) it
        sym))
 
+
+
+(defun option-not-nil (plist &optional (accum nil)) 
+  (cond ((null plist) (nreverse accum))
+	((and (car plist) (cadr plist)) (option-not-nil (cddr plist) (cons (cadr plist) (cons (car plist) accum))))
+	(t                              (option-not-nil (cddr plist) accum))))
+
 (defun lisp->twitter-plist (plist)
   (loop for elt in plist 
        for i from 1 collect
        (if (oddp i) 
 	   (lisp->twitter elt)
 	   elt)))
+
+
 
 (defun twitter->lisp (sym)
   (aif (gethash sym *twitter->lisp-symbols*) it

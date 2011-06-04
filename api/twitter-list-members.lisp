@@ -51,7 +51,8 @@
   :include_entities "When set to either true, t or 1, each tweet will include a node called entities.")
 
 ;;-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------;---
-(defun user-list-members (&key  (list-owner (twitter-user-screen-name *twitter-user*)) (list-id nil) (cursor -1) (include-entities nil))
+
+(defun user-list-members (&key  (list-owner (twitter-user-screen-name *twitter-user*)) (list-id nil) (cursor -1) (include-entities t))
   (apply 'twitter-op :?user/?list_id/members/_get :user list-owner :list-id list-id :cursor cursor :include-entities include-entities nil))
 
 (defun collect-user-list-members (list-owner list-id &key (max -1) (skip 0))

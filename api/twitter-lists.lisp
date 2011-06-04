@@ -136,10 +136,10 @@
 (defun delete-user-lists (id &key (list-owner (twitter-user-screen-name *twitter-user*)))
   (apply 'twitter-op :?user/lists/?id/_delete :id id :user list-owner  :_method "DELETE" nil)) 
 
+(defun statuses-user-lists (&rest args &key (list-owner (twitter-user-screen-name *twitter-user*)) (id nil)  (page 1) (per-page 20)  (since-id nil) (max-id nil) (include-entities t) )
+  (declare (ignore id per-page  since-id max-id ))
+  (apply 'twitter-op :?user/lists/?id/statuses :user list-owner :page page :include-entities include-entities (strip-keywords '(:page :list-owner :include-entities) args) ))
 
-(defun statuses-user-lists (&rest args &key (list-owner (twitter-user-screen-name *twitter-user*)) (id nil)  (page 1) (per-page 20)  (since-id nil) (max-id nil) (include-entities nil) )
-  (declare (ignore id per-page  since-id max-id include-entities))
-  (apply 'twitter-op :?user/lists/?id/statuses :user list-owner :page page (strip-keywords '(:cursor :list-owner) args) ))
 
 (defun memberships-user-lists ( &key (screen-name (twitter-user-screen-name *twitter-user*))  (cursor -1))
   (apply 'twitter-op :?user/lists/memberships :user screen-name :cursor cursor nil))

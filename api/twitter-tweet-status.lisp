@@ -124,70 +124,54 @@
 
 ;;;---------------------------- end of command definitions --------------------------
 
-(defun get-status (tweet-id &rest args &key (trim-user nil) (include-entities nil))
-  (declare (ignore trim-user include-entities))
-  (apply 'twitter-op :statuses/show/?id :id tweet-id  args))
 
-(defun update-status (status &rest args &key (in-reply-to-status-id nil) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities nil))
-  (declare (ignore in-reply-to-status-id lat long place-id display-coordinates trim-user include-entities))
-  (apply 'twitter-op :statuses/update :status status  (rem-nil-keywords args '(:long :lat))))
+(define-twitter-method get-status      ( (tweet-id) &key (trim-user nil) (include-entities t)) :statuses/show/?id :id )
 
-(defun delete-status (tweet-id &rest args &key (trim-user nil) (include-entities nil))
-  (declare (ignore trim-user include-entities))
-  (apply 'twitter-op :statuses/destroy/?id :id tweet-id  args))
+(define-twitter-method update-status   ( (status)   &key (in-reply-to-status-id nil) (lat nil) (long nil) 
+					 (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities t)) :statuses/update :status )
 
-(defun retweet-status (tweet-id &rest args &key (trim-user nil) (include-entities nil))
-  (declare (ignore trim-user include-entities))
-  (apply 'twitter-op :statuses/retweet/?id :id tweet-id  args))
+(define-twitter-method delete-status           ( (tweet-id) &key (trim-user nil) (include-entities t))                       :statuses/destroy/?id           :id )
+(define-twitter-method status-retweets         ( (tweet-id) &key (count nil) (trim-user nil) (include-entities t))           :statuses/retweets/?id          :id )
+(define-twitter-method status-retweeted-by     ( (tweet-id) &key (count nil) (trim-user nil) (include-entities t))           :statuses/?id/retweeted-by      :id )
+(define-twitter-method status-retweeted-by-ids ( (tweet-id) &key (count nil) (trim-user nil) (page nil) (include-entities t)) :statuses/?id/retweeted-by/ids :id )
 
-(defun status-retweets (tweet-id &rest args &key (count nil) (trim-user nil) (include-entities nil))
-  (declare (ignore count trim-user include-entities))
-  (apply 'twitter-op :statuses/retweets/?id :id tweet-id  args))
-
-(defun status-retweeted-by (tweet-id &rest args &key (count nil) (trim-user nil) (page nil) (include-entities nil))
-  (declare (ignore count page trim-user include-entities))
-  (apply 'twitter-op :statuses/?id/retweeted-by :id tweet-id  args))
-
-(defun status-retweeted-by-ids (tweet-id &rest args &key (count nil) (trim-user nil) (page nil) (include-entities nil))
-  (declare (ignore count page trim-user include-entities))
-  (apply 'twitter-op :statuses/?id/retweeted-by/ids :id tweet-id  args))
 
 ;;---------------------------------------------------------------------------
 ;;
 
-(defun tweet? (id &key (trim-user nil) (include-entities nil))
+(defun tweet? (id &key (trim-user nil) (include-entities t))
   (get-status id :trim-user trim-user :include-entities include-entities))
 
-(defun tweet (text &key (tiny-url-p t) (in-reply-to-status-id nil) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities nil))
+(defun tweet (text &key (tiny-url-p t) (in-reply-to-status-id nil) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities t))
   (let ((newtext (if tiny-url-p (convert-to-tinyurl text) text)))
     (if (<= (length newtext) 140)
 	(update-status newtext :in-reply-to-status-id in-reply-to-status-id :place-id place-id :lat lat :long long :display-coordinates display-coordinates :trim-user trim-user :include-entities include-entities)
 	(error "Tweet updates must be less than 140 characters.  Length is ~A" (length newtext)))))
 
-(defun reply-to (tweet text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities nil))
+(defun reply-to (tweet text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities t))
   (tweet text :in-reply-to-status-id (tweet-id tweet) :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates 
 	 :trim-user trim-user :include-entities include-entities))
 
-(defun @reply-to (tweet text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities nil))
+(defun @reply-to (tweet text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities t))
   (let ((fmt (format nil "@~A ~A" (twitter-user-screen-name (tweet-user tweet)) text)))
     (tweet fmt :in-reply-to-status-id (tweet-id tweet) :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates 
 	   :trim-user trim-user :include-entities include-entities)))
 
-(defun @mention (name text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities nil))
+(defun @mention (name text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities t))
   (let ((fmt (format nil "@~A ~A" (twitter-user-screen-name (show-user name)) text)))
     (tweet fmt :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates :trim-user trim-user :include-entities include-entities)))
 	   
   
-(defun delete-tweet (tweet &key (trim-user nil) (include-entities nil))
+(defun delete-tweet (tweet &key (trim-user nil) (include-entities t))
   (delete-status (tweet-id tweet) :trim-user trim-user :include-entities include-entities))
 
-(defun retweet (tweet &key (trim-user nil) (include-entities nil))
+(defun retweet (tweet &key (trim-user nil) (include-entities t))
   (retweet-status (tweet-id tweet) :trim-user trim-user :include-entities include-entities))
 
-(defun retweets (tweet &key (trim-user nil) (include-entities nil))
+(defun retweets (tweet &key (trim-user nil) (include-entities t))
   (status-retweets (tweet-id tweet) :trim-user trim-user :include-entities include-entities))
 
-(defun retweeted-by (tweet &key (trim-user nil) (include-entities nil))
+(defun retweeted-by (tweet &key (trim-user nil) (include-entities t))
   (status-retweeted-by (tweet-id tweet) :trim-user trim-user :include-entities include-entities))
 
 

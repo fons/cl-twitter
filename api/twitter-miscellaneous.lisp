@@ -45,6 +45,5 @@
 (defun twitter-privacy ()
   (apply 'twitter-op :legal/privacy nil))
 
-(defun report-spam (screen-name &rest args &key (user-id nil) (include-entities nil))
-  (declare (ignore user-id include-entities))
-  (apply 'twitter-op :report-spam :screen-name screen-name args))
+(defun report-spam (screen-name &key (user-id nil) (include-entities t))
+  (apply 'twitter-op :report-spam :screen-name screen-name :user-id user-id :include-entities include-entities))

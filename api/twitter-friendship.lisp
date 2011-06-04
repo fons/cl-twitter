@@ -141,13 +141,9 @@
 
 ;;--------------------------- end of frienship methods ----------------------------------------------------------------------------
 
-(defun follow (screen-name &rest args &key (user-id nil) (follow nil) (include-entities nil))
-  (declare (ignore user-id follow include-entities))
-  (apply 'twitter-op :friendships/create :screen-name screen-name args))
+(define-twitter-method follow ((screen-name)  &key (user-id nil) (follow nil) (include-entities t)) :friendships/create :screen-name )
 
-(defun unfollow (screen-name &rest args &key (user-id nil) (include-entities nil))
-  (declare (ignore user-id include-entities))
-  (apply 'twitter-op :friendships/destroy :screen-name screen-name args))
+(define-twitter-method unfollow ((screen-name)  &key (user-id nil) (include-entities nil)) :friendships/destroy :screen-name )
   
 (defun user-a-following-user-b? (user-a user-b)
   (apply 'twitter-op :friendships/exists :user-a user-a :user-b user-b nil))
@@ -156,11 +152,7 @@
   (declare (ignore source-id target-id))
   (apply 'twitter-op :friendships/show :source-screen-name source-screen-name :target-screen-name target-screen-name args))
 
-(defun incoming-follow-requests (&rest args &key (cursor nil))
-  (declare (ignore cursor))
-  (apply 'twitter-op :friendships/incoming args))
+(define-twitter-method incoming-follow-requests ( () &key (cursor nil)) :friendships/incoming )
 
-(defun outgoing-follow-requests (&rest args &key (cursor nil))
-  (declare (ignore cursor))
-  (apply 'twitter-op :friendships/outgoing args))
+(define-twitter-method outgoing-follow-requests ( () &key (cursor nil)) :friendships/outgoing )
 

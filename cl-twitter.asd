@@ -34,6 +34,7 @@
 		   (:file "twitter-blocks") 
 		   (:file "twitter-messages")
 		   (:file "twitter-friendship")
+		   (:file "twitter-favorites")
 		   (:file "twitter-saved-searches")
 		   (:file "twitter-search")
 		   (:file "twitter-notifications")
