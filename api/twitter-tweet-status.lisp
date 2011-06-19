@@ -130,10 +130,15 @@
 (define-twitter-method update-status   ( (status)   &key (in-reply-to-status-id nil) (lat nil) (long nil) 
 					 (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities t)) :statuses/update :status )
 
-(define-twitter-method delete-status           ( (tweet-id) &key (trim-user nil) (include-entities t))                       :statuses/destroy/?id           :id )
-(define-twitter-method status-retweets         ( (tweet-id) &key (count nil) (trim-user nil) (include-entities t))           :statuses/retweets/?id          :id )
-(define-twitter-method status-retweeted-by     ( (tweet-id) &key (count nil) (trim-user nil) (include-entities t))           :statuses/?id/retweeted-by      :id )
-(define-twitter-method status-retweeted-by-ids ( (tweet-id) &key (count nil) (trim-user nil) (page nil) (include-entities t)) :statuses/?id/retweeted-by/ids :id )
+(define-twitter-method delete-status           ( (tweet-id) &key (trim-user nil) (include-entities t))                        :statuses/destroy/?id           :id )
+(define-twitter-method status-retweets         ( (tweet-id) &key (count nil) (trim-user nil) (include-entities t))            :statuses/retweets/?id          :id )
+(define-twitter-method status-retweeted-by     ( (tweet-id) &key (count nil) (trim-user nil) (include-entities t))            :statuses/?id/retweeted-by      :id )
+(define-twitter-method status-retweeted-by-ids ( (tweet-id) &key (count nil) (trim-user nil) (page nil) (include-entities t)) :statuses/?id/retweeted-by/ids  :id )
+(define-twitter-method retweet-status          ( (tweet-id) &key (trim-user nil) (include-entities t))                        :statuses/retweet/?id           :id )
+
+;;(defun retweet-status (tweet-id &rest args &key (trim-user nil) (include-entities nil))
+;;  (declare (ignore trim-user include-entities))
+;;  (apply 'twitter-op :statuses/retweet/?id :id tweet-id  args))
 
 
 ;;---------------------------------------------------------------------------

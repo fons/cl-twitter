@@ -47,7 +47,7 @@
 	nil))))
 
 (defun send-command (command args)
-  ;;(format t "command {~A} args : {~A} ~%" command args)
+  #+nil(format t "command {~A} args : {~A} ~%" command args)
   (multiple-value-bind (method url auth post-params) (command-request-arguments command args)
     (let ((socket nil))
       #+nil

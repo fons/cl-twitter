@@ -81,7 +81,7 @@
 
 (defun maybe-add-conversion-from-twitter (twitter-sym)
   "Add a conversion between _ and - forms of argument symbols starting with a twitter symbol"
-  #+nil(format t "twitter sym : ~S~%" twitter-sym)
+  #+nil (format t "===>twitter sym : ~S~%" twitter-sym)
   (let* ((twitter-key (as-keyword twitter-sym))
 	 (twitter-name (symbol-name twitter-key)))
     (when (find #\_ twitter-name)
