@@ -17,10 +17,11 @@
 ;;
 
 (defun add-conversions-from-twitter (args)
-    "Add twitter->lisp conversions for define-element args"
-    (progn
-      (mapcar #'maybe-add-conversion-from-twitter (mapcar #'car args))
-      args))
+  "Add twitter->lisp conversions for define-element args"
+  (progn
+    (mapcar #'maybe-add-conversion-from-twitter (mapcar #'car args))
+    args))
+
 
 ;;
 ;; Command definition macro
@@ -45,6 +46,22 @@
 	      :base-url ,base-url
 	      :description ,description
 	      :argmap ',(add-conversions-from-twitter (plist->alist args)))))))
+
+;;
+;; Doesn't work when you have more than one argument. I would need to take the car of the twitter-command list and the cdr would
+;; have to be zipped with the arg-list... TBD for now
+;;
+(defmacro define-twitter-method (method (arg-list &rest keys) &body twitter-command)
+  (labels ((construct-arg-list (lst &optional (accum nil))
+	     (labels ((add-pair (l r lst)
+			(cons l (cons r lst))))
+	       (cond ( (null lst) accum)
+		     ( (atom (car lst)) (construct-arg-list (cdr lst) (add-pair (intern (symbol-name (car lst)) :keyword) (car lst) accum)))
+		     ( t          (construct-arg-list (cdr lst) (add-pair (intern (symbol-name (car (car lst))) :keyword) (car (car lst)) accum)))))))
+    (let ((cmd-sym (intern (symbol-name method)))
+	  (key-list (construct-arg-list (cdr keys) )))
+      `(defun ,cmd-sym (,@arg-list ,@keys)
+	 (apply 'twitter-op ,@twitter-command ,@arg-list (list ,@key-list))))))
 
 ;;
 ;; Command API
@@ -93,20 +110,22 @@
   "A command reference and a plist of arguments.
    Returns multiple values: url auth post-params parse-type"
   (let ((cmd (get-command command)))
-    (check-arguments cmd args)
+    ;;(progn 
+      ;;-see command on check-arguments
+      ;;(check-arguments cmd args))
     (let ((newargs (lisp->twitter-plist args)))
       (case (command-method cmd)
-	(:get                    (get-command-request cmd newargs))
-	(:post                   (post-command-request cmd (fix-args newargs)))
-	(:get-id                 (get-id-command-request cmd newargs))
-	(:get-user               (get-user-command-request cmd newargs))
-	(:get-user-id            (get-user-id-command-request cmd newargs))
-	(:get-user-list-id       (get-user-list-id-command-request cmd newargs))
+	(:get                    (get-command-request                 cmd newargs))
+	(:post                   (post-command-request                cmd (fix-args newargs)))
+	(:get-id                 (get-id-command-request              cmd newargs))
+	(:get-user               (get-user-command-request            cmd newargs))
+	(:get-user-id            (get-user-id-command-request         cmd newargs))
+	(:get-user-list-id       (get-user-list-id-command-request    cmd newargs))
 	(:get-user-list-id-id    (get-user-list-id-id-command-request cmd newargs))
-	(:post-user-id           (post-user-id-command-request cmd newargs))
-	(:post-user-list-id      (post-user-list-id-command-request cmd newargs))
-	(:post-user              (post-user-command-request cmd newargs))
-	(:post-id                (post-id-command-request cmd newargs))))))
+	(:post-user-id           (post-user-id-command-request        cmd newargs))
+	(:post-user-list-id      (post-user-list-id-command-request   cmd newargs))
+	(:post-user              (post-user-command-request           cmd newargs))
+	(:post-id                (post-id-command-request             cmd newargs))))))
 
 ;;
 ;; URI generators
@@ -181,6 +200,10 @@
 ;; Helpers
 ;;		       
 
+
+;;
+;; This relies on a side effect where a hash map is populated at compile time
+;;
 (defun check-arguments (cmd args)
   (let ((argmap (command-argmap cmd))
 	(name (command-name cmd)))

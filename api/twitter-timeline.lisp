@@ -28,12 +28,11 @@
      This is the same timeline seen by a user when they login to twitter.com."
   :since_id "Optional. Returns statuses with an ID more recent than this one"
   :max_id  "Returns results with an ID less than (that is, older than) or equal to the specified ID."
-  :count "Optional. Returns the number of statuses to receive"
-  :page "Optional. Returns the statuses at page * count offset"
-  :trim_user "When set to either true, t or 1, each tweet returned in a timeline will include a user object including only the status authors numerical ID."
+    :count "Optional. Returns the number of statuses to receive"
+    :page "Optional. Returns the statuses at page * count offset"
+    :trim_user "When set to either true, t or 1, each tweet returned in a timeline will include a user object including only the status authors numerical ID."
   :include_rts "When set to either true, t or 1,the timeline will contain native retweets (if they exist) in addition to the standard stream of tweets. "
   :include_entities "When set to either true, t or 1, each tweet will include a node called entities. ")
-
 
 (define-command statuses/friends-timeline (:get (:tweet))
     (twitter-app-uri "statuses/friends_timeline.json")

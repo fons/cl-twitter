@@ -33,6 +33,7 @@
 	 (record-arg-descriptions ',name ,description args)))))
 
 (eval-when (:compile-toplevel :load-toplevel)
+
   (defun make-slot-init (type arg)
     "Make a defclass slot initialization"
     (let ((slotname (first arg))
@@ -40,19 +41,19 @@
       `(,slotname :accessor ,(accessor-name type slotname)
 		  :initarg ,(as-keyword slotname)
 		  :initform ,initform)))
-						
+  
   (defun as-keyword (symbol)
     (intern (symbol-name symbol)
 	    #.(find-package :keyword)))
-
+  
   (defun add-conversions (args)
     "Add twitter->lisp conversions for define-element args"
     (mapcar #'maybe-add-conversion (mapcar #'car args)))
-
+  
   (defun record-type-args (type args)
     "Record arguments for type checking prior to creation"
     (declare (ignore type args)))
-
+  
   (defun record-arg-descriptions (type description args)
     "Record the descriptions for specific slot types.  This
    works because they're universal in the twitter API"
@@ -64,25 +65,27 @@
 		 (rest arg)))))
 
   ;; Lookup default functions
-
+  
   (defun accessor-name (type slotname)
     "Create accessor name"
     (intern (format nil "~A-~A" type slotname)
 	    #.(find-package :twitter)))
-	    
+  
   (defun parse-fn-name (type)
     "Given a type, return the canonical parser name.  Created automatically"
     (intern (concatenate 'string "PARSE-" (symbol-name type))
 	    #.(find-package :twitter)))
-
+  
   (defun lookup-fn-name (type)
     "Given a type, return the name lookup fn. User defined."
     (intern (concatenate 'string "LOOKUP-" (symbol-name type))
-	    #.(find-package :twitter))))
+	    #.(find-package :twitter)))
+
+  ) ;;end of toplevel compile
 
 (defun lookup-id-name (type)
-    "Given a type, return the name lookup fn. User defined."
-    (intern (concatenate 'string (symbol-name type) "-ID")  #.(find-package :twitter)))
+  "Given a type, return the name lookup fn. User defined."
+  (intern (concatenate 'string (symbol-name type) "-ID")  #.(find-package :twitter)))
 
 
 ;;

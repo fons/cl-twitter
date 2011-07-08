@@ -41,11 +41,25 @@
 (defvar *twitter->lisp-symbols* (make-hash-table :test 'eq)
   "Maintain conversions between _ and - forms for simplicity")
 
-(defun lisp->twitter (sym)
-  (aif (gethash sym *lisp->twitter-symbols*) it
-       sym))
+(defun dump-lisp->twitter-symbols ()
+  (maphash (lambda (k v) (format t "~S:~S~%" k v)) cl-twitter::*lisp->twitter-symbols*))
+
+(defun dump-twitter->lisp-symbols ()
+  (maphash (lambda (k v) (format t "~S:~S~%" k v)) cl-twitter::*twitter->lisp-symbols*))
 
 
+;;memoize all the symbols....
+;;the population of *lisp->twitter-symbols* and *twitter->lisp-symbols* relies on a compile side effect to be completely populated.
+;; at this stage this is not happening, and side effects shouldn't be relied on.
+;; at this stage I'm trearting these tables as a memoization device so all symbols will end up in here, not just the ones requiring conversion..
+(defun lisp->twitter (lisp-symbol)
+  (let ((twitter-symbol (gethash lisp-symbol *lisp->twitter-symbols*)))
+    (if (null twitter-symbol)
+	(multiple-value-bind (new-twitter-symbol lisp-key) (add-conversion lisp-symbol)
+	  (declare (ignore lisp-key))
+	  new-twitter-symbol)
+	twitter-symbol)))
+	
 
 (defun option-not-nil (plist &optional (accum nil)) 
   (cond ((null plist) (nreverse accum))
@@ -59,8 +73,6 @@
 	   (lisp->twitter elt)
 	   elt)))
 
-
-
 (defun twitter->lisp (sym)
   (aif (gethash sym *twitter->lisp-symbols*) it
        sym))
@@ -69,6 +81,21 @@
   (loop for cell in alist do
        (setf (car cell) (twitter->lisp (car cell))))
   alist)
+
+(defun convert->lisp=>twitter (lisp-symbol)
+  "Add a conversion between _ and - forms of argument symbols"
+  (let* ((lisp-key (as-keyword lisp-symbol))
+	 (lisp-name (symbol-name lisp-key)))
+    (if (find #\- lisp-name)
+	(convert-to-twitter lisp-name)
+	lisp-symbol)))
+
+(defun add-conversion (lisp-sym)
+  "Add a conversion between _ and - forms of argument symbols"
+  (let ((twitter-sym (convert->lisp=>twitter lisp-sym))
+	(lisp-key (as-keyword lisp-sym)))
+    (setf (gethash lisp-key    *lisp->twitter-symbols*) twitter-sym
+	  (gethash twitter-sym *twitter->lisp-symbols*) lisp-key)))
 
 (defun maybe-add-conversion (lisp-sym)
   "Add a conversion between _ and - forms of argument symbols"
@@ -193,10 +220,7 @@
 ;;-------------------------------------------------------------------------------------------------
 
 (defun get-dirs ()
-  #+sbcl (directory "./.")
-  #+ccl  (directory "*" :directories t)
-  #-(or sbcl ccl) (directory "./"))
-
+  (list (user-homedir-pathname)))
 
 (defun default-file-path (dirname filename)
   (let ((dirs (mapcar #'namestring (get-dirs))))
@@ -204,7 +228,7 @@
 	       (multiple-value-bind (start end reg1 reg2) (ppcre:scan "/cl-twitter/" path)
 		 (declare (ignore start reg1 reg2))
 		 (subseq path 0 end))))
-      (let ((root-dirs (mapcar #'cl-twitter-root dirs)))
-	(if root-dirs
-	    (concatenate 'string (car root-dirs) dirname filename)
-	    ())))))
+      (let* ((root-dirs (mapcar #'cl-twitter-root dirs))
+	    (dir  (ensure-directories-exist (concatenate 'string (car root-dirs) ".cl-twitter/" dirname))))
+	(concatenate 'string dir  filename)))))
+
