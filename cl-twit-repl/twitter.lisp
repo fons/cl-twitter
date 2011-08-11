@@ -71,7 +71,8 @@ the user has been logged in to Twitter via OAuth."
   (handler-case 
       (let* ((access-token (get-access-token user))
 	     (username (cdr (assoc "screen_name" (oauth:token-user-data access-token) :test #'equal)))
-	     (user (get-user username)))
+	     (user (cl-twitter:get-user username)))
+	(cl-twitter:get-user username)
 	(setf (twitter-user-access-token user) access-token)
 	(setf *twitter-user* user))
     (missing-user-credentials (c)

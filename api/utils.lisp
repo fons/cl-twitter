@@ -232,3 +232,4 @@
 	    (dir  (ensure-directories-exist (concatenate 'string (car root-dirs) ".cl-twitter/" dirname))))
 	(concatenate 'string dir  filename)))))
 
+
