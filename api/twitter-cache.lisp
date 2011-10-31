@@ -71,8 +71,8 @@
        (setf (gethash (twitter-user-screen-name user) (twitter-object-cache 'twitter-user)) user)
        (db-store-object user lisprec))))
 
-(defmacro drop-cache (type) 
-  `(remhash (quote ,type) *twitter-object-cache*))
+(defun drop-cache (type) 
+  (remhash  type *twitter-object-cache*))
 
 (defmethod lookup-twitter-object ((ref (eql 'twitter-user)) (lisprec cons))
     (let ((name (cl-twitter::get-value :screen-name lisprec)))

@@ -50,7 +50,7 @@
     (nreverse lst)))
 
 (defun decode-to-hash-table (lst)
-  (let ((ht (make-hash-table :test 'equal)))
+   (let ((ht (make-hash-table :test 'equal)))
     (labels ((assocp (lst)
 	       (and (consp lst) (consp (car lst)) (symbolp (car (car lst)))))
 	     (item-listp (lst)
@@ -68,7 +68,7 @@
 	      (t	                                      (add (car el) (cdr el)))))
       ht)))
 
-;; IMPORTANT : use 'safe mode' i.e chech get-last-error before continuing....
+;; IMPORTANT : use 'safe mode' i.e check get-last-error before continuing....
 
 (defmacro store-twitter-object (type)
  `(progn 

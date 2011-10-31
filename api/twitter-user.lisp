@@ -173,7 +173,10 @@
 (define-twitter-method show-user       ((screen-name) &key (user-id nil)     (include-entities t)) :users/show :screen_name)
 (define-twitter-method show-user-by-id ((user-id)     &key (screen-name nil) (include-entities t)) :users/show :user_id)
 ;; probably should built in some resiliency in that the user can pass in a list ??
-(define-twitter-method lookup-users    ((screen-name) &key (user-id nil)     (include-entities t)) :users/lookup :screen-name)
+;; keep entities turned off until you can handle this in the object creation.
+;; i see that if an other user is mentioned in the tweets, the entities will contain those ids and those are comming back decoded (i.e as the response)
+;; maybe that's a feature !!
+(define-twitter-method lookup-users    ((screen-name) &key (user-id nil)     (include-entities nil)) :users/lookup :screen-name)
 ;; does the query need to be url encoded ????
 ;; used url-rewrite for encoding; gets same result set as twitter for simple name queries..
 (define-twitter-method search-users    ((query) &key (per-page nil) (page nil) (include-entities t) ) :users/search :q )
