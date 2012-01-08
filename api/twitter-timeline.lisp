@@ -115,7 +115,6 @@
 					   (trim-user nil) (include_rts nil) (include-entities t)) :statuses/user-timeline )
 
 (define-twitter-method mentions (() &key (since-id nil) (max-id nil) (count nil) (page nil) (trim-user nil) (include_rts nil) (include-entities t)) :statuses/mentions)
-
 (define-twitter-method retweeted-by-me (() &key (since-id nil) (max-id nil) (count nil) 
 					     (page nil) (trim-user nil) (include_rts nil) (include-entities t)) :statuses/retweeted-by-me)
 

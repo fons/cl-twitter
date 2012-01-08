@@ -77,6 +77,30 @@
 (defmethod show ((cursor-user-lists cursor-user-lists) &optional (s *standard-output*))
   (mapcar (lambda (el) (show el s)) (cursor-user-lists-lists cursor-user-lists)))
 
+(defmethod show ((url-entity url-entity) &optional (s *standard-output*))
+  (format s "~&~1turl: ~a~30tdisplay: ~a~65texpanded: ~a~120t[~a,~a]" (url-entity-url url-entity)
+	  (url-entity-display-url url-entity)
+	  (url-entity-expanded-url url-entity)
+	  (car (url-entity-indices url-entity))
+	  (cadr (url-entity-indices url-entity))))
 
+(defmethod show ((hashtag hashtag) &optional (s *standard-output*))
+  (format s "~&~1ttext: #~a~30t[~a,~a]" (hashtag-text hashtag)
+	  (car (hashtag-indices hashtag))
+	  (cadr (hashtag-indices hashtag))))
+ 
+(defmethod show ((user-mention user-mention) &optional (s *standard-output*))
+  (format s "~&~1t@~a~25t~a~55t~a~65t[~a,~a]" 
+	  (user-mention-screen-name user-mention)
+	  (user-mention-name user-mention)
+	  (user-mention-id user-mention)
+	  (car (user-mention-indices user-mention))
+	  (cadr (user-mention-indices user-mention))))
 
-    
+(defmethod show ((media-entity media-entity) &optional (s *standard-output*))
+  (format s "~&~1t~a~30turl: ~a~60tdisplay: ~a~95texpanded: ~a~120t[~a,~a]" (media-entity-type media-entity)
+	  (media-entity-url media-entity)
+	  (media-entity-display-url media-entity)
+	  (media-entity-expanded-url media-entity)
+	  (car (media-entity-indices media-entity))
+	  (cadr (media-entity-indices media-entity))))

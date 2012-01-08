@@ -5,7 +5,7 @@
 ;; Status/Tweet Element --> depends on twitter user..
 ;;
 
-(define-element tweet ((user twitter-user))
+(define-element tweet ((user twitter-user) (entities twitter-entities))
   "A status element consisting of information on a status and a nested
    user element"
   (id "" nil)
@@ -20,6 +20,8 @@
   (in-reply-to-screen-name "" nil)
   (geo "" nil)
   (geo-enabled "" nil)
+  ;; embedded twitter entities
+  (entities "" nil)
   ;; embedded user
   (user "" nil))
 

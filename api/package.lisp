@@ -262,6 +262,7 @@
    #:twitter-user-following
    #:twitter-user-notifications
    #:twitter-user-statuses-count
+
    ;; Tweet Element
    #:tweet
    #:tweet-id
@@ -274,6 +275,8 @@
    #:tweet-in-reply-to-user-id 
    #:tweet-in-reply-to-screen-name 
    #:tweet-user 
+   #:tweet-entities
+   
    ;; Message element
    #:twitter-message
    #:twitter-message-id
@@ -427,6 +430,50 @@
 
    #:geo-token
    #:geo-print-places
+
+   ;;twitter-entity exports
+   #:twitter-entities-id
+   #:twitter-entities-hashtags
+   #:twitter-entities-user-mentions
+   #:twitter-entities-media
+   #:twitter-entities-urls
+
+   #:media-entity-id
+   #:media-entity-id-str
+   #:media-entity-media-url 
+   #:media-entity-media-url-https  
+   #:media-entity-url
+   #:media-entity-display-url 
+   #:media-entity-expanded-url 
+   #:media-entity-type
+   #:media-entity-sizes
+   #:media-entity-indices
+
+   #:user-mention-id
+   #:user-mention-id-str
+   #:user-mention-screen-name
+   #:user-mention-name
+   #:user-mention-screen-indices
+
+   #:hash-tag-id
+   #:hash-tag-text
+   #:hash-tag-indices
+
+   #:url-entity-id
+   #:url-entity-url
+   #:url-entity-display-url
+   #:url-entity-expanded-url
+   #:url-entity-indices
+
+   #:media-size-id  
+   #:media-size-w
+   #:media-size-h
+   #:media-size-resize
+
+   #:entity-hashtags
+   #:entity-user-mentions
+   #:entity-urls
+   #:entity-media
 
    ;;persistence/lookup hooks
    #:register-twitter-object

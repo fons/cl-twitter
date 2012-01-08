@@ -27,6 +27,7 @@
 		   (:file "twitter-op")
 		   (:file "twitter-user")
 		   (:file "twitter-tweet-status")
+		   (:file "twitter-entity")
 		   (:file "twitter-timeline")
 		   (:file "twitter-trends")
 		   (:file "twitter-social-graph")

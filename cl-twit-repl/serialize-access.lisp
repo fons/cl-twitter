@@ -42,8 +42,8 @@
     (with-open-file (stream (access-file) :direction :output :if-exists :supersede :if-does-not-exist :create)
       (maphash (lambda (key lst) (declare (ignore key)) (format stream "~S~%" lst)) ht)))) 
 		 
-
-(defun read-access-info()
+      
+(defun read-access-info ()  
   (let ((ht (make-hash-table :test 'equal)))
     (with-open-file (stream (access-file) :direction :input :if-does-not-exist :create)
       (do ((line (read stream nil) (read stream nil))) 
