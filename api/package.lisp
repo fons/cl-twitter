@@ -455,9 +455,9 @@
    #:user-mention-name
    #:user-mention-screen-indices
 
-   #:hash-tag-id
-   #:hash-tag-text
-   #:hash-tag-indices
+   #:hashtag-id
+   #:hashtag-text
+   #:hashtag-indices
 
    #:url-entity-id
    #:url-entity-url
