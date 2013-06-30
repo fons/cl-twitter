@@ -3,16 +3,16 @@
 (defpackage :twitter
   (:use :cl :drakma :json :anaphora); :trivial-http)
   (:nicknames :cl-twitter :twit)
-  (:export 
+  (:export
    ;;helper functions
 
-   #:twitter-oauth-uri 
+   #:twitter-oauth-uri
    #:show
 
    ;;------revised api -------
    ;;----lisp rest api ------
 
-   ;; Time line resources as per 
+   ;; Time line resources as per
    #:public-timeline
    #:home-timeline
    #:friends-timeline
@@ -98,7 +98,7 @@
    #:search-users
    #:friends-statuses
    #:followers-statuses
-   
+
    ;; User Resources api
    #:collect-friend-statuses
    #:collect-follower-statuses
@@ -112,10 +112,10 @@
    ;; cursors not supported
    #:incoming-follow-requests
    ;; cursors not supported
-   #:outgoing-follow-requests 
+   #:outgoing-follow-requests
 
    ;; Saved Searches resources
-   
+
    #:saved-searches
    #:saved-search
    #:save-search
@@ -139,9 +139,8 @@
 
    ;;  Search resources api
    #:with-paging
-   #:do-search 
-   #:print-search-ref 
- 
+   #:do-search
+
   ;; List resources
    #:create-user-list
    #:update-user-list
@@ -158,7 +157,7 @@
    #:collect-user-list-statuses
 
    #:user-list-timeline
-   #:member-list-timeline 
+   #:member-list-timeline
    #:subscriber-list-timeline
 
    ;;List Members resources
@@ -167,14 +166,14 @@
    #:add-user-list-members
    #:delete-user-list-members
    #:user-list-members-p
- 
+
   ;; List Subscribers resources
    #:user-list-subscribers
    #:collect-user-list-subscribers
    #:add-user-list-subscribers
    #:delete-user-list-subscribers
    #:user-list-subscribers-p
-   
+
    ;; Notification resources
    #:follow-notification
    #:leave-notification
@@ -190,7 +189,7 @@
    #:leave-notification
 
    ;; Geo resources
-   
+
    #:geo-search
    #:geo-similar-places
    #:geo-reverse-geocode
@@ -266,17 +265,17 @@
    ;; Tweet Element
    #:tweet
    #:tweet-id
-   #:tweet-created-at 
-   #:tweet-text 
-   #:tweet-source 
-   #:tweet-truncated 
-   #:tweet-favorited 
-   #:tweet-in-reply-to-status-id 
-   #:tweet-in-reply-to-user-id 
-   #:tweet-in-reply-to-screen-name 
-   #:tweet-user 
+   #:tweet-created-at
+   #:tweet-text
+   #:tweet-source
+   #:tweet-truncated
+   #:tweet-favorited
+   #:tweet-in-reply-to-status-id
+   #:tweet-in-reply-to-user-id
+   #:tweet-in-reply-to-screen-name
+   #:tweet-user
    #:tweet-entities
-   
+
    ;; Message element
    #:twitter-message
    #:twitter-message-id
@@ -290,31 +289,20 @@
    #:twitter-message-recipient
    ;; Search Result Wrapper
    #:search-result
-   #:search-result-id
-   #:search-result-results
-   #:search-result-since-id
-   #:search-result-max-id
-   #:search-result-warning
-   #:search-result-refresh-url
-   #:search-result-page
-   #:search-result-results-per-page
-   #:search-result-next-page
-   #:search-result-completed-in
-   #:search-result-query
-   ;; Search Reference
-   #:search-ref
-   #:search-ref-id
-   #:search-ref-text
-   #:search-ref-to-user
-   #:search-ref-to-user-id
-   #:search-ref-from-user
-   #:search-ref-from-user-id
-   #:search-ref-created-at
-   #:search-ref-iso-language-code
-   #:search-ref-profile-image-url
+   #:search-result-statuses
+   #:search-result-search-metadata
    ;; Search Meta Data
-   #:search-ref-metadata-result-type
-   #:search-ref-metadata-recent-retweets
+   #:search-metadata
+   #:search-metadata-completed-in
+   #:search-metadata-max-id
+   #:search-metadata-max-id_str
+   #:search-metadata-next-results
+   #:search-metadata-query
+   #:search-metadata-refresh-url
+   #:search-metadata-count
+   #:search-metadata-since-id
+   #:search-metadata-since-id-str
+
 
    ;;Rate Limit
    #:rate-limit-reset-time
@@ -330,7 +318,7 @@
    #:place-type-code
    #:place-type-name
 
-   ;;place 
+   ;;place
    #:place-ural
    #:place-placetype
    #:place-country
@@ -391,7 +379,7 @@
    #:list-type-user
 
    ;;geo resources
-   
+
    #:geo-coordinate-id
    #:geo-coordinate-long
    #:geo-coordinate-lat
@@ -440,11 +428,11 @@
 
    #:media-entity-id
    #:media-entity-id-str
-   #:media-entity-media-url 
-   #:media-entity-media-url-https  
+   #:media-entity-media-url
+   #:media-entity-media-url-https
    #:media-entity-url
-   #:media-entity-display-url 
-   #:media-entity-expanded-url 
+   #:media-entity-display-url
+   #:media-entity-expanded-url
    #:media-entity-type
    #:media-entity-sizes
    #:media-entity-indices
@@ -465,7 +453,7 @@
    #:url-entity-expanded-url
    #:url-entity-indices
 
-   #:media-size-id  
+   #:media-size-id
    #:media-size-w
    #:media-size-h
    #:media-size-resize
@@ -481,11 +469,11 @@
 
    ;; conditions
 
-   #:return-code 
+   #:return-code
    #:default-file-path
    #:get-user
-   
-   ;; db/cache 
+
+   ;; db/cache
    #:use-cache
    #:unique-id
    #:caches
@@ -504,5 +492,5 @@
    ))
 
 
-   
+
 

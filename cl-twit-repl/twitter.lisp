@@ -8,7 +8,7 @@
 ;;
 ;;
 (defvar *oauth-request-token-cache-max-length* 100 "Max number of request tokens that can be cached by CL-Twitter.")
-(defvar *oauth-request-token-cache* nil  
+(defvar *oauth-request-token-cache* nil
 "A list of request tokens that have been generated for OAuth
 authentication by OAUTH-MAKE-TWITTER-AUTHORIZATION-URI.  These are
 stored in between when the user is directed to a login URI and when
@@ -58,8 +58,8 @@ the user has been logged in to Twitter via OAuth."
     (let (( pin (read)))
       (format t "obtaining access tokens for pin : ~S~%" pin)
       (unless (oauth:request-token-authorized-p request-token) (oauth:authorize-request-token request-token))
-      (setf (oauth:request-token-verification-code request-token) (format nil "~A" pin))      
-      (let* ((access-token (oauth:obtain-access-token (twitter-oauth-uri "access_token") request-token)) 
+      (setf (oauth:request-token-verification-code request-token) (format nil "~A" pin))
+      (let* ((access-token (oauth:obtain-access-token (twitter-oauth-uri "access_token") request-token))
 	     (user-id (cdr (assoc "user_id" (oauth:token-user-data access-token) :test #'equal)))
 	     (username (cdr (assoc "screen_name" (oauth:token-user-data access-token) :test #'equal)))
 	     (user (get-user username)))
@@ -68,13 +68,17 @@ the user has been logged in to Twitter via OAuth."
 	(write-access-info *twitter-user*) ))))
 
 (defun get-authenticated-user (user)
-  (handler-case 
+  (handler-case
       (let* ((access-token (get-access-token user))
 	     (username (cdr (assoc "screen_name" (oauth:token-user-data access-token) :test #'equal)))
-	     (user (cl-twitter:get-user username)))
-	(cl-twitter:get-user username)
-	(setf (twitter-user-access-token user) access-token)
-	(setf *twitter-user* user))
+	     )
+        ;;; Ugly, ugly hack to get login working in v1.1 API.
+        ;;; Basically, create a simple stub twitter-user object and populate enough of it to get the
+        ;;; full code working.
+        (setf *twitter-user* (make-instance 'twitter-user :access-token (cl-twit-repl::get-access-token username)))
+        (let ((user (cl-twitter:get-user username)))
+          (setf (twitter-user-access-token user) access-token)
+          (setf *twitter-user* user)))
     (missing-user-credentials (c)
       (format t "We don't have twitter credentials for ~A in ~A ~%" (who c) (access-file))
       (format t "maybe because this is the first time you are using cl-twit-repl on this machine.. ~&")
@@ -88,4 +92,4 @@ the user has been logged in to Twitter via OAuth."
 
 
 
-  
+

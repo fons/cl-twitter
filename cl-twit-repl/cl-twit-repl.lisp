@@ -6,11 +6,11 @@
 (defvar *saved-pprint-dispatch-cons*  (pprint-dispatch 'cons)             "saved version of the cons pp")
 (defvar *cl-twit-repl-stream*         *standard-output*                   "prefferred output stream for the twitter repl client")
 
-(defvar *twitter-types* (list 'tweet 'cl-twitter::geo-places 'cl-twitter::geo-place 'cl-twitter::place 'cl-twitter::list-type 'cl-twitter::geo-result 'twitter-user 'search-ref 'trend-list 
+(defvar *twitter-types* (list 'tweet 'cl-twitter::geo-places 'cl-twitter::geo-place 'cl-twitter::place 'cl-twitter::list-type 'cl-twitter::geo-result 'twitter-user 'search-metadata 'search-result 'trend-list
 			      'cl-twitter::rate-limit) "list of types in the twitter api for which we 're going to use the show method instead of the pp")
 
 (defun car-ht-value (ht)
-  (with-hash-table-iterator (it ht) 
+  (with-hash-table-iterator (it ht)
     (multiple-value-bind (exists-p key value) (it)
       (declare (ignore key))
       (when exists-p (return-from car-ht-value value)))))
@@ -41,7 +41,7 @@
 
 
 (defun done-twittering ()
-  (when *saved-print-pprint-dispatch* 
+  (when *saved-print-pprint-dispatch*
     (setf *print-pprint-dispatch* *saved-print-pprint-dispatch*)
     (setf *saved-print-pprint-dispatch* nil))
   ;;order is important
@@ -51,4 +51,4 @@
   (cl-twitter::with-error-handler (:verbose nil)
     (end-session))
   (setf *twitter-user* nil))
- 
+
