@@ -17,7 +17,7 @@
   (since-id-str "" nil))
 
 (defmethod print-object ((metadata search-metadata) stream)
-  (format stream "#<TWITTER-SEARCH-METADATA '~A'>" (search-metadata-query metadata)))
+  (format stream "#<TWITTER-SEARCH-METADATA ~S results for '~A'>" (search-metadata-count metadata) (search-metadata-query metadata)))
 
 (define-element search-result ((statuses (tweet)) (search-metadata search-metadata))
    "This is the results of a twitter search.  Metadata plus
