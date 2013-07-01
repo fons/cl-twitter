@@ -49,8 +49,7 @@
   :callback "Only available for JSON format. If supplied, the response will use the JSONP format with a callback of the given name."
   :lang     "Restricts tweets to a particular language given by an ISO 639-1 code."
   :locale   "Specify the language of the query you are sending (only ja is currently effective). "
-  :rpp      "The number of tweets to return per page, up to 100."
-  :page     "The page number."
+  :count    "The number of tweets to return per page, up to 100."
   :since_id "Returns tweets with status ids greater than the given id"
   :until    "Returns tweets generated before the given date. Date should be formatted as YYYY-MM-DD."
   :geocode  "Returns tweets by users located within a given radius of the given
@@ -72,9 +71,9 @@
 ;; Search API
 ;;
 
-(defun search-twitter (query &rest args &key (callback nil) (lang nil) (locale nil) (rpp nil) (page nil)
+(defun search-twitter (query &rest args &key (callback nil) (lang nil) (locale nil) (count nil)
 		       (since-id nil) (until nil) (geocode nil) (show-user nil) (result-type nil) )
-  (declare (ignore callback lang  locale rpp page since-id until geocode show-user result-type ))
+  (declare (ignore callback lang  locale count since-id until geocode show-user result-type ))
   (apply 'twitter-op :search :q query (rem-nil-keywords args '(:callback :geocode :lang :until))))
 
 ;;---------------------------------------------------------------------------------------------------------------------------
