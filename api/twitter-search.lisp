@@ -8,13 +8,14 @@
   "meta data returned in the search result"
   (completed-in "" nil)
   (max-id "" nil)
-  (max-id_str "" nil)
+  (max-id-str "" nil)
   (next-results "" nil)
   (query "" nil)
   (refresh-url "" nil)
   (count "" nil)
   (since-id "" nil)
   (since-id-str "" nil))
+
 
 (defmethod print-object ((metadata search-metadata) stream)
   (format stream "#<TWITTER-SEARCH-METADATA ~S results for '~A'>" (search-metadata-count metadata) (search-metadata-query metadata)))
@@ -26,7 +27,7 @@
    (search-metadata "" nil))
 
 (defmethod print-object ((result search-result) stream)
-  (format stream "#<TWITTER-SEARCH '~A'~%~A>" (search-result-search-metadata result) (search-result-statuses result)))
+  (format stream "#<TWITTER-SEARCH '~A' ~A statuses>" (search-result-search-metadata result) (length (search-result-statuses result))))
 
 (defun search-results (result)
   (search-result-statuses result))
@@ -72,20 +73,17 @@
 ;;
 
 (defun search-twitter (query &rest args &key (callback nil) (lang nil) (locale nil) (count nil)
-		       (since-id nil) (until nil) (geocode nil) (show-user nil) (result-type nil) )
-  (declare (ignore callback lang  locale count since-id until geocode show-user result-type ))
+		       (max-id nil) (since-id nil) (until nil) (geocode nil) (show-user nil) (result-type nil) )
+  (declare (ignore callback lang locale count max-id since-id until geocode show-user result-type ))
   (apply 'twitter-op :search :q query (rem-nil-keywords args '(:callback :geocode :lang :until))))
 
 ;;---------------------------------------------------------------------------------------------------------------------------
 
 
-
-(defun do-search (query &key (max-pages 15) )
+(defun do-search (query &key (max-pages 15) (test #'rate-limit-exceeded))
   (let ((ht (make-hash-table  :test 'equal :size 1500)))
     (labels ((collect-it (slst)
 	       (dolist (item slst)
 		 (setf (gethash (tweet-id item) ht) item))))
-      (with-paging (:collector #'collect-it :max-pages max-pages :test #'rate-limit-exceeded ) (search-twitter query))
+      (with-paging (:collector #'collect-it :max-pages max-pages :test test) (search-twitter query))
       ht)))
-
-
