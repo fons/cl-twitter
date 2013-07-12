@@ -26,7 +26,7 @@
   (user "" nil))
 
 (defmethod print-object ((tweet tweet) stream)
-  (format stream "#<TWEET '~A' id:~A>" 
+  (format stream "#<TWEET '~A' id:~A>"
 	  (if (tweet-user tweet)
 	      (twitter-user-screen-name (tweet-user tweet))
 	      "none")
@@ -129,7 +129,7 @@
 
 (define-twitter-method get-status      ( (tweet-id) &key (trim-user nil) (include-entities t)) :statuses/show/?id :id )
 
-(define-twitter-method update-status   ( (status)   &key (in-reply-to-status-id nil) (lat nil) (long nil) 
+(define-twitter-method update-status   ( (status)   &key (in-reply-to-status-id nil) (lat nil) (long nil)
 					 (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities t)) :statuses/update :status )
 
 (define-twitter-method delete-status           ( (tweet-id) &key (trim-user nil) (include-entities t))                        :statuses/destroy/?id           :id )
@@ -156,19 +156,19 @@
 	(error "Tweet updates must be less than 140 characters.  Length is ~A" (length newtext)))))
 
 (defun reply-to (tweet text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities t))
-  (tweet text :in-reply-to-status-id (tweet-id tweet) :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates 
+  (tweet text :in-reply-to-status-id (tweet-id tweet) :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates
 	 :trim-user trim-user :include-entities include-entities))
 
 (defun @reply-to (tweet text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities t))
   (let ((fmt (format nil "@~A ~A" (twitter-user-screen-name (tweet-user tweet)) text)))
-    (tweet fmt :in-reply-to-status-id (tweet-id tweet) :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates 
+    (tweet fmt :in-reply-to-status-id (tweet-id tweet) :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates
 	   :trim-user trim-user :include-entities include-entities)))
 
 (defun @mention (name text &key (tiny-url-p t) (lat nil) (long nil) (place-id nil) (display-coordinates nil) (trim-user nil) (include-entities t))
   (let ((fmt (format nil "@~A ~A" (twitter-user-screen-name (show-user name)) text)))
     (tweet fmt :tiny-url-p tiny-url-p :place-id place-id :lat lat :long long :display-coordinates display-coordinates :trim-user trim-user :include-entities include-entities)))
-	   
-  
+
+
 (defun delete-tweet (tweet &key (trim-user nil) (include-entities t))
   (delete-status (tweet-id tweet) :trim-user trim-user :include-entities include-entities))
 
@@ -180,5 +180,3 @@
 
 (defun retweeted-by (tweet &key (trim-user nil) (include-entities t))
   (status-retweeted-by (tweet-id tweet) :trim-user trim-user :include-entities include-entities))
-
-

@@ -8,7 +8,7 @@
 (defun parse-command-response (response type)
   (let ((parsed
 	 (cond ((consp type)
-		(mapcar (lambda (r) 
+		(mapcar (lambda (r)
 			  (parse-record r (first type)))
 			response))
 	       ((null type)
@@ -18,31 +18,31 @@
     parsed))
 
 (defun parse-error-response (response code)
-  (destructuring-bind (code short long) 
+  (destructuring-bind (code short long)
       (assoc code *code-messages*)
-    (handler-case 
-	(cerror "Ignore response" 'twitter-api-condition 
+    (handler-case
+	(cerror "Ignore response" 'twitter-api-condition
 		:code code
 		:short short
 		:long long
 		:request (get-value :error response)
 		:uri (get-value :request response))
       (error (c)
-	(cerror "Ignore response" 'twitter-api-condition 
+	(cerror "Ignore response" 'twitter-api-condition
 		:code code
 		:short short
-		:long long 
+		:long long
 		:request "request not available"
 		:uri response )))))
 
 (defun safe-decode-json (response-stream)
   (let ((json:*json-identifier-name-to-lisp* 'convert-from-twitter))
-    (declare (special json:*json-identifier-name-to-lisp* 
+    (declare (special json:*json-identifier-name-to-lisp*
 		      json:*lisp-identifier-name-to-json*))
-    (handler-case 
+    (handler-case
 	  (json:decode-json response-stream)
       #+nil
-      (t () 
+      (t ()
 	;; what to do with decoding errors?
 	nil))))
 
@@ -52,7 +52,7 @@
       (unwind-protect
 	   (multiple-value-bind (response code)
 	       (destructuring-bind (&optional auth-method &rest auth-spec) (or auth  (user-http-auth *twitter-user*))
-		 (let ((common-drakma-args 
+		 (let ((common-drakma-args
 			(list :want-stream t
 			      :additional-headers *twitter-client-headers*
 			      :external-format-out :utf-8)))
@@ -64,14 +64,14 @@
 			      :parameters (plist->alist post-params)
 			      common-drakma-args)
 		       (destructuring-bind (access-token) auth-spec
-			 (oauth:access-protected-resource  url access-token 
+			 (oauth:access-protected-resource  url access-token
 							   :consumer-token (oauth:token-consumer (twitter-user-access-token *twitter-user*))
 							   :request-method method
 							   :user-parameters (plist->alist post-params)
 							   :drakma-args common-drakma-args))
 		       )))
 	     (setf socket response)
-	     (handler-case 
+	     (handler-case
 		 (values (safe-decode-json response) code)
 	       (error (c)
 		 (progn
@@ -100,7 +100,7 @@
 	  (parse-error-response response code)))))
 
 ;;
-;;enriches the response with the arguments so those can be used in the element definition 
+;;enriches the response with the arguments so those can be used in the element definition
 ;;for an example see the social graph. Twitter returns list of ids. This ensures the scrren-name is added.
 (defmethod twitter-op-ext (command &rest args)
   #+nil (format t "command : [~S] [~s]~%" command args)

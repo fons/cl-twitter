@@ -12,13 +12,13 @@
 
 
 (defvar *twitter-app-uri*       "http://api.twitter.com/1.1/")
-(defvar *twitter-search-uri*    "http://search.twitter.com/")
-(defvar *twitter-oauth-uri*  "http://api.twitter.com/oauth/")   
+(defvar *twitter-search-uri*    "http://api.twitter.com/1.1/")
+(defvar *twitter-oauth-uri*  "http://api.twitter.com/oauth/")
 
 
 (defvar *twitter-user*)
 
-(defvar *twitter-client-headers* 
+(defvar *twitter-client-headers*
   '(("X-Twitter-Client" . "CL-Twitter")
     ("X-Twitter-Client-Version" . "1.0")
     ("X-Twitter-Client-URL" . "http://github.com/fons/cl-twitter/"))
