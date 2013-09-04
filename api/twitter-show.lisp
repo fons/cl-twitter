@@ -31,23 +31,27 @@
   (format s "~&~120<~1t~a~; ~a~>" (trend-name trend) (trend-url trend))
   (format s "~&~A" *seperator*))
 
-(defmethod show ((search-ref cl-twitter::search-ref) &optional (s *standard-output*))
-  (format s "~&~150<From: ~a~; To: ~a~>" (search-ref-from-user search-ref) (or (search-ref-to-user search-ref) ""))
-  (format s "~&~A" (search-ref-text search-ref))
-  (format s "~&~A" (search-ref-created-at search-ref))
+(defmethod show ((search-metadata cl-twitter::search-metadata) &optional (s *standard-output*))
+  (format s "~&~150<Metadata: ~a results for ~a in ~s seconds~>" (search-metadata-count search-metadata)
+          (search-metadata-query search-metadata) (search-metadata-completed-in search-metadata))
+  (format s "~&~A" *seperator*))
+
+(defmethod show ((search-result cl-twitter::search-result) &optional (s *standard-output*))
+  (format s "~&~150<Search: ~a results for ~a in ~s seconds~>" (search-metadata-count (search-metadata search-result))
+          (search-metadata-query (search-metadata search-result)) (search-metadata-completed-in (search-metadata search-result)))
   (format s "~&~A" *seperator*))
 
 (defmethod show ((twitter-user twitter-user) &optional (s *standard-output*))
-  (format s "~&~1t~A ~30ttimezone : ~A ~70turl     : ~A ~140tcreated   : ~A" (twitter-user-screen-name twitter-user) (twitter-user-time-zone twitter-user) 
+  (format s "~&~1t~A ~30ttimezone : ~A ~70turl     : ~A ~140tcreated   : ~A" (twitter-user-screen-name twitter-user) (twitter-user-time-zone twitter-user)
 	  (twitter-user-url twitter-user) (twitter-user-created-at twitter-user) )
-  (format s "~&~1tname : ~S ~30tstatuses : ~A ~70tfriends : ~A ~120tfollowers : ~A ~140tfollowing : ~A" (twitter-user-name twitter-user) 
-	  (twitter-user-statuses-count twitter-user) (twitter-user-friends-count twitter-user) 
-	  (twitter-user-followers-count twitter-user) (twitter-user-following twitter-user)) 
+  (format s "~&~1tname : ~S ~30tstatuses : ~A ~70tfriends : ~A ~120tfollowers : ~A ~140tfollowing : ~A" (twitter-user-name twitter-user)
+	  (twitter-user-statuses-count twitter-user) (twitter-user-friends-count twitter-user)
+	  (twitter-user-followers-count twitter-user) (twitter-user-following twitter-user))
   (format s "~&~1t~A" (twitter-user-description twitter-user))
   (format s "~&~A" *seperator*))
 
 (defmethod show ((geo-place geo-place) &optional (s *standard-output*))
-  (format s "~&~1t~A~15t~A " (geo-place-place-type geo-place) (geo-place-full-name geo-place)) 
+  (format s "~&~1t~A~15t~A " (geo-place-place-type geo-place) (geo-place-full-name geo-place))
   (format s "~80t~A" (geo-attribute-street-address (geo-place-attributes geo-place)))
   (format s "~120t~A" (geo-place-country geo-place) )
   (format s "~&~A" *seperator*))
@@ -64,13 +68,13 @@
 
 
 (defmethod show ((rate-limit rate-limit) &optional (s *standard-output*))
-  (format s "~&~1tremaining : ~A/~A ~20treset : ~A/current time : ~A ~67t[~A seconds]" (rate-limit-remaining-hits rate-limit) (rate-limit-hourly-limit rate-limit) 
+  (format s "~&~1tremaining : ~A/~A ~20treset : ~A/current time : ~A ~67t[~A seconds]" (rate-limit-remaining-hits rate-limit) (rate-limit-hourly-limit rate-limit)
 	  (rate-limit-reset-time rate-limit) (current-utc nil) (rate-limit-reset-time-in-seconds rate-limit) ))
-	  
+
 
 (defmethod show ((geo-places geo-places) &optional (s *standard-output*))
   (mapcar (lambda (el) (show el s)) (geo-places-places geo-places)))
-  
+
 (defmethod show ((geo-result geo-result) &optional (s *standard-output*))
   (show (geo-result-result geo-result) s))
 
@@ -88,9 +92,9 @@
   (format s "~&~1ttext: #~a~30t[~a,~a]" (hashtag-text hashtag)
 	  (car (hashtag-indices hashtag))
 	  (cadr (hashtag-indices hashtag))))
- 
+
 (defmethod show ((user-mention user-mention) &optional (s *standard-output*))
-  (format s "~&~1t@~a~25t~a~55t~a~65t[~a,~a]" 
+  (format s "~&~1t@~a~25t~a~55t~a~65t[~a,~a]"
 	  (user-mention-screen-name user-mention)
 	  (user-mention-name user-mention)
 	  (user-mention-id user-mention)
