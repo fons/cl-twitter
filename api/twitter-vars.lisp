@@ -11,9 +11,9 @@
 (defvar      *day-of-week-strings*   '("Mon" "Tue" "Wed" "Thu" "Fri" "Sat" "Sun") "map day-of-the-week to a string")
 
 
-(defvar *twitter-app-uri*       "http://api.twitter.com/1.1/")
-(defvar *twitter-search-uri*    "http://api.twitter.com/1.1/")
-(defvar *twitter-oauth-uri*  "http://api.twitter.com/oauth/")
+(defvar *twitter-app-uri*       "https://api.twitter.com/1.1/")
+(defvar *twitter-search-uri*    "https://api.twitter.com/1.1/")
+(defvar *twitter-oauth-uri*  "https://api.twitter.com/oauth/")
 
 
 (defvar *twitter-user*)
@@ -29,6 +29,3 @@
 (defvar *twitter-client-source-param* "cltwitter"   "The source value for posts; shows up in twitter web as client id")
 
 (defparameter *http-request-function* 'drakma:http-request "Function used to make HTTP requests.  Must conform exactly to Drakma's specifications.")
-
-
-
