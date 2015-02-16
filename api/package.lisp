@@ -13,7 +13,6 @@
    ;;----lisp rest api ------
 
    ;; Time line resources as per
-   #:public-timeline
    #:home-timeline
    #:friends-timeline
    #:user-timeline

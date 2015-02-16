@@ -15,12 +15,13 @@
 ;;
 ;;
 
-(define-command statuses/public-timeline (:get (:tweet))
-    (twitter-app-uri "statuses/public_timeline.json")
-  "Returns 20 most recent statuses from non-protected users"
-  :trim_user "When set to either true, t or 1, each tweet returned in a timeline will include a user object including only the status authors numerical ID. 
-             Omit this parameter to receive the complete user object."
-  :include_entities "When set to either true, t or 1, each tweet will include a node called entities. ")
+;; deprecated; no longer supported
+;;(define-command statuses/public-timeline (:get (:tweet))
+;;    (twitter-app-uri "statuses/public_timeline.json")
+;;  "Returns 20 most recent statuses from non-protected users"
+;;  :trim_user "When set to either true, t or 1, each tweet returned in a timeline will include a user object including only the status authors numerical ID. 
+ ;;            Omit this parameter to receive the complete user object."
+;;  :include_entities "When set to either true, t or 1, each tweet will include a node called entities. ")
 
 (define-command statuses/home-timeline (:get (:tweet))
     (twitter-app-uri "statuses/home_timeline.json")
@@ -102,8 +103,8 @@
 
 ;;---------------------end of timeline resources ----------------------------------------------------------------------------
 
-
-(define-twitter-method public-timeline (() &key (trim-user nil) (include-entities t)) :statuses/public-timeline )
+;;deprecated 
+;;(define-twitter-method public-timeline (() &key (trim-user nil) (include-entities t)) :statuses/public-timeline )
 
 (define-twitter-method home-timeline (() &key (since-id nil) (max-id nil) (count nil) (page nil) 
 					   (trim-user nil) (include_rts nil) (include-entities t)) :statuses/home-timeline )

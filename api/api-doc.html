@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generated-by" content="Markdown PRO, http://markdownpro.com"/>
+<title></title>
+<style type="text/css">
+html,body{margin:0;padding:0;}
+body {padding: 20px}
+h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,cite,code,del,dfn,em,img,q,s,samp,small,strike,strong,sub,sup,tt,var,dd,dl,dt,li,ol,ul,fieldset,form,label,legend,button,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;font-weight:normal;font-style:normal;font-size:100%;line-height:1;font-family:inherit;}
+table{border-collapse:collapse;border-spacing:0;}
+ol,ul{list-style:none;}
+q:before,q:after,blockquote:before,blockquote:after{content:"";}
+html{overflow-y:scroll;font-size:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+a:focus{outline:thin dotted;}
+a:hover,a:active{outline:0;}
+article,aside,details,figcaption,figure,footer,header,hgroup,nav,section{display:block;}
+audio,canvas,video{display:inline-block;*display:inline;*zoom:1;}
+audio:not([controls]){display:none;}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline;}
+sup{top:-0.5em;}
+sub{bottom:-0.25em;}
+img{border:0;-ms-interpolation-mode:bicubic;}
+button,input,select,textarea{font-size:100%;margin:0;vertical-align:baseline;*vertical-align:middle;}
+button,input{line-height:normal;*overflow:visible;}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0;}
+button,input[type="button"],input[type="reset"],input[type="submit"]{cursor:pointer;-webkit-appearance:button;}
+input[type="search"]{-webkit-appearance:textfield;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;}
+input[type="search"]::-webkit-search-decoration{-webkit-appearance:none;}
+textarea{overflow:auto;vertical-align:top;}
+html,body{background-color:#ffffff;}
+body{margin:0;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:13px;font-weight:normal;line-height:18px;color:#404040;}
+.container{width:940px;margin-left:auto;margin-right:auto;zoom:1;}.container:before,.container:after{display:table;content:"";zoom:1;*display:inline;}
+.container:after{clear:both;}
+.container-fluid{position:relative;min-width:940px;padding-left:20px;padding-right:20px;zoom:1;}.container-fluid:before,.container-fluid:after{display:table;content:"";zoom:1;*display:inline;}
+.container-fluid:after{clear:both;}
+.container-fluid>.sidebar{float:left;width:220px;}
+.container-fluid>.content{margin-left:240px;}
+a{color:#0069d6;text-decoration:none;line-height:inherit;font-weight:inherit;}a:hover{color:#00438a;text-decoration:underline;}
+.pull-right{float:right;}
+.pull-left{float:left;}
+.hide{display:none;}
+.show{display:block;}
+.row{zoom:1;margin-left:-20px;}.row:before,.row:after{display:table;content:"";zoom:1;*display:inline;}
+.row:after{clear:both;}
+p{font-size:13px;font-weight:normal;line-height:18px;margin-bottom:9px;}p small{font-size:11px;color:#bfbfbf;}
+h1,h2,h3,h4,h5,h6{font-weight:bold;color:#404040;}h1 small,h2 small,h3 small,h4 small,h5 small,h6 small{color:#bfbfbf;}
+h1{margin-bottom:18px;font-size:30px;line-height:36px;}h1 small{font-size:18px;}
+h2{font-size:24px;line-height:36px;}h2 small{font-size:14px;}
+h3,h4,h5,h6{line-height:36px;}
+h3{font-size:18px;}h3 small{font-size:14px;}
+h4{font-size:16px;}h4 small{font-size:12px;}
+h5{font-size:14px;}
+h6{font-size:13px;color:#bfbfbf;text-transform:uppercase;}
+ul,ol{margin:0 0 18px 25px;}
+ul ul,ul ol,ol ol,ol ul{margin-bottom:0;}
+ul{list-style:disc;}
+ol{list-style:decimal;}
+li{line-height:18px;color:#808080;}
+ul.unstyled{list-style:none;margin-left:0;}
+dl{margin-bottom:18px;}dl dt,dl dd{line-height:18px;}
+dl dt{font-weight:bold;}
+dl dd{margin-left:9px;}
+hr{margin:20px 0 19px;border:0;border-bottom:1px solid #eee;}
+strong{font-style:inherit;font-weight:bold;}
+em{font-style:italic;font-weight:inherit;line-height:inherit;}
+.muted{color:#bfbfbf;}
+blockquote{margin-bottom:18px;border-left:5px solid #eee;padding-left:15px;}blockquote p{font-size:14px;font-weight:300;line-height:18px;margin-bottom:0;}
+blockquote small{display:block;font-size:12px;font-weight:300;line-height:18px;color:#bfbfbf;}blockquote small:before{content:'\2014 \00A0';}
+address{display:block;line-height:18px;margin-bottom:18px;}
+code,pre{padding:0 3px 2px;font-family:Monaco, Andale Mono, Courier New, monospace;font-size:12px;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
+code{padding:1px 3px;}
+pre{background-color:#f5f5f5;display:block;padding:8.5px;margin:0 0 18px;line-height:18px;font-size:12px;border:1px solid #ccc;border:1px solid rgba(0, 0, 0, 0.15);-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;white-space:pre;white-space:pre-wrap;word-wrap:break-word;}
+form{margin-bottom:18px;}
+fieldset{margin-bottom:18px;padding-top:18px;}fieldset legend{display:block;padding-left:150px;font-size:19.5px;line-height:1;color:#404040;*padding:0 0 5px 145px;*line-height:1.5;}
+form .clearfix{margin-bottom:18px;zoom:1;}form .clearfix:before,form .clearfix:after{display:table;content:"";zoom:1;*display:inline;}
+form .clearfix:after{clear:both;}
+label,input,select,textarea{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:13px;font-weight:normal;line-height:normal;}
+label{padding-top:6px;font-size:13px;line-height:18px;float:left;width:130px;text-align:right;color:#404040;}
+form .input{margin-left:150px;}
+input[type=checkbox],input[type=radio]{cursor:pointer;}
+input,textarea,select,.uneditable-input{display:inline-block;width:210px;height:18px;padding:4px;font-size:13px;line-height:18px;color:#808080;border:1px solid #ccc;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;}
+input[type=checkbox],input[type=radio]{width:auto;height:auto;padding:0;margin:3px 0;*margin-top:0;line-height:normal;border:none;}
+input[type=file]{background-color:#ffffff;padding:initial;border:initial;line-height:initial;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;}
+input[type=button],input[type=reset],input[type=submit]{width:auto;height:auto;}
+select,input[type=file]{height:27px;line-height:27px;*margin-top:4px;}
+select[multiple]{height:inherit;}
+textarea{height:auto;}
+.uneditable-input{background-color:#ffffff;display:block;border-color:#eee;-webkit-box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.025);-moz-box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.025);box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.025);cursor:not-allowed;}
+:-moz-placeholder{color:#bfbfbf;}
+::-webkit-input-placeholder{color:#bfbfbf;}
+input,textarea{-webkit-transition:border linear 0.2s,box-shadow linear 0.2s;-moz-transition:border linear 0.2s,box-shadow linear 0.2s;-ms-transition:border linear 0.2s,box-shadow linear 0.2s;-o-transition:border linear 0.2s,box-shadow linear 0.2s;transition:border linear 0.2s,box-shadow linear 0.2s;-webkit-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);-moz-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1);}
+input:focus,textarea:focus{outline:0;border-color:rgba(82, 168, 236, 0.8);-webkit-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1),0 0 8px rgba(82, 168, 236, 0.6);-moz-box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1),0 0 8px rgba(82, 168, 236, 0.6);box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.1),0 0 8px rgba(82, 168, 236, 0.6);}
+input[type=file]:focus,input[type=checkbox]:focus,select:focus{-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none;outline:1px dotted #666;}
+form div.clearfix.error{background:#fae5e3;padding:10px 0;margin:-10px 0 10px;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}form div.clearfix.error>label,form div.clearfix.error span.help-inline,form div.clearfix.error span.help-block{color:#9d261d;}
+form div.clearfix.error input,form div.clearfix.error textarea{border-color:#c87872;-webkit-box-shadow:0 0 3px rgba(171, 41, 32, 0.25);-moz-box-shadow:0 0 3px rgba(171, 41, 32, 0.25);box-shadow:0 0 3px rgba(171, 41, 32, 0.25);}form div.clearfix.error input:focus,form div.clearfix.error textarea:focus{border-color:#b9554d;-webkit-box-shadow:0 0 6px rgba(171, 41, 32, 0.5);-moz-box-shadow:0 0 6px rgba(171, 41, 32, 0.5);box-shadow:0 0 6px rgba(171, 41, 32, 0.5);}
+form div.clearfix.error .input-prepend span.add-on,form div.clearfix.error .input-append span.add-on{background:#f4c8c5;border-color:#c87872;color:#b9554d;}
+table{width:100%;margin-bottom:18px;padding:0;border-collapse:separate;*border-collapse:collapse;font-size:13px;border:1px solid #ddd;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;}table th,table td{padding:10px 10px 9px;line-height:18px;text-align:left;}
+table th{padding-top:9px;font-weight:bold;vertical-align:middle;border-bottom:1px solid #ddd;}
+table td{vertical-align:top;}
+table th+th,table td+td{border-left:1px solid #ddd;}
+table tr+tr td{border-top:1px solid #ddd;}
+table tbody tr:first-child td:first-child{-webkit-border-radius:4px 0 0 0;-moz-border-radius:4px 0 0 0;border-radius:4px 0 0 0;}
+table tbody tr:first-child td:last-child{-webkit-border-radius:0 4px 0 0;-moz-border-radius:0 4px 0 0;border-radius:0 4px 0 0;}
+table tbody tr:last-child td:first-child{-webkit-border-radius:0 0 0 4px;-moz-border-radius:0 0 0 4px;border-radius:0 0 0 4px;}
+table tbody tr:last-child td:last-child{-webkit-border-radius:0 0 4px 0;-moz-border-radius:0 0 4px 0;border-radius:0 0 4px 0;}
+.zebra-striped tbody tr:nth-child(odd) td{background-color:#f9f9f9;}
+.zebra-striped tbody tr:hover td{background-color:#f5f5f5;}
+.zebra-striped .header{cursor:pointer;}.zebra-striped .header:after{content:"";float:right;margin-top:7px;border-width:0 4px 4px;border-style:solid;border-color:#000 transparent;visibility:hidden;}
+.zebra-striped .header:hover:after{visibility:visible;}
+footer{margin-top:17px;padding-top:17px;border-top:1px solid #eee;}
+.page-header{margin-bottom:17px;border-bottom:1px solid #ddd;-webkit-box-shadow:0 1px 0 rgba(255, 255, 255, 0.5);-moz-box-shadow:0 1px 0 rgba(255, 255, 255, 0.5);box-shadow:0 1px 0 rgba(255, 255, 255, 0.5);}.page-header h1{margin-bottom:8px;}
+.close{float:right;color:#000000;font-size:20px;font-weight:bold;line-height:13.5px;text-shadow:0 1px 0 #ffffff;filter:alpha(opacity=20);-khtml-opacity:0.2;-moz-opacity:0.2;opacity:0.2;}.close:hover{color:#000000;text-decoration:none;filter:alpha(opacity=40);-khtml-opacity:0.4;-moz-opacity:0.4;opacity:0.4;}
+
+pre {
+	padding: 0;
+	margin: 10px 0px 10px;
+	overflow: auto; /*--If the Code exceeds the width, a scrolling is available--*/
+	overflow-Y: hidden;  /*--Hides vertical scroll created by IE--*/
+}
+pre code {
+	margin: 5px;  /*--Left Margin--*/
+	padding: 0px;
+	display: block;
+    line-height: 18px;
+}
+.center { text-align:center}
+.left {text-align:left}
+.right {text-align:right}
+
+</style><style type="text/css">
+body{font-size:14px;line-height:1.6;font-family: Helvetica, arial, freesans, clean, sans-serif;padding: 20px;}
+body>*:first-child{margin-top:0!important;}
+body>*:last-child{margin-bottom:0!important;}
+body a:active {outline: none;}
+body a:hover {text-decoration: underline;}
+body a {color: #4183C4;text-decoration: none;}
+body a.absent{color:#c00;}
+body h1, body h2, h3, h4, h5, h6{margin:20px 0 10px;padding:0;font-weight:bold;-webkit-font-smoothing:antialiased;}
+body h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code{font-size:inherit;}
+body h1{font-size:28px;color:#000;}
+body h2{font-size:24px;border-bottom:1px solid #ccc;color:#000;}
+body h3{font-size:18px;}
+body h4{font-size:16px;}
+body h5{font-size:14px;}
+body h6{color:#777;font-size:14px;}
+body p, blockquote, ul, ol, dl, li, table, pre{margin:15px 0;}
+body hr{background:transparent url('../../images/modules/pulls/dirty-shade.png') repeat-x 0 0;border:0 none;color:#ccc;height:4px;padding:0;}
+body>h2:first-child,>h1:first-child,>h1:first-child+h2,>h3:first-child,>h4:first-child,>h5:first-child,>h6:first-child{margin-top:0;padding-top:0;}
+body h1+p, h2+p, h3+p, h4+p, h5+p, h6+p{margin-top:0;}
+body li p.first{display:inline-block;}
+body ul, ol{padding-left:30px;}
+body ul li>:first-child, ol li>:first-child{margin-top:0;}
+body ul li>:last-child, ol li>:last-child{margin-bottom:0;}
+body dl{padding:0;}
+body dl dt{font-size:14px;font-weight:bold;font-style:italic;padding:0;margin:15px 0 5px;}
+body dl dt:first-child{padding:0;}
+body dl dt>:first-child{margin-top:0;}
+body dl dt>:last-child{margin-bottom:0;}
+body dl dd{margin:0 0 15px;padding:0 15px;}
+body dl dd>:first-child{margin-top:0;}
+body dl dd>:last-child{margin-bottom:0;}
+body blockquote{border-left:4px solid #DDD;padding:0 15px;color:#777;}
+body blockquote>:first-child{margin-top:0;}
+body blockquote>:last-child{margin-bottom:0;}
+body table{padding:0;}
+body table tr{border-top:1px solid #ccc;background-color:#fff;margin:0;padding:0;}
+body table tr:nth-child(2n){background-color:#f8f8f8;}
+body table tr th{font-weight:bold;}
+body table tr th, table tr td{border:1px solid #ccc;text-align:left;margin:0;padding:6px 13px;}
+body table tr th>:first-child, table tr td>:first-child{margin-top:0;}
+body table tr th>:last-child, table tr td>:last-child{margin-bottom:0;}
+body img{max-width:100%;}
+body span.frame{display:block;overflow:hidden;}
+body span.frame>span{border:1px solid #ddd;display:block;float:left;overflow:hidden;margin:13px 0 0;padding:7px;width:auto;}
+body span.frame span img{display:block;float:left;}
+body span.frame span span{clear:both;color:#333;display:block;padding:5px 0 0;}
+body span.align-center{display:block;overflow:hidden;clear:both;}
+body span.align-center>span{display:block;overflow:hidden;margin:13px auto 0;text-align:center;}
+body span.align-center span img{margin:0 auto;text-align:center;}
+body span.align-right{display:block;overflow:hidden;clear:both;}
+body span.align-right>span{display:block;overflow:hidden;margin:13px 0 0;text-align:right;}
+body span.align-right span img{margin:0;text-align:right;}
+body span.float-left{display:block;margin-right:13px;overflow:hidden;float:left;}
+body span.float-left span{margin:13px 0 0;}
+body span.float-right{display:block;margin-left:13px;overflow:hidden;float:right;}
+body span.float-right>span{display:block;overflow:hidden;margin:13px auto 0;text-align:right;}
+body code, tt{margin:0 2px;padding:0 5px;white-space:nowrap;border:1px solid #eaeaea;background-color:#f8f8f8;border-radius:3px;}
+body pre>code{margin:0;padding:0;white-space:pre;border:none;background:transparent;}
+body .highlight pre, pre{background-color:#f8f8f8;border:1px solid #ccc;font-size:13px;line-height:19px;overflow:auto;padding:6px 10px;border-radius:3px;}
+body pre code, pre tt{background-color:transparent;border:none;}
+</style></head>
+<body>
+<h1 id="toc_0">cl-twitter api overview</h1>
+
+<h2 id="toc_1">Helper Functions</h2>
+
+<h4 id="toc_2">twitter-oauth-uri</h4>
+
+<h4 id="toc_3"><a href="https://github.com/fons/cl-twitter/blob/master/api/twitter-show.lisp">show</a></h4>
+
+<p>The <em>show</em>  is used to pretty print the results returned by the twitter rest api functions.</p>
+
+<pre><code>TWIT-REPL> (home-timeline)
+(#&ltTWEET 'Franzinc' id:565564990447702016>
+ #&ltTWEET 'Franzinc' id:565534775893835777>
+ [...])
+</code></pre>
+
+<pre><code>TWIT-REPL> (show(home-timeline))
+Franzinc                                                                                                                Wed Feb 11 17:36:16 +0000 2015
+RT @HaystaxTech: Haystax CTO Bryan Ware will be presenting Enterprise Threat Management: A Comprehensive Risk-Based Approach at CyberOSINT …
+ 
+Franzinc                                                                                                                Wed Feb 11 15:36:12 +0000 2015
+Check out the new #AllegroGraph 5.0 release - Free Download  http://t.co/lOiVl4iIYk  #nosql #graphdatabase
+[...]         
+</code></pre>
+
+<h2 id="toc_4"><a href="https://dev.twitter.com/rest/public">Twitter Rest API</a></h2>
+
+<h3 id="toc_5">Time line resources</h3>
+
+<h4 id="toc_6"><a href="https://dev.twitter.com/rest/reference/get/statuses/user_timeline">user-timeline</a></h4>
+
+<h4 id="toc_7">home-timeline</h4>
+
+<h4 id="toc_8">friends-timeline</h4>
+
+<h4 id="toc_9">mentions</h4>
+
+<h4 id="toc_10">retweeted-by-me</h4>
+
+<h4 id="toc_11">retweeted-to-me</h4>
+
+<h4 id="toc_12">retweets-of-me</h4>
+
+<h3 id="toc_13">Time Line Resources api</h3>
+
+<h4 id="toc_14">collect-home-timeline</h4>
+
+<h4 id="toc_15">collect-friends-timeline</h4>
+
+<h4 id="toc_16">collect-user-timeline</h4>
+
+<h3 id="toc_17">Tweets resources</h3>
+
+<h4 id="toc_18">get-status</h4>
+
+<h4 id="toc_19">update-status</h4>
+
+<h4 id="toc_20">delete-status</h4>
+
+<h4 id="toc_21">retweet-status</h4>
+
+<h4 id="toc_22">status-retweets</h4>
+
+<h4 id="toc_23">status-retweeted-by</h4>
+
+<h4 id="toc_24">status-retweeted-by-ids</h4>
+
+<h3 id="toc_25">Tweets resources: app api</h3>
+
+<h4 id="toc_26">tweet?</h4>
+
+<h4 id="toc_27">tweet</h4>
+
+<h4 id="toc_28">reply-to</h4>
+
+<h4 id="toc_29">@reply-to</h4>
+
+<h4 id="toc_30">delete-tweet</h4>
+
+<h4 id="toc_31">retweet</h4>
+
+<h4 id="toc_32">retweets</h4>
+
+<h4 id="toc_33">retweeted-by</h4>
+
+<h4 id="toc_34">@mention</h4>
+
+<h3 id="toc_35">Trends resources</h3>
+
+<h4 id="toc_36">trends</h4>
+
+<h4 id="toc_37">current-trends</h4>
+
+<h4 id="toc_38">daily-trends</h4>
+
+<h4 id="toc_39">weekly-trends</h4>
+
+<h4 id="toc_40">location-trends</h4>
+
+<h4 id="toc_41">trends@location</h4>
+
+<h3 id="toc_42">Trends resources ap api</h3>
+
+<h4 id="toc_43">trending-locations</h4>
+
+<h3 id="toc_44">Direct Messages resources</h3>
+
+<p>:direct-messages-received
+   :direct-messages-sent
+   :send-direct-message
+   :delete-direct-message</p>
+
+<h3 id="toc_45">Direct Messages resources api</h3>
+
+<h4 id="toc_46">send-message</h4>
+
+<h4 id="toc_47">delete-message</h4>
+
+<h4 id="toc_48">messages</h4>
+
+<h4 id="toc_49">sent-messages</h4>
+
+<h3 id="toc_50">Favorites resources</h3>
+
+<h4 id="toc_51">favorites</h4>
+
+<h4 id="toc_52">create-favorite</h4>
+
+<h4 id="toc_53">delete-favorite</h4>
+
+<h3 id="toc_54">Favorites resources api</h3>
+
+<h4 id="toc_55">favor-tweet</h4>
+
+<h4 id="toc_56">unfavor-tweet</h4>
+
+<h3 id="toc_57">Block resources</h3>
+
+<h4 id="toc_58">create-block</h4>
+
+<h4 id="toc_59">remove-block</h4>
+
+<h4 id="toc_60">blocks</h4>
+
+<h4 id="toc_61">blocked-user-ids</h4>
+
+<h3 id="toc_62">Block resources api</h3>
+
+<h4 id="toc_63">is-blocked?</h4>
+
+<h3 id="toc_64">Account resources : partially supported</h3>
+
+<h4 id="toc_65">verify-credentials</h4>
+
+<h4 id="toc_66">rate-limit-status</h4>
+
+<h4 id="toc_67">end-session</h4>
+
+<h4 id="toc_68">update-profile-colors</h4>
+
+<h4 id="toc_69">update-profile</h4>
+
+<h3 id="toc_70">User resources</h3>
+
+<h4 id="toc_71">show-user</h4>
+
+<h4 id="toc_72">show-user-by-id</h4>
+
+<h4 id="toc_73">lookup-users</h4>
+
+<h4 id="toc_74">search-users</h4>
+
+<h4 id="toc_75">friends-statuses</h4>
+
+<h4 id="toc_76">followers-statuses</h4>
+
+<h3 id="toc_77">User Resources api</h3>
+
+<h4 id="toc_78">collect-friend-statuses</h4>
+
+<h4 id="toc_79">collect-follower-statuses</h4>
+
+<h4 id="toc_80">do-user-search</h4>
+
+<h3 id="toc_81">Friendship Methods</h3>
+
+<h4 id="toc_82">follow</h4>
+
+<h4 id="toc_83">unfollow</h4>
+
+<h4 id="toc_84">user-a-following-user-b?</h4>
+
+<h4 id="toc_85">follower-relationship</h4>
+
+<h3 id="toc_86">cursors not supported</h3>
+
+<h4 id="toc_87">incoming-follow-requests</h4>
+
+<h3 id="toc_88">cursors not supported</h3>
+
+<h4 id="toc_89">outgoing-follow-requests</h4>
+
+<h3 id="toc_90">Saved Searches resources</h3>
+
+<h4 id="toc_91">saved-searches</h4>
+
+<h4 id="toc_92">saved-search</h4>
+
+<h4 id="toc_93">save-search</h4>
+
+<h4 id="toc_94">delete-search</h4>
+
+<h3 id="toc_95">Saved Searches resources api</h3>
+
+<h4 id="toc_96">show-search</h4>
+
+<h4 id="toc_97">rm-search</h4>
+
+<h3 id="toc_98">Social Graph Methods</h3>
+
+<h3 id="toc_99">Friends and Followers resources :</h3>
+
+<h4 id="toc_100">friend-ids</h4>
+
+<h4 id="toc_101">follower-ids</h4>
+
+<h3 id="toc_102">Friends and Followers resources api:</h3>
+
+<h4 id="toc_103">with-cursor</h4>
+
+<h4 id="toc_104">collect-follower-ids</h4>
+
+<h4 id="toc_105">collect-friend-ids</h4>
+
+<h3 id="toc_106">Search resources</h3>
+
+<h4 id="toc_107">search-twitter</h4>
+
+<h3 id="toc_108">Search resources api</h3>
+
+<h4 id="toc_109">with-paging</h4>
+
+<h4 id="toc_110">do-search</h4>
+
+<h3 id="toc_111">List resources</h3>
+
+<h4 id="toc_112">create-user-list</h4>
+
+<h4 id="toc_113">update-user-list</h4>
+
+<h4 id="toc_114">get-user-list</h4>
+
+<h4 id="toc_115">get-user-lists</h4>
+
+<h4 id="toc_116">delete-user-lists</h4>
+
+<h4 id="toc_117">statuses-user-lists</h4>
+
+<h4 id="toc_118">memberships-user-lists</h4>
+
+<h4 id="toc_119">subscriptions-user-lists</h4>
+
+<h4 id="toc_120">collect-user-lists</h4>
+
+<h4 id="toc_121">collect-user-list-memberships</h4>
+
+<h4 id="toc_122">collect-user-list-subscriptions</h4>
+
+<h4 id="toc_123">collect-user-list-statuses</h4>
+
+<h4 id="toc_124">user-list-timeline</h4>
+
+<h4 id="toc_125">member-list-timeline</h4>
+
+<h4 id="toc_126">subscriber-list-timeline</h4>
+
+<h3 id="toc_127">List Members resources</h3>
+
+<h4 id="toc_128">user-list-members</h4>
+
+<h4 id="toc_129">collect-user-list-members</h4>
+
+<h4 id="toc_130">add-user-list-members</h4>
+
+<h4 id="toc_131">delete-user-list-members</h4>
+
+<h4 id="toc_132">user-list-members-p</h4>
+
+<h3 id="toc_133">List Subscribers resources</h3>
+
+<h4 id="toc_134">user-list-subscribers</h4>
+
+<h4 id="toc_135">collect-user-list-subscribers</h4>
+
+<h4 id="toc_136">add-user-list-subscribers</h4>
+
+<h4 id="toc_137">delete-user-list-subscribers</h4>
+
+<h4 id="toc_138">user-list-subscribers-p</h4>
+
+<h3 id="toc_139">Notification resources</h3>
+
+<h4 id="toc_140">follow-notification</h4>
+
+<h4 id="toc_141">leave-notification</h4>
+
+<h3 id="toc_142">miscellaneous resources</h3>
+
+<h4 id="toc_143">twitter-test</h4>
+
+<h4 id="toc_144">twitter-terms-of-service</h4>
+
+<h4 id="toc_145">twitter-privacy</h4>
+
+<h4 id="toc_146">report-spam</h4>
+
+<h3 id="toc_147">Notification resources</h3>
+
+<h4 id="toc_148">follow-notification</h4>
+
+<h4 id="toc_149">leave-notification</h4>
+
+<h3 id="toc_150">Geo resources</h3>
+
+<h4 id="toc_151">geo-search</h4>
+
+<h4 id="toc_152">geo-similar-places</h4>
+
+<h4 id="toc_153">geo-reverse-geocode</h4>
+
+<h4 id="toc_154">geo-place-by-id</h4>
+
+<h4 id="toc_155">geo-register-place</h4>
+
+<h3 id="toc_156">Geo resources api :</h3>
+
+<h4 id="toc_157">geo-print-places</h4>
+
+<h4 id="toc_158">geo-token</h4>
+
+<h3 id="toc_159">--------------------</h3>
+
+<h4 id="toc_160">*access-file*</h4>
+
+<h4 id="toc_161">*http-request-function*</h4>
+
+<h3 id="toc_162">Interactive API</h3>
+
+<h4 id="toc_163">authenticate-user</h4>
+
+<h4 id="toc_164">authenticated-user</h4>
+
+<h4 id="toc_165">*twitter-user*</h4>
+
+<h3 id="toc_166">OAuth</h3>
+
+<h4 id="toc_167">oauth-make-twitter-authorization-uri</h4>
+
+<h4 id="toc_168">oauth-authenticate-user</h4>
+
+<h4 id="toc_169">repl-authenticate-user</h4>
+
+<h4 id="toc_170">get-authenticated-user</h4>
+
+<h3 id="toc_171">Updates</h3>
+
+<h3 id="toc_172">I/O</h3>
+
+<h4 id="toc_173">print-tweets</h4>
+
+<h4 id="toc_174">get-tinyurl</h4>
+
+<h3 id="toc_175">Twitter command operations</h3>
+
+<h4 id="toc_176">twitter-op</h4>
+
+<h4 id="toc_177">twitter-api-condition</h4>
+
+<h5 id="toc_178">return-code</h5>
+
+<h5 id="toc_179">short-message</h5>
+
+<h5 id="toc_180">long-message</h5>
+
+<h5 id="toc_181">request-uri</h5>
+
+<h5 id="toc_182">request-message</h5>
+
+<h3 id="toc_183">Documentation</h3>
+
+<h4 id="toc_184">list-commands</h4>
+
+<h4 id="toc_185">command-help</h4>
+
+<h4 id="toc_186">element-help</h4>
+
+<h3 id="toc_187">User Element</h3>
+
+<h4 id="toc_188">twitter-user</h4>
+
+<h4 id="toc_189">twitter-user-id</h4>
+
+<h4 id="toc_190">twitter-user-name</h4>
+
+<h4 id="toc_191">twitter-user-access-token</h4>
+
+<h4 id="toc_192">twitter-user-screen-name</h4>
+
+<h4 id="toc_193">twitter-user-password</h4>
+
+<h4 id="toc_194">twitter-user-location</h4>
+
+<h4 id="toc_195">twitter-user-description</h4>
+
+<h4 id="toc_196">twitter-user-profile-image-url</h4>
+
+<h4 id="toc_197">twitter-user-url</h4>
+
+<h4 id="toc_198">twitter-user-protected</h4>
+
+<h4 id="toc_199">twitter-user-followers-count</h4>
+
+<h4 id="toc_200">twitter-user-status</h4>
+
+<h4 id="toc_201">twitter-user-profile-background-color</h4>
+
+<h4 id="toc_202">twitter-user-profile-text-color</h4>
+
+<h4 id="toc_203">twitter-user-profile-link-color</h4>
+
+<h4 id="toc_204">twitter-user-profile-sidebar-color</h4>
+
+<h4 id="toc_205">twitter-user-profile-sidebar-border-color</h4>
+
+<h4 id="toc_206">twitter-user-profile-sidebar-fill-color</h4>
+
+<h4 id="toc_207">twitter-user-friends-count</h4>
+
+<h4 id="toc_208">twitter-user-created-at</h4>
+
+<h4 id="toc_209">twitter-user-favourites-count</h4>
+
+<h4 id="toc_210">twitter-user-utc-offset</h4>
+
+<h4 id="toc_211">twitter-user-time-zone</h4>
+
+<h4 id="toc_212">twitter-user-profile-background-image-url</h4>
+
+<h4 id="toc_213">twitter-user-profile-background-tile</h4>
+
+<h4 id="toc_214">twitter-user-following</h4>
+
+<h4 id="toc_215">twitter-user-notifications</h4>
+
+<h4 id="toc_216">twitter-user-statuses-count</h4>
+
+<h3 id="toc_217">Tweet Element</h3>
+
+<h4 id="toc_218">tweet</h4>
+
+<h4 id="toc_219">tweet-id</h4>
+
+<h4 id="toc_220">tweet-created-at</h4>
+
+<h4 id="toc_221">tweet-text</h4>
+
+<h4 id="toc_222">tweet-source</h4>
+
+<h4 id="toc_223">tweet-truncated</h4>
+
+<h4 id="toc_224">tweet-favorited</h4>
+
+<h4 id="toc_225">tweet-in-reply-to-status-id</h4>
+
+<h4 id="toc_226">tweet-in-reply-to-user-id</h4>
+
+<h4 id="toc_227">tweet-in-reply-to-screen-name</h4>
+
+<h4 id="toc_228">tweet-user</h4>
+
+<h4 id="toc_229">tweet-entities</h4>
+
+<h3 id="toc_230">Message element</h3>
+
+<h4 id="toc_231">twitter-message</h4>
+
+<h4 id="toc_232">twitter-message-id</h4>
+
+<h4 id="toc_233">twitter-message-created-at</h4>
+
+<h4 id="toc_234">twitter-message-text</h4>
+
+<h4 id="toc_235">twitter-message-sender-id</h4>
+
+<h4 id="toc_236">twitter-message-sender-screen-name</h4>
+
+<h4 id="toc_237">twitter-message-recipient-id</h4>
+
+<h4 id="toc_238">twitter-message-recipient-screen-name</h4>
+
+<h4 id="toc_239">twitter-message-sender</h4>
+
+<h4 id="toc_240">twitter-message-recipient</h4>
+
+<h3 id="toc_241">Search Result Wrapper</h3>
+
+<h4 id="toc_242">search-result</h4>
+
+<h4 id="toc_243">search-result-statuses</h4>
+
+<h4 id="toc_244">search-result-search-metadata</h4>
+
+<h3 id="toc_245">Search Meta Data</h3>
+
+<h4 id="toc_246">search-metadata</h4>
+
+<h4 id="toc_247">search-metadata-completed-in</h4>
+
+<h4 id="toc_248">search-metadata-max-id</h4>
+
+<h4 id="toc_249">search-metadata-max-id_str</h4>
+
+<h4 id="toc_250">search-metadata-next-results</h4>
+
+<h4 id="toc_251">search-metadata-query</h4>
+
+<h4 id="toc_252">search-metadata-refresh-url</h4>
+
+<h4 id="toc_253">search-metadata-count</h4>
+
+<h4 id="toc_254">search-metadata-since-id</h4>
+
+<h4 id="toc_255">search-metadata-since-id-str</h4>
+
+<h3 id="toc_256">Rate Limit</h3>
+
+<h4 id="toc_257">rate-limit-reset-time</h4>
+
+<h4 id="toc_258">rate-limit-reset-time-in-seconds</h4>
+
+<h4 id="toc_259">rate-limit-remaining-hits</h4>
+
+<h4 id="toc_260">rate-limit-hourly-limit</h4>
+
+<h3 id="toc_261">End Session</h3>
+
+<h4 id="toc_262">end-session-request</h4>
+
+<h4 id="toc_263">end-session-error</h4>
+
+<h3 id="toc_264">place type</h3>
+
+<h4 id="toc_265">place-type-code</h4>
+
+<h4 id="toc_266">place-type-name</h4>
+
+<h3 id="toc_267">place</h3>
+
+<h4 id="toc_268">place-ural</h4>
+
+<h4 id="toc_269">place-placetype</h4>
+
+<h4 id="toc_270">place-country</h4>
+
+<h4 id="toc_271">place-woeid</h4>
+
+<h4 id="toc_272">place-name</h4>
+
+<h3 id="toc_273">trend</h3>
+
+<h4 id="toc_274">trend</h4>
+
+<h4 id="toc_275">trend-id</h4>
+
+<h4 id="toc_276">trend-url</h4>
+
+<h4 id="toc_277">trend-query</h4>
+
+<h4 id="toc_278">trend-promoted-content</h4>
+
+<h4 id="toc_279">trend-events</h4>
+
+<h4 id="toc_280">trend-name</h4>
+
+<h3 id="toc_281">trend list</h3>
+
+<h4 id="toc_282">trend-list</h4>
+
+<h4 id="toc_283">trend-list-id</h4>
+
+<h4 id="toc_284">trend-list-created-at</h4>
+
+<h4 id="toc_285">trend-list-locations</h4>
+
+<h4 id="toc_286">trend-list-trends</h4>
+
+<h4 id="toc_287">trend-list-as-of</h4>
+
+<h3 id="toc_288">saved search</h3>
+
+<h4 id="toc_289">saved-search-id</h4>
+
+<h4 id="toc_290">saved-search-query</h4>
+
+<h4 id="toc_291">saved-search-created-at</h4>
+
+<h4 id="toc_292">saved-search-id-str</h4>
+
+<h4 id="toc_293">saved-search-name</h4>
+
+<h4 id="toc_294">saved-search-position</h4>
+
+<h3 id="toc_295">social graph ;Friends and Followers resources :</h3>
+
+<h4 id="toc_296">social-graph-cursor-id</h4>
+
+<h4 id="toc_297">social-graph-cursor-id-id</h4>
+
+<h4 id="toc_298">social-graph-cursor-id-screen-name</h4>
+
+<h4 id="toc_299">social-graph-cursor-id-next-cursor-str</h4>
+
+<h4 id="toc_300">social-graph-cursor-id-next-cursor</h4>
+
+<h4 id="toc_301">social-graph-cursor-id-previous-cursor-str</h4>
+
+<h4 id="toc_302">social-graph-cursor-id-previous-cursor</h4>
+
+<h4 id="toc_303">social-graph-cursor-id-ids</h4>
+
+<h3 id="toc_304">list resources</h3>
+
+<h4 id="toc_305">cursor-user-lists-id</h4>
+
+<h4 id="toc_306">cursor-user-lists-next-cursor-str</h4>
+
+<h4 id="toc_307">cursor-user-lists-next-cursor</h4>
+
+<h4 id="toc_308">cursor-user-lists-previous-cursor-str</h4>
+
+<h4 id="toc_309">cursor-user-lists-previous-cursor</h4>
+
+<h4 id="toc_310">cursor-user-lists-lists</h4>
+
+<h4 id="toc_311">list-type-id</h4>
+
+<h4 id="toc_312">list-type-mode</h4>
+
+<h4 id="toc_313">list-type-description</h4>
+
+<h4 id="toc_314">list-type-slug</h4>
+
+<h4 id="toc_315">list-type-uri</h4>
+
+<h4 id="toc_316">list-type-member-count</h4>
+
+<h4 id="toc_317">list-type-id-str</h4>
+
+<h4 id="toc_318">list-type-full-name</h4>
+
+<h4 id="toc_319">list-type-user</h4>
+
+<h3 id="toc_320">geo resources</h3>
+
+<h4 id="toc_321">geo-coordinate-id</h4>
+
+<h4 id="toc_322">geo-coordinate-long</h4>
+
+<h4 id="toc_323">geo-coordinate-lat</h4>
+
+<h4 id="toc_324">geo-bounding-box-id</h4>
+
+<h4 id="toc_325">geo-bounding-box-coordinates</h4>
+
+<h4 id="toc_326">geo-bounding-box-type</h4>
+
+<h4 id="toc_327">geo-query-id</h4>
+
+<h4 id="toc_328">geo-query-type</h4>
+
+<h4 id="toc_329">geo-query-params</h4>
+
+<h4 id="toc_330">geo-query-url</h4>
+
+<h4 id="toc_331">geo-result-id</h4>
+
+<h4 id="toc_332">geo-result-result</h4>
+
+<h4 id="toc_333">geo-result-query</h4>
+
+<h4 id="toc_334">geo-places-id</h4>
+
+<h4 id="toc_335">geo-places-token</h4>
+
+<h4 id="toc_336">geo-places-places</h4>
+
+<h4 id="toc_337">geo-place-id</h4>
+
+<h4 id="toc_338">geo-place-code</h4>
+
+<h4 id="toc_339">geo-place-name</h4>
+
+<h4 id="toc_340">geo-place-attributes</h4>
+
+<h4 id="toc_341">geo-place-url</h4>
+
+<h4 id="toc_342">geo-place-place-type</h4>
+
+<h4 id="toc_343">geo-place-full-name</h4>
+
+<h4 id="toc_344">geo-place-country</h4>
+
+<h4 id="toc_345">geo-place-bounding-box</h4>
+
+<h4 id="toc_346">geo-place-geometry</h4>
+
+<h4 id="toc_347">geo-place-country-code</h4>
+
+<h4 id="toc_348">geo-place-polylines</h4>
+
+<h4 id="toc_349">geo-place-contained-within</h4>
+
+<h4 id="toc_350">print-geo-place</h4>
+
+<h4 id="toc_351">geo-token</h4>
+
+<h4 id="toc_352">geo-print-places</h4>
+
+<h3 id="toc_353">twitter-entity exports</h3>
+
+<h4 id="toc_354">twitter-entities-id</h4>
+
+<h4 id="toc_355">twitter-entities-hashtags</h4>
+
+<h4 id="toc_356">twitter-entities-user-mentions</h4>
+
+<h4 id="toc_357">twitter-entities-media</h4>
+
+<h4 id="toc_358">twitter-entities-urls</h4>
+
+<h4 id="toc_359">media-entity-id</h4>
+
+<h4 id="toc_360">media-entity-id-str</h4>
+
+<h4 id="toc_361">media-entity-media-url</h4>
+
+<h4 id="toc_362">media-entity-media-url-https</h4>
+
+<h4 id="toc_363">media-entity-url</h4>
+
+<h4 id="toc_364">media-entity-display-url</h4>
+
+<h4 id="toc_365">media-entity-expanded-url</h4>
+
+<h4 id="toc_366">media-entity-type</h4>
+
+<h4 id="toc_367">media-entity-sizes</h4>
+
+<h4 id="toc_368">media-entity-indices</h4>
+
+<h4 id="toc_369">user-mention-id</h4>
+
+<h4 id="toc_370">user-mention-id-str</h4>
+
+<h4 id="toc_371">user-mention-screen-name</h4>
+
+<h4 id="toc_372">user-mention-name</h4>
+
+<h4 id="toc_373">user-mention-screen-indices</h4>
+
+<h4 id="toc_374">hashtag-id</h4>
+
+<h4 id="toc_375">hashtag-text</h4>
+
+<h4 id="toc_376">hashtag-indices</h4>
+
+<h4 id="toc_377">url-entity-id</h4>
+
+<h4 id="toc_378">url-entity-url</h4>
+
+<h4 id="toc_379">url-entity-display-url</h4>
+
+<h4 id="toc_380">url-entity-expanded-url</h4>
+
+<h4 id="toc_381">url-entity-indices</h4>
+
+<h4 id="toc_382">media-size-id</h4>
+
+<h4 id="toc_383">media-size-w</h4>
+
+<h4 id="toc_384">media-size-h</h4>
+
+<h4 id="toc_385">media-size-resize</h4>
+
+<h4 id="toc_386">entity-hashtags</h4>
+
+<h4 id="toc_387">entity-user-mentions</h4>
+
+<h4 id="toc_388">entity-urls</h4>
+
+<h4 id="toc_389">entity-media</h4>
+
+<h3 id="toc_390">persistence/lookup hooks</h3>
+
+<h4 id="toc_391">register-twitter-object</h4>
+
+<h4 id="toc_392">lookup-twitter-object</h4>
+
+<h3 id="toc_393">conditions</h3>
+
+<h4 id="toc_394">return-code</h4>
+
+<h4 id="toc_395">default-file-path</h4>
+
+<h4 id="toc_396">get-user</h4>
+
+<h3 id="toc_397">db/cache</h3>
+
+<h4 id="toc_398">use-cache</h4>
+
+<h4 id="toc_399">unique-id</h4>
+
+<h4 id="toc_400">caches</h4>
+
+<h4 id="toc_401">drop-cache</h4>
+
+<h4 id="toc_402">read-cache-spec</h4>
+
+<h4 id="toc_403">write-cache-spec</h4>
+
+<h4 id="toc_404">cache-map-reduce</h4>
+
+<h4 id="toc_405">map-reduce-cache</h4>
+
+<h4 id="toc_406">db-initialize</h4>
+
+<h4 id="toc_407">db-shutdown</h4>
+
+<h4 id="toc_408">db-store-object</h4>
+
+<h4 id="toc_409">db-map-reduce</h4>
+
+<h4 id="toc_410">db-status</h4>
+
+<h4 id="toc_411">use-db</h4>
+
+</body>
+</html>

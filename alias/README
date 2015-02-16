@@ -1,1 +1,5 @@
+# Command Alias
+
+cl-twit-repl allows commands to be aliased. This file contains a number of those aliases. 
+ 
 this directory contains the cl-twit-repl.alias file.

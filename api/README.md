@@ -1,11 +1,13 @@
 # CL-TWITTER : A common lisp API for Twitter
 
-## API Status:
+## API Status
 
-All of [twitter's rest api calls](http://dev.twitter.com/doc/) are covered, asof 12/13/2010.
+All [twitter's rest api calls](https://dev.twitter.com/rest/public) are covered, asof 12/13/2010 <sup>1</sup>. 
+The twitter api has gone through some changes since then. 
+The public time line is nor more and existing commands have a few more options.
 
 The api consists of two layers. The first layer is relatively low level and is nothing more than a wrapper around the rest api call. 
-The second layer provides the same functionality, but is usually a littel easier to use. 
+The second layer provides the same functionality, but is usually a little easier to use. 
 
 For example the first level call to get the user id's for a user's followers looks like :
 
@@ -51,6 +53,10 @@ macro :
 
 The caller can access the tweet data using standard *(tweet-... )* generic functions, like *tweet-id* or *tweet-text*.
 
+-
+<sup>1</sup>  I 'm reviewing this against the current 1.1 version of the api.
+ 
 ## API Overview
  
-TBD 
+[api doc](api-doc.md) 
+
