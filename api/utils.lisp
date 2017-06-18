@@ -51,7 +51,7 @@
 ;;memoize all the symbols....
 ;;the population of *lisp->twitter-symbols* and *twitter->lisp-symbols* relies on a compile side effect to be completely populated.
 ;; at this stage this is not happening, and side effects shouldn't be relied on.
-;; at this stage I'm trearting these tables as a memoization device so all symbols will end up in here, not just the ones requiring conversion..
+;; at this stage I'm treating these tables as a memoization device so all symbols will end up in here, not just the ones requiring conversion..
 (defun lisp->twitter (lisp-symbol)
   (let ((twitter-symbol (gethash lisp-symbol *lisp->twitter-symbols*)))
     (if (null twitter-symbol)
@@ -235,3 +235,35 @@
 
 ;;;------------------------
 
+;;---convert containers (like hashes) to reasonable lists
+
+
+(defgeneric tolist (obj))
+
+(defmethod tolist ( (obj t)) obj)
+
+(defmethod tolist ((obj cons)) obj)
+
+(defmethod tolist ((obj hash-table))
+  (alexandria:hash-table-values obj)) 
+
+(defun arguments (&rest args) args )
+
+
+(defun collect-results (container depth func arg-list )
+  (let* ((result-set (apply func arg-list )))
+    (if (and (consp result-set) (< 0 depth) )
+        (collect-results (nconc result-set container) (- depth 1) func arg-list)
+        container)))
+
+(defun set-count (count)
+  (cond
+    ((eq count nil ) 200)
+    ((< count 200)   count)
+    ( t              200)))
+
+(defun set-depth (count)
+  (cond
+    ((eq count nil ) 4)
+    ((< count 200) (+ 1 (floor (/ count 200))))
+    (t 4)))

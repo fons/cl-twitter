@@ -115,7 +115,7 @@
   )
 
 (defmethod print-object ((ref geo-place) stream)
-  (format stream "#<TWITTER-GEO-PLACE '~A'>" (geo-place-name ref)))
+  (format stream "#<TWITTER-GEO-PLACE '~A:~A'>" (geo-place-name ref) (geo-place-id ref)))
 
 (defvar *geo-print-offset* 0)
 
@@ -161,20 +161,6 @@
     (mapcar #'print-geo-place geo-place-list)))
       
 
-;;;---------------------------------------------------------------
-;;
-;; Geo resources
-;;         geo/nearby_places ====> deprecated
-;;    geo/search
-;;    geo/similar_places
-;;    geo/reverse_geocode
-;;    geo/id/247f43d441defc03
-;;    geo/place
-;; Test case : (apply 'twitter-op :geo/search :lat 37.7821120598956 :long -122.400612831116  ())
-;; return san fran..
-;;  (apply 'twitter-op :geo/search :lat 40.88 :long -73.41  ()) --> huntington
-
-;; TODO handle this :   :attribute:street_address "This parameter searches for places which have this given street address. "
 
 (define-command geo/search (:get :geo-result)
     (twitter-app-uri "geo/search.json")
@@ -191,71 +177,31 @@
     :contained_within "This is the place_id which you would like to restrict the search results to. "
     :callback "If supplied, the response will use the JSONP format with a callback of the given name.")
 
-;; Consult the api pages for more information
-
-;; on accruarcy : If a number, then this is a radius in meters, but it can also take a string that is suffixed with ft to specify feet. 
-;;    If this is not passed in, then it is assumed to be 0m. If coming from a device, in practice, this value is whatever accuracy the device has 
-;;    measuring its location (whether it be coming from a GPS, WiFi triangulation, etc.).
-
-(define-command geo/similar_places (:get :geo-result)
-    (twitter-app-uri "geo/similar_places.json")
-    "Locates places near the given coordinates which are similar in name."
-    :lat "Required  : The latitude to search around. Ignored unless between [-90.0 +90.0] (North is positive) and :long is specified"
-    :long "Required : The longitude to search around. Ignored unless between [-180.0 to +180.0] (East is positive) inclusive." 
-    :name "Required : The name a place is known as."
-    :attribute->street_address "This parameter searches for places which have this given street address."
-    :contained_within "This is the place_id which you would like to restrict the search results to. "
-    :callback "If supplied, the response will use the JSONP format with a callback of the given name.")
-
+(define-twitter-method geo-search (() &key (lat nil) (long nil) (query nil) (granularity nil) (max-results 20) (ip nil) (accuracy nil) (contained-within) (attribute->street_address)) :geo/search )
 
 (define-command geo/reverse_geocode (:get :geo-result)
     (twitter-app-uri "geo/reverse_geocode.json")
     "Given a latitude and a longitude, searches for up to 20 places that can be used as a place_id when updating a status."
-    :lat "Required  : The latitude to search around. Ignored unless between [-90.0 +90.0] (North is positive) and :long is specified"
-    :long "Required : The longitude to search around. Ignored unless between [-180.0 to +180.0] (East is positive) inclusive." 
-    :accuracy "A hint on the 'region' in which to search."
-    :granularity "This is the minimal granularity of place types to return and must be one of: poi, neighborhood (default), city, admin or country."
-    :max_results "A hint as to the number of results to return. "
-    :callback "If supplied, the response will use the JSONP format with a callback of the given name.")
+  :lat "Required  : The latitude to search around. Ignored unless between [-90.0 +90.0] (North is positive) and :long is specified"
+  :long "Required : The longitude to search around. Ignored unless between [-180.0 to +180.0] (East is positive) inclusive." 
+  :accuracy "A hint on the 'region' in which to search."
+  :granularity "This is the minimal granularity of place types to return and must be one of: poi, neighborhood (default), city, admin or country."
+  :max_results "A hint as to the number of results to return. "
+  :callback "If supplied, the response will use the JSONP format with a callback of the given name.")
 
+(defun geo-reverse-geocode (lat long &rest args &key (granularity nil) (max-results 20) (ip nil) (accuracy nil) (contained-within))
+  (declare (ignore granularity max-results ip accuracy contained-within))
+  (apply 'twitter-op :geo/reverse_geocode :lat lat :long long args )) 
 
 (define-command geo/id/?place_id (:get-id :geo-place)
     (twitter-app-uri "geo/id/<id>.json")
     "Given a latitude and a longitude, searches for up to 20 places that can be used as a place_id when updating a status."
   :id "A place in the world. These IDs can be retrieved from geo/reverse_geocode.")
 
-;; TODO --> reasonable return structure
-;; TODO not tested
-(define-command geo/place (:post :identity)
-    (twitter-app-uri "geo/place.json")
-    "Creates a new place at the given latitude and longitude."
-  :name "Required :The name a place is known as."
-  :contained_within "Required :The place_id within which the new place can be found. Try and be as close as possible with the containing place. "
-  :token "Required: The token found in the response from geo/similar_places."
-  :lat "Required :The latitude the place is located at. This parameter will be ignored unless it is inside the range -90.0 to +90.0 (North is positive) inclusive."
-  :long "Required :The longitude the place is located at. The valid ranges for longitude is -180.0 to +180.0 (East is positive) inclusive. "
-  :attribute->street_address "This parameter searches for places which have this given street address."
-  :callback "If supplied, the response will use the JSONP format with a callback of the given name.")  
+(defun geo-id-place-id (place-id)
+  (apply 'twitter-op :geo/id/?place_id :id place-id nil))
 
 
-;;----------------------------------end of geo resources --------------------------
 
-(defun geo-search (lat long &rest args &key (query nil) (granularity nil) (max-results 20) (ip nil) (accuracy nil) (contained-within) (attribute->street_address) )
-  (declare (ignore query granularity max-results ip accuracy contained-within attribute->street_address))
-  (apply 'twitter-op :geo/search :lat lat :long long args )) 
-
-(defun geo-similar-places (lat long name &rest args &key (contained-within nil) (callback nil) (attribute->street_address) )
-  (declare (ignore contained-within callback attribute->street_address) )
-  (apply 'twitter-op :geo/similar_places :lat lat :long long :name name args))
-
-(defun geo-reverse-geocode (lat long &rest args &key (query nil) (granularity nil) (max-results 20) (ip nil) (accuracy nil) (contained-within))
-  (declare (ignore query granularity max-results ip accuracy contained-within))
-  (apply 'twitter-op :geo/reverse_geocode :lat lat :long long args )) 
-  
-(defun geo-place-by-id (id)
-  (apply 'twitter-op :geo/id/?place_id :id id nil))
-
-(defun geo-register-place (lat long name contained-id token)
-  (apply 'twitter-op :geo/place :name name :contained_within contained-id :token token :lat lat :long long nil))
 
 

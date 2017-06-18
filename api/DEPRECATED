@@ -1,0 +1,99 @@
+;;
+;;
+;; Api functionality removed after reviewed against twitter v 1.1 api
+;;
+;;
+
+;; TODO : cursor doesn't work : this does not return a "twitter-user" list.
+;; Probably better to create a seperate 'cursor' command ?
+;; DEPRECATED
+;;
+;;
+;;(define-command statuses/friends (:get :cursor-user )
+;;    (twitter-app-uri "statuses/friends.json")
+;;    "Returns the authenticating user's friends, each with current status inline. They are ordered by the order in which they were added as friends. 
+;;     It's also possible to request another user's recent friends list via the id parameter below."
+;;  :user_id "The ID of the user for whom to return results for." 
+;;  :screen_name "The screen name of the user for whom to return results for."
+;;  :cursor "Breaks the results into pages. This is recommended for users who are following many users. Provide a value of -1 to begin paging. 
+;;          Provide values as returned in the response body's next_cursor and previous_cursor attributes to page back and forth in the list."
+;;  :include_entities "When set to either true, t or 1, each tweet will include a node called entities." )
+;;
+;;(define-command statuses/followers (:get :identity )
+;;DEPRECATED
+;;(define-command statuses/followers (:get :cursor-user )
+;;    (twitter-app-uri "statuses/followers.json")
+;;    "Returns the authenticating user's followers, each with current status inline. "
+;;  :user_id "The ID of the user for whom to return results for." 
+;;  :screen_name "The screen name of the user for whom to return results for."
+;;  :cursor "Breaks the results into pages. This is recommended for users who are following many users. Provide a value of -1 to begin paging. 
+;;          Provide values as returned in the response body's next_cursor and previous_cursor attributes to page back and forth in the list."
+;; :include_entities "When set to either true, t or 1, each tweet will include a node called entities." )
+;;
+
+
+;;
+;;DEPRECATED
+;;
+;;(defun collect-follower-statuses (screen-name &key (max -1) (skip 0))
+;;  (let ((ht (make-hash-table  :test 'equal :size 100)))
+;;    (labels ((collect-it (lst)
+;;	       (dolist (item lst)
+;;		 (setf (gethash (twitter-user-id item) ht) item))))
+;;      (with-cursor (:extractor #'cursor-user-users :controller #'cursor-user-next-cursor 
+;;			       :collector #'collect-it :skip skip :max max :test (lambda() nil)) (followers-statuses :screen-name screen-name )))
+;;    ht))
+
+
+;;(defun collect-friend-statuses (screen-name &key (max -1) (skip 0))
+;;  (let ((ht (make-hash-table  :test 'equal :size 100)))
+;;    (labels ((collect-it (lst)
+;;	       (dolist (item lst)
+;;		 (setf (gethash (twitter-user-id item) ht) item))))
+;;      (with-cursor (:extractor #'cursor-user-users :controller #'cursor-user-next-cursor 
+;;			       :collector #'collect-it :skip skip :max max :test (lambda() nil)) (friends-statuses :screen-name screen-name )))
+;;    ht))
+
+;;DEPRECATED
+;;(define-twitter-method friends-statuses (()     &key (user-id nil) (screen-name nil) (include-entities t) (cursor -1) ) :statuses/friends)
+
+;;cursor is required to get results as a twitter-cursor-user..
+;;(define-twitter-method followers-statuses (()   &key (user-id nil) (screen-name nil) (include-entities t) (cursor -1) ) :statuses/followers)
+
+
+
+
+;; deprecated; no longer supported
+;;(define-command statuses/public-timeline (:get (:tweet))
+;;    (twitter-app-uri "statuses/public_timeline.json")
+;;  "Returns 20 most recent statuses from non-protected users"
+;;  :trim_user "When set to either true, t or 1, each tweet returned in a timeline will include a user object including only the status authors numerical ID. 
+;;            Omit this parameter to receive the complete user object."
+;;  :include_entities "When set to either true, t or 1, each tweet will include a node called entities. ")
+
+
+
+;; deprecated
+;;(define-command statuses/friends-timeline (:get (:tweet))
+;;    (twitter-app-uri "statuses/friends_timeline.json")
+;;  "Returns 20 most recent statuss from provided users friends"
+;;  :since_id "Optional. Returns statuses with an ID more recent than this one"
+;;  :max_id  "Returns results with an ID less than (that is, older than) or equal to the specified ID."
+;;  :count "Optional. Returns the number of statuses to receive"
+;;  :page "Optional. Returns the statuses at page * count offset"
+;;  :trim_user "When set to either true, t or 1, each tweet returned in a timeline will include a user object including only the status authors numerical ID."
+;;  :include_rts "When set to either true, t or 1,the timeline will contain native retweets (if they exist) in addition to the standard stream of tweets. "
+;;  :include_entities "When set to either true, t or 1, each tweet will include a node called entities. ")
+
+
+
+;;deprecated 
+;;(define-twitter-method public-timeline (() &key (trim-user nil) (include-entities t)) :statuses/public-timeline )
+;;deprecate
+;;(define-twitter-method friends-timeline (() &key (since-id nil) (max-id nil) (count nil) (page nil) 
+;;					      (trim-user nil) (include_rts nil) (include-entities t)) :statuses/friends-timeline )
+
+;;deprecated
+;;(defun collect-friends-timeline (&key (max 3) (skip 0) (container (make-hash-table  :test 'equal :size 100)))
+;;  (collect-tweets (:max max :skip skip :container container) friends-timeline))
+

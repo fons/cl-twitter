@@ -1,60 +1,62 @@
 (in-package :twitter)
 
-;; List Subscribers resources
-;;     :user/:list_id/subscribers
-;;     :user/:list_id/subscribers
-;;     :user/:list_id/subscribers
-;;     :user/:list_id/subscribers/:id
-;; similarly requires the rpalcement of two ids in the url
-;; =======>>>>>>>TBD
 
-(define-command ?user/?list_id/subscribers/_get (:get-user-list-id :cursor-user)
-    (twitter-app-uri "<user>/<list-id>/subscribers.json")
+(define-command lists/subscribers (:get :cursor-user)
+    (twitter-app-uri "lists/subscribers.json")
     "Returns the subscribers of the specified list."
-  :user "user"
-  :list_id "The id or slug of the list."
-  :cursor "Breaks the results into pages. This is recommended for users who are following many users. Provide a value of -1 to begin paging. "
-  :include_entities "When set to either true, t or 1, each tweet will include a node called entities.")
+  :list_id "Required: The numerical id of the list."
+  :slug "Required: You can identify a list by its slug instead of its numerical id. You’ll also have to specify the list owner using the owner_id or owner_screen_name parameters."
+  :owner_screen_name "Optional: The screen name of the user who owns the list being requested by a slug."
+  :owner_id "Optional :The user ID of the user who owns the list being requested by a slug."
+  :count "Optional: Specifies the number of results to return per page (see cursor below). The default is 20, with a maximum of 5,000."
+  :cursor "Semi-optional: Causes the collection of list subscribers to be broken into “pages” of consistent sizes (specified by the count parameter)."
+  :include_entities "Optional: The entities node will be disincluded when set to false."
+  :skip_status "Optional: When set to either true, t or 1 statuses will not be included in the returned user objects.")
 
-(define-command ?user/?list_id/subscribers (:post-user-list-id :list-type)
-    (twitter-app-uri "<user>/<list-id>/subscribers.json")
-    "Make the authenticated user follow the specified list."
-  :user "user"
-  :list_id "The id or slug of the list.")
+(define-twitter-method lists-subscribers (() &key (list-id nil) (slug nil) (owner-screen-name nil) (owner-id nil) (count nil) (cursor nil) (include-entities nil) (skip-status nil) ) :lists/subscribers )
 
-(define-command ?user/?list_id/subscribers/_delete (:post-user-list-id :list-type)
-    (twitter-app-uri "<user>/<list-id>/subscribers.json")
-    "Make the authenticated user follow the specified list."
-  :user "user; list owner"
-  :list_id "The id or slug of the list."
-  :_method "should be delete")
 
-(define-command ?user/?list_id/subscribers/?id (:get-user-list-id-id :twitter-user)
-    (twitter-app-uri "<user>/<list-id>/subscribers/<id>.json")
+
+(define-command lists/subscribers/show (:get :twitter-user)
+    (twitter-app-uri "lists/subscribers/show.json")
     "Check if a user is a subscriber of the specified list."
-  :user "Required : user; owner of the list"
   :list_id "Required : The id or slug of the list."
-  :id        "Required : id of the user whose membership you're checking"
+  :slug "Required: You can identify a list by its slug instead of its numerical id. If you decide to do so, note that you’ll also have to specify the list owner using the owner_id or owner_screen_name parameters."
+  :user_id "Required : The ID of the user for whom to return results for."
+  :screen_name "Required: The screen name of the user for whom to return results for."
+  :owner_screen_name "Optional: The screen name of the user who owns the list being requested by a slug."
+  :owner_id "Optional: The user ID of the user who owns the list being requested by a slug."
   :include_entities "When set to either true, t or 1, each tweet will include a node called entities.")
 
-;;------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-(defun user-list-subscribers (&key  (list-owner (twitter-user-screen-name *twitter-user*)) (list-id nil) (cursor -1) (include-entities t))
-  (apply 'twitter-op :?user/?list_id/subscribers/_get :user list-owner :list_id list-id :cursor cursor :include-entities include-entities nil))
+(define-twitter-method lists-subscribers-show (() &key (list-id nil) (slug nil) (user-id nil) (screen-name nil) (owner-screen-name nil) (owner-id nil) (include-entities nil)  ) :lists/subscribers/show)
 
-(defun collect-user-list-subscribers (list-owner list-id &key (max -1) (skip 0))
-  (let ((ht (make-hash-table  :test 'equal :size 100)))
-    (labels ((collect-it (lst)
-	       (dolist (item lst)
-		 (setf (gethash (twitter-user-id item) ht) item))))
-      (with-cursor (:extractor #'cursor-user-users :controller #'cursor-user-next-cursor 
-			       :collector #'collect-it :skip skip :max max :test (lambda() nil)) (user-list-subscribers :list-owner list-owner :list-id list-id :cursor -1)))
-    ht))
 
-(defun add-user-list-subscribers (list-id  &key (list-owner (twitter-user-screen-name *twitter-user*)))
-  (apply 'twitter-op :?user/?list_id/subscribers :user list-owner :list_id list-id  nil))
+(define-command lists/subscribers/destroy (:post :list-type)
+    (twitter-app-uri "lists/subscribers/destroy.json")
+    "Removes the subscriber from the specified list."
+  :user_id "user" 
+  :slug "Optional: You can identify a list by its slug instead of its numerical id."
+  :list_id "Required : The id or slug of the list."
+  :screen_name   "Optional: screen name of the user to be removed"
+  :owner_screen_name "ptional: The screen name of the user who owns the list being requested by a slug"
+  :owner_id "Optional: user ID of the user who owns the list being requested by a slug.")
 
-(defun delete-user-list-subscribers (list-id &key (list-owner (twitter-user-screen-name *twitter-user*)))
-  (apply 'twitter-op :?user/?list_id/subscribers/_delete :user list-owner :list_id list-id  :_method "delete" nil ))
+(define-twitter-method lists-subscribers-destroy (() &key (user-id nil) (slug nil) (list-id nil) (screen-name nil) (owner-screen-name nil) (owner-id nil)) :lists/subscribers/destroy)
 
-(defun user-list-subscriber-p (list-id user-id &key (list-owner (twitter-user-screen-name *twitter-user*)) (include-entities t) )
-  (apply 'twitter-op :?user/?list_id/subscribers/?id :user list-owner :list-id list-id :id user-id  :include-entities include-entities nil))
+
+
+(define-command lists/subscribers/create (:post :list-type)
+    (twitter-app-uri "lists/subscribers/create.json")
+    "Add a subscriber to the specified list."
+  :user_id "user" 
+  :slug "Optional: You can identify a list by its slug instead of its numerical id."
+  :list_id "Required : The id or slug of the list."
+  :screen_name   "Optional: screen name of the user to be removed"
+  :owner_screen_name "ptional: The screen name of the user who owns the list being requested by a slug"
+  :owner_id "Optional: user ID of the user who owns the list being requested by a slug.")
+
+(define-twitter-method lists-subscribers-create (() &key (user-id nil) (slug nil) (list-id nil) (screen-name nil) (owner-screen-name nil) (owner-id nil)) :lists/subscribers/create)
+
+
+
+

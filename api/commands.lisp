@@ -26,7 +26,7 @@
 ;;
 ;; Command definition macro
 ;;
-
+;;
 
 (defmacro define-command (command (method return-type) base-url description &body args)
   "Capture all the key syntax for Twitter commands:

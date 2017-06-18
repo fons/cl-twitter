@@ -14,16 +14,14 @@
 
    ;; Time line resources as per
    #:home-timeline
-   #:friends-timeline
    #:user-timeline
-   #:mentions
+   #:mentions-timeline
    #:retweeted-by-me
    #:retweeted-to-me
    #:retweets-of-me
 
    ;;Time Line Resources api
    #:collect-home-timeline
-   #:collect-friends-timeline
    #:collect-user-timeline
 
    ;;  Tweets resources

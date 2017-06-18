@@ -83,6 +83,9 @@ the user has been logged in to Twitter via OAuth."
         (let ((user (cl-twitter:get-user username)))
           (setf (twitter-user-access-token user) access-token)
           (setf *twitter-user* user)))
+    ;;
+    ;; missing user credentials is a condition thrown by get-access-token 
+    ;;
     (missing-user-credentials (c)
       (format t "We don't have twitter credentials for ~A in ~A ~%" (who c) (access-file))
       (format t "maybe because this is the first time you are using cl-twit-repl on this machine.. ~&")

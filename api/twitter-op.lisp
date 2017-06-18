@@ -14,7 +14,7 @@
 	       ((null type)
 		nil)
 	       (t (parse-record response type)))))
-    ;;    (format t "Parsed response of type ~S:  ~S~%" type parsed)
+     #+nil   (format t "Parsed response of type ~S:  ~S~%" type parsed)
     parsed))
 
 (defun parse-error-response (response code)
@@ -57,18 +57,28 @@
 			      :additional-headers *twitter-client-headers*
 			      :external-format-out :utf-8)))
 		   (if (member auth-method '(nil :basic-authorization))
-		       (apply *http-request-function*
-			      (puri:parse-uri url)
-			      :method method
-			      :basic-authorization auth-spec
-			      :parameters (plist->alist post-params)
-			      common-drakma-args)
-		       (destructuring-bind (access-token) auth-spec
-			 (oauth:access-protected-resource  url access-token
-							   :consumer-token (oauth:token-consumer (twitter-user-access-token *twitter-user*))
-							   :request-method method
-							   :user-parameters (plist->alist post-params)
-							   :drakma-args common-drakma-args))
+                       (progn
+                         #+nill (format t "applying basic autthorization.....(shouldn't happen) method ~A ~%" method)
+                         #+nill (apply *http-request-function*
+                                (puri:parse-uri url)
+                                :method method
+                                :basic-authorization auth-spec
+                                :parameters (plist->alist post-params)
+                                common-drakma-args)
+                         )
+                       (progn
+                         #+nill (format t "applying extended oauth autthorization.....(should happen !!) ~S~%" auth-spec)
+                         (destructuring-bind (access-token) auth-spec
+                           (progn
+                             #+nill (format t "access-token url : ~S : ~S~%" url access-token)
+                             (oauth:access-protected-resource  url access-token
+                                                               :consumer-token (oauth:token-consumer (twitter-user-access-token *twitter-user*))
+                                                               :request-method method
+                                                               :user-parameters (plist->alist post-params)
+                                                               :drakma-args common-drakma-args)
+                             )
+                           )
+                         )
 		       )))
 	     (setf socket response)
 	     (handler-case
@@ -88,14 +98,13 @@
 
 
 (defmethod twitter-op (command &rest args)
-  #+nil
-  (format t "command : [~S] [~s] [~S]~%" command args (option-not-nil (lisp->twitter-plist args)))
+  #+nil (format t "command : [~S] [~s] [~S]~%" command args (option-not-nil (lisp->twitter-plist args)))
   (let ((cmd (get-command command)))
     (multiple-value-bind (response code)
 	(send-command cmd (option-not-nil (lisp->twitter-plist args)))
       (if (eq code 200)
 	  (progn
-	    #+nil(format t "~A~%" response)
+	    ;;#+nil(format t "(twitter-op) ~A~%" response)
 	    (parse-command-response response (command-return-type cmd)))
 	  (parse-error-response response code)))))
 

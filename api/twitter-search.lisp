@@ -43,7 +43,7 @@
 ;;  Search resources
 ;;         search
 
-(define-command search (:get :search-result)
+(define-command search-tweets (:get :search-result)
     (twitter-search-uri "search/tweets.json")
     "Returns tweets that match a specified query."
   :q        "Required. The search string"
@@ -58,32 +58,56 @@
             Twitter profile.  The parameter value is specified by
             'latitude, longitude, radius' where radius units must be
             specified as either miles or kilometers"
-  :show-user "When 'true' adds '<user>:' to the beginning of the tweet.  This is
-              useful for readers that do not display Atom's author field.  The
-              default is 'false'"
   :result_type "Optional. Specifies what type of search results you would prefer to receive. The current default is 'mixed.'
                 Valid values include:
                              mixed: Include both popular and real time results in the response.
                              recent: return only the most recent results in the response
-                             popular: return only the most popular results in the response.")
+                             popular: return only the most popular results in the response."
+  :max_id "Returns results with an ID less than (that is, older than) or equal to the specified ID."
+  :include_entities "The entities node will be disincluded when set to false."
+  )
+
 
 
 ;;
 ;; Search API
 ;;
 
-(defun search-twitter (query &rest args &key (callback nil) (lang nil) (locale nil) (count nil)
-		       (max-id nil) (since-id nil) (until nil) (geocode nil) (show-user nil) (result-type nil) )
-  (declare (ignore callback lang locale count max-id since-id until geocode show-user result-type ))
-  (apply 'twitter-op :search :q query (rem-nil-keywords args '(:callback :geocode :lang :until))))
+(defun search-tweets (query &rest args &key (callback nil) (lang nil) (locale nil) (count nil)
+                                         (since-id nil) (until nil) (geocode nil) (result-type nil) (max-id nil) (include-entities nil) )
+  (declare (ignore callback lang locale count max-id since-id until geocode result-type include-entities ))
+  (apply 'twitter-op :search-tweets :q query (rem-nil-keywords args '(:callback :geocode :lang :until :max-id :include-entities))))
 
 ;;---------------------------------------------------------------------------------------------------------------------------
+(defun find-tweets (query &key (lang nil) (locale nil) (count nil)
+                            (since-id nil) (until nil) (geocode nil) (result-type nil) (max-id nil) (include-entities nil) )
+  (search-result-statuses (search-tweets query :lang lang :locale locale :count count :since-id since-id :until until :geocode geocode :result-type result-type :max-id max-id :include-entities include-entities)))
+                                         
+(defun set-count-s (count)
+  (cond
+    ((eq count nil ) 15)
+    ((< count 101)   count)
+    ( t              20)))
+
+(defun set-depth-s (count)
+  (cond
+    ((eq count nil ) 1)
+    ((< count 101) 1)
+    (t (+ 1 (floor (/ count 20))))))
 
 
-(defun do-search (query &key (max-pages 15) (test #'rate-limit-exceeded))
-  (let ((ht (make-hash-table  :test 'equal :size 1500)))
-    (labels ((collect-it (slst)
-	       (dolist (item slst)
-		 (setf (gethash (tweet-id item) ht) item))))
-      (with-paging (:collector #'collect-it :max-pages max-pages :test test) (search-twitter query))
-      ht)))
+(defun do-search (query &key (lang nil) (locale nil) (count 20) (since-id nil) (until  nil) (geocode nil) (result-type "mixed") (max-id nil) (include-entities t))
+  (collect-results nil (set-depth-s count)
+                   #'find-tweets 
+                   (arguments
+                    query
+                    :lang      lang
+                    :locale    locale
+                    :count     (set-count-s count)
+                    :since-id since-id
+                    :until    until
+                    :geocode  geocode
+                    :result-type result-type
+                    :max-id max-id
+                    :include-entities include-entities)))
+ 

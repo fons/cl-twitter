@@ -16,8 +16,14 @@
   (maphash (lambda (k v) (declare (ignore k)) (show v s)) obj))
 
 (defmethod show ((tweet tweet) &optional (s *standard-output*))
-  (format s "~&~150<~a~; ~a~>" (twitter-user-screen-name (tweet-user tweet)) (tweet-created-at tweet))
-  (format s "~&~A" (tweet-text tweet))
+  (let ((name (if (tweet-user tweet) (twitter-user-screen-name (tweet-user tweet)) "none")))
+    (format s "~&~150<~a~; ~a~>" name (tweet-created-at tweet))
+    (format s "~&~A" (tweet-text tweet))
+    (format s "~&~A" *seperator*)))
+
+(defmethod show ((twitter-message twitter-message) &optional (s *standard-output*))
+  (format s "~&~150<~a -> ~a~; ~a~>" (twitter-message-sender-screen-name  twitter-message) (twitter-message-recipient-screen-name  twitter-message)  (twitter-message-created-at twitter-message))
+  (format s "~&~A" (twitter-message-text twitter-message))
   (format s "~&~A" *seperator*))
 
 (defmethod show ((trend-list trend-list) &optional (s *standard-output*))
@@ -67,9 +73,9 @@
   (format s "~&~A" *seperator*))
 
 
-(defmethod show ((rate-limit rate-limit) &optional (s *standard-output*))
-  (format s "~&~1tremaining : ~A/~A ~20treset : ~A/current time : ~A ~67t[~A seconds]" (rate-limit-remaining-hits rate-limit) (rate-limit-hourly-limit rate-limit)
-	  (rate-limit-reset-time rate-limit) (current-utc nil) (rate-limit-reset-time-in-seconds rate-limit) ))
+;;(defmethod show ((rate-limit rate-limit) &optional (s *standard-output*))
+;;  (format s "~&~1tremaining : ~A/~A ~20treset : ~A/current time : ~A ~67t[~A seconds]" (rate-limit-remaining-hits rate-limit) (rate-limit-hourly-limit rate-limit)
+;;	  (rate-limit-reset-time rate-limit) (current-utc nil) (rate-limit-reset-time-in-seconds rate-limit) ))
 
 
 (defmethod show ((geo-places geo-places) &optional (s *standard-output*))
@@ -80,6 +86,9 @@
 
 (defmethod show ((cursor-user-lists cursor-user-lists) &optional (s *standard-output*))
   (mapcar (lambda (el) (show el s)) (cursor-user-lists-lists cursor-user-lists)))
+
+(defmethod show ((cursor-user cursor-user) &optional (s *standard-output*))
+  (show (cursor-user-users cursor-user) s))
 
 (defmethod show ((url-entity url-entity) &optional (s *standard-output*))
   (format s "~&~1turl: ~a~30tdisplay: ~a~65texpanded: ~a~120t[~a,~a]" (url-entity-url url-entity)
@@ -108,3 +117,4 @@
 	  (media-entity-expanded-url media-entity)
 	  (car (media-entity-indices media-entity))
 	  (cadr (media-entity-indices media-entity))))
+

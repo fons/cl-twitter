@@ -2,55 +2,58 @@
 
 ;;---> define place element with a place type embedded in it..
 ;;
-(define-element place-type ()
-  "a place type"
-  (id   "" nil)
-  (code "" nil)
-  (name "" nil))
 
-(defmethod place-type-name ((name (eql nil)))
-  nil)
-  
+#|
 
-(defmethod print-object ((ref place-type) stream)
-  (format stream "#<TWITTER-PLACE-TYPE '~A'>" (place-type-name ref)))
-
-
-(defun print-place-type (ref)
-  (format t "~A: ~A~%" 
-	  (place-type-name ref)
-	  (place-type-code ref)))
-
-
-(define-element place ((placetype place-type))
-  "a place "
-  (id  "" nil)
-  (url "" nil)
-  (placetype "" nil)
-  (country "" nil)
-  (countrycode "" nil)
-  (woeid  "" nil)
-  (name "" nil))
-
-(defmethod place-name ((obj (eql nil)))
-  "N/A")
-
-(defmethod print-object ((ref place) stream)
-  (format stream "#<TWITTER-PLACE '~A:~A'>" (place-woeid ref) (place-name ref)))
-
-(defun print-place (ref)
-  (format t "~A: ~A ~A~%" 
-	  (place-name ref)
-	  (place-country ref)
-	  (place-woeid ref)))
-
+NIL
+TWIT> (trends-place 1)
+(((:Trends
+   ((:NAME . "#PSYAngBatasNgApi") (:QUERY . "%23PSYAngBatasNgApi")
+    (:URL . "http://twitter.com/search?q=%23PSYAngBatasNgApi")
+    (:PROMOTED-CONTENT))
+   ((:NAME . "#FelizJueves") (:QUERY . "%23FelizJueves")
+    (:URL . "http://twitter.com/search?q=%23FelizJueves") (:PROMOTED-CONTENT))
+   ((:NAME . "#MeSobranGanasDe") (:QUERY . "%23MeSobranGanasDe")
+    (:URL . "http://twitter.com/search?q=%23MeSobranGanasDe")
+    (:PROMOTED-CONTENT))
+   ((:NAME . "#شعورك_الان_بتغريده")
+    (:QUERY
+     . "%23%D8%B4%D8%B9%D9%88%D8%B1%D9%83_%D8%A7%D9%84%D8%A7%D9%86_%D8%A8%D8%AA%D8%BA%D8%B1%D9%8A%D8%AF%D9%87")
+    (:URL
+     . "http://twitter.com/search?q=%23%D8%B4%D8%B9%D9%88%D8%B1%D9%83_%D8%A7%D9%84%D8%A7%D9%86_%D8%A8%D8%AA%D8%BA%D8%B1%D9%8A%D8%AF%D9%87")
+    (:PROMOTED-CONTENT))
+   ((:NAME . "#과목별_담당선생님들_명언을써보자")
+    (:QUERY
+     . "%23%EA%B3%BC%EB%AA%A9%EB%B3%84_%EB%8B%B4%EB%8B%B9%EC%84%A0%EC%83%9D%EB%8B%98%EB%93%A4_%EB%AA%85%EC%96%B8%EC%9D%84%EC%8D%A8%EB%B3%B4%EC%9E%90")
+    (:URL
+     . "http://twitter.com/search?q=%23%EA%B3%BC%EB%AA%A9%EB%B3%84_%EB%8B%B4%EB%8B%B9%EC%84%A0%EC%83%9D%EB%8B%98%EB%93%A4_%EB%AA%85%EC%96%B8%EC%9D%84%EC%8D%A8%EB%B3%B4%EC%9E%90")
+    (:PROMOTED-CONTENT))
+   ((:NAME . "ロッキン") (:QUERY . "%E3%83%AD%E3%83%83%E3%82%AD%E3%83%B3")
+    (:URL . "http://twitter.com/search?q=%E3%83%AD%E3%83%83%E3%82%AD%E3%83%B3")
+    (:PROMOTED-CONTENT))
+   ((:NAME . "Chiellini") (:QUERY . "Chiellini")
+    (:URL . "http://twitter.com/search?q=Chiellini") (:PROMOTED-CONTENT))
+   ((:NAME . "メンタルヘルス")
+    (:QUERY
+     . "%E3%83%A1%E3%83%B3%E3%82%BF%E3%83%AB%E3%83%98%E3%83%AB%E3%82%B9")
+    (:URL
+     . "http://twitter.com/search?q=%E3%83%A1%E3%83%B3%E3%82%BF%E3%83%AB%E3%83%98%E3%83%AB%E3%82%B9")
+    (:PROMOTED-CONTENT))
+   ((:NAME . "Rick Perry") (:QUERY . "%22Rick+Perry%22")
+    (:URL . "http://twitter.com/search?q=%22Rick+Perry%22")
+    (:PROMOTED-CONTENT))
+   ((:NAME . "COUNTDOWN 427화") (:QUERY . "%22COUNTDOWN+427%ED%99%94%22")
+    (:URL . "http://twitter.com/search?q=%22COUNTDOWN+427%ED%99%94%22")
+    (:PROMOTED-CONTENT)))
+  (:AS-OF . "2015-06-04T13:22:25Z") (:CREATED-AT . "2015-06-04T13:19:50Z")
+  (:LOCATIONS ((:NAME . "Worldwide") (:WOEID . 1)))))
+TWIT> 
+|#
 (define-element trend ()
   "a trend "
-  (id               "" nil)
+  (promoted-content "" nil)
   (url              "" nil)
   (query            "" nil)
-  (promoted-content "" nil)
-  (events           "" nil)
   (name             "" nil))
 
 ;;twitter doesn't provide a unique id; use name instead
@@ -102,6 +105,7 @@
 	     (mapcar (lambda (trend-set) (list (symbol-name (first trend-set)) (parse-trend-set (rest trend-set)))) trends)))	     
     (cons (get-value :as-of response) (parse-trends (get-value :trends response)) )))
 
+
 ;;
 ;; Trends resources
 ;;     trends
@@ -109,80 +113,74 @@
 ;;     trends/daily
 ;;     trends/weekly
 
+(define-element place-type ()
+  "a place type"
+  (code "" nil)
+  (name "" nil))
 
-(define-command trends (:get :trend-list)
-    (twitter-app-uri "trends.json")
-    "Returns the top ten topics that are currently trending on Twitter. The response includes the time of the request, the name of each trend, and the url to the Twitter Search results page for that topic.")
+(defmethod place-type-name ((name (eql nil)))
+  nil)
 
-(define-command trends/current (:get :new-trends)
-    (twitter-app-uri "trends/current.json")
-    "Returns the top ten queries that are currently trending on Twitter.  The response includes the time of the request, the name of each trending topic, and the url to the Twitter Search results page for that topic. "
+
+(defmethod print-object ((ref place-type) stream)
+  (format stream "#<TWITTER-PLACE-TYPE '~A'>" (place-type-name ref)))
+
+
+(defun print-place-type (ref)
+  (format t "~A: ~A~%" 
+	  (place-type-name ref)
+	  (place-type-code ref)))
+
+(define-element place ((placetype place-type))
+  "a place "
+  (id  "" nil)
+  (url "" nil)
+  (placetype "" nil)
+  (country "" nil)
+  (countrycode "" nil)
+  (woeid  "" nil)
+  (name "" nil))
+
+(defmethod place-name ((obj (eql nil)))
+  "N/A")
+
+(defmethod print-object ((ref place) stream)
+  (format stream "#<TWITTER-PLACE '~A:~A'>" (place-woeid ref) (place-name ref)))
+
+(defun print-place (ref)
+  (format t "~A: ~A ~A~%" 
+	  (place-name ref)
+	  (place-country ref)
+	  (place-woeid ref)))
+
+(define-command trends/available (:get (place))
+    (twitter-app-uri "trends/available.json")
+    "Returns the locations that Twitter has trending topic information for.")
+
+
+(define-twitter-method trends-available (()) :trends/available)
+
+
+(define-command trends/place (:get (:trend-list))
+    (twitter-app-uri "trends/place.json")
+    "Returns the top 10 trending topics for a specific WOEID, if trending information is available for it."
+  :id "Required: The Yahoo! Where On Earth ID of the location to return trending information for. Global information is available by using 1 as the WOEID."
   :exclude "Setting this equal to hashtags will remove all hashtags from the trends list.")
 
-(define-command trends/daily (:get :new-trends)
-    (twitter-app-uri "trends/daily.json")
-    "Returns the top 20 trending topics for each hour in a given day."
-  :date "The start date for the report. The date should be formatted YYYY-MM-DD. A 404 error will be thrown if the date is older than the available search index (7-10 days). "
-  :exclude "Setting this equal to hashtags will remove all hashtags from the trends list")
+(define-twitter-method trends-place ((id)) :trends/place :id)
 
-(define-command trends/weekly (:get :new-trends)
-    (twitter-app-uri "trends/weekly.json")
-    "Returns the top 30 trending topics for each day in a given week."
-  :date "The start date for the report. The date should be formatted YYYY-MM-DD. A 404 error will be thrown if the date is older than the available search index (7-10 days). "
-  :exclude "Setting this equal to hashtags will remove all hashtags from the trends list")
-
-
-;;--------------end of trends-------------------------------------
-;;
-;; Local Trends resources
-;;     trends/available
-;;     trends/1
-;;
-;; The response is an array of "locations" that encode the location's WOEID and some other human-readable information such as 
-;; a canonical name and country the location belongs in.
-;; A WOEID is a Yahoo! Where On Earth ID.
-
-(define-command trends/available (:get (:place))
-    (twitter-app-uri "trends/available.json")
+(define-command trends/closest (:get (:place))
+    (twitter-app-uri "trends/closest.json")
     "Returns the locations that Twitter has trending topic information for."
   :lat "If provided with a long parameter the available trend locations will be sorted by distance, nearest to furthest, to the co-ordinate pair."
   :long "If provided with a lat parameter the available trend locations will be sorted by distance, nearest to furthest, to the co-ordinate pair.")
 
+(define-twitter-method trends-closest(() &key lat long) :trends/closest)
 
-(define-command trends/1 (:get-id (:trend-list))
-    (twitter-app-uri "trends/<id>.json")
-    "Returns the locations that Twitter has trending topic information for."
-  :id "Required woeid; The Yahoo! Where On Earth ID of the location to return trending information for. Global information is available by using 1 as the WOEID.")
+
 
 ;;---------------------- end of local trends resources ----------------------------------------------------
 
-(defun trends ()
-  (apply 'twitter-op :trends nil))
 
-(defun current-trends (&rest args &key (exclude nil))
-  (declare (ignore exclude))
-  (apply 'twitter-op :trends/current  args))
 
-(defun daily-trends (&rest args &key (date nil) (exclude nil))
-  (declare (ignore exclude date))
-  (apply 'twitter-op :trends/daily args))
 
-(defun weekly-trends (&rest args &key (date nil) (exclude nil))
-  (declare (ignore exclude date))
-  (apply 'twitter-op :trends/weekly args))
-
-(defun location-trends (&rest args &key (lat nil) (long nil))
-  (declare (ignore long lat))
-  (apply 'twitter-op :trends/available args))
-
-(defun trends@location (woeid)
-  (apply 'twitter-op :trends/1 :id woeid nil))
-
-;;-----------------------------------------------------
-
-(defun trending-locations (&key (lat nil) (long nil))
-  (let ((loc-trend-list (location-trends :lat lat :long long))
-	(lst ()))
-    (dolist (loc-trend loc-trend-list)
-      (push (trends@location (place-woeid loc-trend)) lst))
-    lst))

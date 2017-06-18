@@ -31,7 +31,7 @@
 		    (,nocursor_args (strip-keyword-2 ,cursor ,args)))
 		(do () ((or (zerop ,_cursor_) (zerop (decf ,$max)) (funcall ,test)))
 		  (progn
-		    ;;#+nil(format t "**[~A;~A] ~A ~S~%" ,nocursor_kargs ,nocursor_args ,fn (append ,nocursor_args ,nocursor_kargs (list ,cursor ,_cursor_)))
+		    #+nil(format t "**[~A;~A] ~A ~S~%" ,nocursor_kargs ,nocursor_args ,fn (append ,nocursor_args ,nocursor_kargs (list ,cursor ,_cursor_)))
 		    (let ((,cursor-id (apply ,fn (append ,nocursor_args ,nocursor_kargs (list ,cursor ,_cursor_)))))
 		      (if (zerop ,$skip)
 			  (funcall ,collector (funcall ,extractor ,cursor-id))
@@ -55,8 +55,11 @@
 		(declare (ignore ,item))
 		(incf ,page)))
 	 (setf ,ht ,container)
-	 (with-cursor (:skip ,skip :max ,max :extractor #'identity :controller #'next-page :collector #'collect-it :test #'stop-it :cursor :page) (,@body :page 1)))
+         )
        ,ht)))
+
+
+
 
 (defmacro with-paging ((&key (max 1500) (max-pages 15) (collector #'identity) (skip 0) (controller nil) (test (lambda() nil)) )  &rest body)
   (with-gensyms ($results $max $skip fn kargs _page_ args twitter-search fn_ args_ $rpp)

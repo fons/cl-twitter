@@ -74,6 +74,49 @@
 (defun print-cursor-user (ref)
   (format t "~A: ~A ~A~%" (cursor-user-previous-cursor ref) (cursor-user-next-cursor ref) (length (cursor-user-id ref))))
 
+;;. "staff-picks") (:NAME . "Staff Picks"))
+;;((:SIZE . 81) (:SLUG . "mlb") (:NAME . "MLB"))
+;;((:SIZE . 98) (:SLUG . "nascar") (:NAME . "NASCAR"))
+;;((:SIZE . 62) (:SLUG . "nhl") (:NAME . "NHL"))
+;;((:SIZE . 122) (:SLUG . "pga") (:NAME . "PGA"))
+;;((:SIZE . 9) (:SLUG . "march-madness") (:NAME . "March Madness"))
+
+(define-element suggestion ()
+  "a suggestion element "
+  (size                  "" nil)
+  (slug           ""  nil)
+  (name          "" nil))
+
+(defmethod print-object ((ref suggestion) stream)
+  (format stream "#<TWITTER-SUGGESTION '~A:~A:~A'>" (suggestion-name ref) (suggestion-slug ref) (suggestion-size ref)))
+
+
+(defun print-suggestion (ref)
+  (format t "~A ~A~%" (suggestion-name ref) (suggestion-slug ref)))
+
+
+;;((:USERS
+;;  ((:ID . 19923144) (:ID-STR . "19923144") (:NAME . "NBA")
+;;   (:SCREEN-NAME . "NBA") (:LOCATION . "") (:PROFILE-LOCATION)
+;;   (:DESCRIPTION
+;;    . "News and notes directly from the National Basketball Association.")
+;;   (:URL . "http://t.co/sT8h1uaARA")
+;;   (:ENTITIES
+
+(define-element user-list ((users (twitter-user)))
+  "a suggestion element "
+  (users     "" nil)
+  (size      "" nil)
+  (slug      ""  nil)
+  (name      "" nil))
+
+(defmethod print-object ((ref user-list) stream)
+  (format stream "#<TWITTER-USER-LIST '~A:~A:~A:~A'>" (user-list-name ref) (user-list-slug ref) (user-list-size ref) (user-list-users ref)))
+
+
+(defun print-user-list (ref)
+  (format t "~A ~A~%" (user-list-name ref) (user-list-slug ref)))
+  
 ;;
 ;; User resources
 ;;   users/show
@@ -92,125 +135,118 @@
 ;;  :id "Required. The ID or screen name of a user."
 ;;  :email "Optional.  May be used in place of :id.")
 
-
 (define-command users/show (:get :twitter-user)
     (twitter-app-uri "users/show.json")
     "Returns a single-status specified by the id parameter"
   :user_id "Required. The ID or screen name of a user."
-  :screen_name "Optional.  May be used in place of :id."
+  :screen_name "Required.  May be used in place of :user_id."
   :include_entities "When set to either true, t or 1, each tweet will include a node called entities. ")
+
 
 (define-command users/lookup (:get (:twitter-user) )
     (twitter-app-uri "users/lookup.json")
     "Return up to 100 users worth of extended information, specified by either ID, screen name, or combination of the two."
-  :user_id "A comma separated list of user IDs, up to 100 are allowed in a single request."
+  :user_id     "A comma separated list of user IDs, up to 100 are allowed in a single request."
   :screen_name "A comma separated list of screen names, up to 100 are allowed in a single request."
   :include_entities "When set to either true, t or 1, each tweet will include a node called entities. ")
-
 
 (define-command users/search (:get (:twitter-user) )
     (twitter-app-uri "users/search.json")
     "Runs a search for users similar to Find People button on Twitter.com."
   :q "Required; The search query to run against people search."
-  :per_page "The number of people to retrieve. Maxiumum of 20 allowed per page."
+  :count "The number of people to retrieve. Maxiumum of 20 allowed per page."
   :page "Specifies the page of results to retrieve."
   :include_entities "When set to either true, t or 1, each tweet will include a node called entities")
 
-;;TODO Need suggestions element
-(define-command users/suggestions (:get (:identity))
+(define-command users/profile-banner (:get (:identity))
+    (twitter-app-uri "users/profile_banner.json")
+    "Returns a map of the available size variations of the specified user’s profile banner"
+  :user_id "Optional. The ID or screen name of a user."
+  :screen_name "Optional.  May be used in place of :user_id."
+  )
+
+(define-command users/suggestions (:get (:suggestion))
     (twitter-app-uri "users/suggestions.json")
-    "Access to Twitter's suggested user list. This returns the list of suggested user categories. ")
+    "Access to Twitter's suggested user list. This returns the list of suggested user categories. "
+  :lang "optional. Restricts the suggested categories to the requested language"
+  )
 
-;;TODO unable to parse returns which contains user elements and slugs (?); 
-;;should be able to use slug as substitution
-
-(define-command users/suggestions/?slug (:get-id (:identity) )
+(define-command users/suggestions/?id (:get-id :user-list)
     (twitter-app-uri "users/suggestions/<id>.json")
     "Access the users in a given category of the Twitter suggested user list."
-  :id "The short name of list or a category" )
+  :id "The short name of list or a category"
+  :lang "optional. Restricts the suggested categories to the requested language"
+  )
+
+
+(define-command users/suggestions/?id/members (:get-id (:tweet))
+    (twitter-app-uri "users/suggestions/<id>/members.json")
+    "Access the users in a given category of the Twitter suggested user list and return their most recent status if they are not a protected user"
+    :id     "Required: slug Access the users in a given category of the Twitter suggested user list and return their most recent status if they are not a protected user."
+    )
 
 ;;
-;;This resource does not return JSON or XML, but instead returns a 302 redirect to the actual image resource.
-;;This method should only be used by application developers to lookup or check the profile image URL for a user. 
-;;This method must not be used as the image source URL presented to users of your application.
-;; Doesn't work with twitter-op because it doesn't return json.
-
-(define-command users/profile-image/?screen-name (:get-id (:identity) )
-    (twitter-app-uri "users/profile_image/<id>.json")
-    "Access the profile image in various sizes for the user with the indicated screen_name. "
-  :id   "Required ; screen name of the user" 
-  :size "Optional; Specifies the size of image to fetch.")
+;;Spam Reporting resources
+;;   report_spam
+(define-command users/report-spam (:post :twitter-user)
+    (twitter-app-uri "users/report_spam.json")
+    "The user specified in the id is blocked by the authenticated user and reported as a spammer."
+  :user_id "Optional :The ID of the user for whom to return results for. Helpful for disambiguating when a valid user ID is also a valid screen name."
+  :screen_name "Optional : The screen name of the user for whom to return results for. Helpful for disambiguating when a valid screen name is also a user ID.")
 
 
-
-;; TODO : cursor doesn't work : this does not return a "twitter-user" list.
-;; Probably better to create a seperate 'cursor' command ?
-;;
-
-(define-command statuses/friends (:get :cursor-user )
-    (twitter-app-uri "statuses/friends.json")
-    "Returns the authenticating user's friends, each with current status inline. They are ordered by the order in which they were added as friends. 
-     It's also possible to request another user's recent friends list via the id parameter below."
-  :user_id "The ID of the user for whom to return results for." 
-  :screen_name "The screen name of the user for whom to return results for."
-  :cursor "Breaks the results into pages. This is recommended for users who are following many users. Provide a value of -1 to begin paging. 
-          Provide values as returned in the response body's next_cursor and previous_cursor attributes to page back and forth in the list."
-  :include_entities "When set to either true, t or 1, each tweet will include a node called entities." )
-
-;;(define-command statuses/followers (:get :identity )
-
-(define-command statuses/followers (:get :cursor-user )
-    (twitter-app-uri "statuses/followers.json")
-    "Returns the authenticating user's followers, each with current status inline. "
-  :user_id "The ID of the user for whom to return results for." 
-  :screen_name "The screen name of the user for whom to return results for."
-  :cursor "Breaks the results into pages. This is recommended for users who are following many users. Provide a value of -1 to begin paging. 
-          Provide values as returned in the response body's next_cursor and previous_cursor attributes to page back and forth in the list."
-  :include_entities "When set to either true, t or 1, each tweet will include a node called entities." )
 
 ;; ---level 1 api --------------------------------
 
-(define-twitter-method show-user       ((screen-name) &key (user-id nil)     (include-entities t)) :users/show :screen_name)
-(define-twitter-method show-user-by-id ((user-id)     &key (screen-name nil) (include-entities t)) :users/show :user_id)
-;; probably should built in some resiliency in that the user can pass in a list ??
-;; keep entities turned off until you can handle this in the object creation.
-;; i see that if an other user is mentioned in the tweets, the entities will contain those ids and those are comming back decoded (i.e as the response)
-;; maybe that's a feature !!
-(define-twitter-method lookup-users    ((screen-name) &key (user-id nil)     (include-entities nil)) :users/lookup :screen-name)
+(define-twitter-method users-show (() &key (screen-name nil) (user-id nil)  (include-entities t)) :users/show)
+(define-twitter-method users-lookup (()  &key (screen-name nil) (user-id nil) (include-entities t)) :users/lookup )
+(define-twitter-method users-search ((query) &key (per-page nil) (page nil) (include-entities t) ) :users/search :q )
+(define-twitter-method users-profile-banner (() &key (screen-name nil) (user-id nil)) :users/profile-banner)
+;;combines both methods
+(defmethod users-suggestions ( &key (slug nil) (lang nil))
+  (if slug
+      (apply 'twitter-op :users/suggestions/?id  :id slug :lang lang nil )
+      (apply 'twitter-op :users/suggestions :lang lang nil )))
+
+(define-twitter-method users-suggestions-slug-members ((slug))  :users/suggestions/?id/members :id)
+(define-twitter-method users-report-spam (() &key (screen-name nil) (user-id nil) ) :users/report-spam )
+
+;;;=============================
+
+
+
+;;(define-twitter-method users-lookup-by-id ((user-ids-str) &key (include-entities  t)) :users/lookup :user-id)
+
 ;; does the query need to be url encoded ????
 ;; used url-rewrite for encoding; gets same result set as twitter for simple name queries..
-(define-twitter-method search-users    ((query) &key (per-page nil) (page nil) (include-entities t) ) :users/search :q )
-(define-twitter-method friends-statuses (()     &key (user-id nil) (screen-name nil) (include-entities t) (cursor -1) ) :statuses/friends)
-;;cursor is required to get results as a twitter-cursor-user..
-(define-twitter-method followers-statuses (()   &key (user-id nil) (screen-name nil) (include-entities t) (cursor -1) ) :statuses/followers)
+
+
+
+(defun report-spam (screen-name &key (user-id nil))
+  (apply 'twitter-op :report-spam :screen-name screen-name :user-id user-id))
 
 ;;--------------------------------------------------------------
 
+(defun show-user (screen-name &key (include-entities t))
+  (users-show :screen-name screen-name :include-entities include-entities))
 
-(defun collect-follower-statuses (screen-name &key (max -1) (skip 0))
-  (let ((ht (make-hash-table  :test 'equal :size 100)))
-    (labels ((collect-it (lst)
-	       (dolist (item lst)
-		 (setf (gethash (twitter-user-id item) ht) item))))
-      (with-cursor (:extractor #'cursor-user-users :controller #'cursor-user-next-cursor 
-			       :collector #'collect-it :skip skip :max max :test (lambda() nil)) (followers-statuses :screen-name screen-name )))
-    ht))
+(defun show-user-by-id (user-id &key (include-entities t))
+  (users-show :user-id user-id :include-entities include-entities))
 
-(defun collect-friend-statuses (screen-name &key (max -1) (skip 0))
-  (let ((ht (make-hash-table  :test 'equal :size 100)))
-    (labels ((collect-it (lst)
-	       (dolist (item lst)
-		 (setf (gethash (twitter-user-id item) ht) item))))
-      (with-cursor (:extractor #'cursor-user-users :controller #'cursor-user-next-cursor 
-			       :collector #'collect-it :skip skip :max max :test (lambda() nil)) (friends-statuses :screen-name screen-name )))
-    ht))
 
-;;with-cursor expects a :cursor keyword, but paging is identical
-;;this is a shim to enable use to use :page.
-;; NOTE : we don't have a good stopping criteria; The page number will increase and when results aren't found
-;;        twitter will throw an exception 'results not found...". The page key word is not a cursor ...
+(defgeneric lookup-user (obj))
 
-(defun do-user-search (q &key (max -1) (skip 0) (container (make-hash-table  :test 'equal :size 100)))
+(defmethod lookup-user ((name string))
+  (show-user name))
+
+(defmethod show ( (obj t) &optional (s *standard-output*))
+  (format s "~&~1t~S~%" obj))
+
+
+(defun collect-users-by-id (&rest ids)
+  (users-lookup :user-id (format nil "~{~a,~}" ids)))
+
+(defun do-user-search (q &key (max 2) (skip 0) (container (make-hash-table  :test 'equal :size 100)))
    (let ((ht container)
 	(ht-size 0)
 	(page 1))
@@ -224,7 +260,7 @@
 	     (next-page (item)
 	       (declare (ignore item))
 	       (incf page)))
-      (with-cursor (:skip skip :max max :extractor #'identity :controller #'next-page :collector #'collect-it :test #'stop-it :cursor :page) (search-users  q :page 1 :per-page 100)))
+      (with-cursor (:skip skip :max max :extractor #'identity :controller #'next-page :collector #'collect-it :test #'stop-it :cursor :page) (users-search  q :page 1 :per-page 100)))
     ht))
 
 (defun get-user (ref)
